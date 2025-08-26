@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoBUS Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/admin_dashboard.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Go<span id="logo">Bus</span></div>
+        <div class="header-right">
+            <a href="tel:xxxxxxxxxxxxx" class="call-btn">Call xxxx</a>
+            <a href="#" class="my-bookings">My Bookings</a>
+            <a href="#"><i class="fa-solid fa-user-circle"></i> Admin</a>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#revenue" class="sidebar-link active" data-section="revenue">Revenue Tracking</a></li>
+            <li><a href="#discounts" class="sidebar-link" data-section="discounts">Discounts & Promotions</a></li>
+            <li><a href="#reports" class="sidebar-link" data-section="reports">Report Generation</a></li>
+            <li><a href="#feedback" class="sidebar-link" data-section="feedback">Feedback Handling</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <section id="revenue" class="section">
+            <h2>Revenue Tracking per Route</h2>
+            <table class="revenue-table">
+                <thead>
+                    <tr>
+                        <th>Route</th>
+                        <th>Revenue (USD)</th>
+                        <th>Tickets Sold</th>
+                        <th>Average Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dhaka - Rajshahi</td>
+                        <td>15000</td>
+                        <td>300</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>Dhaka - Barisal</td>
+                        <td>22000</td>
+                        <td>440</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>Dhaka - Cox's Bazar</td>
+                        <td>10000</td>
+                        <td>200</td>
+                        <td>50</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="discounts" class="section" style="display: none;">
+            <h2>Discounts & Promotions</h2>
+            <form class="promotion-form">
+                <label for="promo-code">Promo Code:</label>
+                <input type="text" id="promo-code" placeholder="Enter promo code">
+
+                <label for="discount-type">Discount Type:</label>
+                <select id="discount-type">
+                    <option>Percentage</option>
+                    <option>Fixed Amount</option>
+                </select>
+
+                <label for="discount-value">Value:</label>
+                <input type="number" id="discount-value" placeholder="Enter value">
+
+                <label for="route">Applicable Route:</label>
+                <input type="text" id="route" placeholder="Enter route">
+
+                <button type="submit">Add Promotion</button>
+            </form>
+
+            <div class="promotion-list">
+                <h3>Current Promotions</h3>
+                <ul>
+                    <li>Code: SUMMER10 - 10% off on Dhaka routes</li>
+                    <li>Code: FALL20 - $20 off on Chittagong routes</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="reports" class="section" style="display: none;">
+            <h2>Report Generation</h2>
+            <form class="report-form">
+                <label for="report-type">Report Type:</label>
+                <select id="report-type">
+                    <option>Revenue Report</option>
+                    <option>Sales Report</option>
+                    <option>User Feedback Report</option>
+                </select>
+
+                <label for="date-range">Date Range:</label>
+                <select id="date-range">
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                    <option>Custom</option>
+                </select>
+
+                <button type="submit">Generate Report</button>
+            </form>
+        </section>
+
+        <section id="feedback" class="section" style="display: none;">
+            <h2>Feedback and Complaint Handling</h2>
+            <div class="feedback-list">
+                <div class="feedback-item">
+                    <h4>User: John Doe</h4>
+                    <p>Complaint: Delayed bus on Dhaka-Rajshahi route.</p>
+                    <button>Respond</button>
+                </div>
+                <div class="feedback-item">
+                    <h4>User: Jane Smith</h4>
+                    <p>Feedback: Excellent service!</p>
+                    <button>Respond</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footerContainer">
+            <div class="footerSection">
+                <h2>GO BUS</h2>
+                <p>
+                    gobus.com is a premium online booking portal which allows you to purchase ticket 
+                    for various bus booking services locally across the country.
+                </p>
+            </div>
+
+            <div class="footerSection">
+                <h3>Company Info</h3>
+                <a href="#">Terms and Condition</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Cancellation Policy</a>
+            </div>
+
+            <div class="footerSection">
+                <h3>About GoBUS</h3>
+                <a href="#">About Us</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+
+        <div class="footerBottom">
+            Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group</span>
+        </div>
+    </footer>
+
+    <script src="../data/admin_dashboard.js"></script>
+</body>
+</html>
