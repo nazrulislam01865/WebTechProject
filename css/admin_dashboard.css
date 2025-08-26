@@ -9,62 +9,90 @@ body {
 
 /* Header Styles */
 header {
-    background-color: #007bff;
-    color: white;
+    background-color: rgba(255, 255, 255, 0.3);
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+
 }
 
-header .logo {
+/* header .logo {
     font-size: 24px;
     font-weight: bold;
 }
 
 header .logo #logo {
     color: #ffd700;
+} */
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: blue;
+}
+
+#logo{
+    color:white;
+    background:blue;
+    padding:2px 6px;
+    border-radius:4px;
 }
 
 header .header-right a {
-    color: white;
+    color: #007bff;
     text-decoration: none;
     margin-left: 20px;
-    font-size: 16px;
+    font-size: 20px;
+
 }
 
-header .header-right a.call-btn {
-    background-color: #28a745;
-    padding: 8px 15px;
-    border-radius: 4px;
-}
 
 header .header-right a.call-btn:hover {
-    background-color: #218838;
+    background: #007bff;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    transition: 0.3s;
+
 }
 
 header .header-right a.my-bookings, header .header-right a i {
-    transition: color 0.3s;
+    transition: color 0.5s;
 }
 
 header .header-right a:hover {
-    color: #ffd700;
+    background: #007bff;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    transition: 0.3s;
 }
 
 /* Sidebar Navigation */
 .sidebar {
     width: 250px;
-    background-color: #343a40;
-    height: 100vh;
+    background-color: #007bff;
+    height: calc(100vh - 70px);
     position: fixed;
-    top: 0;
+    top: 75px;
     left: 0;
-    padding-top: 80px;
+    padding-top: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .sidebar ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .sidebar ul li {
@@ -72,33 +100,62 @@ header .header-right a:hover {
 }
 
 .sidebar ul li a {
-    color: white;
+    color: Black;
     text-decoration: none;
     display: block;
     padding: 15px 20px;
     transition: background 0.3s;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 .sidebar ul li a:hover {
-    background-color: #495057;
+    background-color: #fff;
+    color: #007bff;
 }
 
 .sidebar ul li a.active {
-    background-color: #007bff;
+    background-color: #ffffff;
+    color: #007bff;
 }
 
 /* Main Content */
 .main-content {
     margin-left: 250px;
     padding: 40px;
+    margin-top: 80px;
+    box-sizing: border-box;
+    min-height: calc(70vh - 80px);
 }
 
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 20px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .footer {
+        margin-left: 0;
+    }
+}
+
+/* Section Styles */
 .section {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 40px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .section h2 {
@@ -111,12 +168,16 @@ header .header-right a:hover {
 .revenue-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
 }
 
 .revenue-table th, .revenue-table td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .revenue-table th {
@@ -278,4 +339,13 @@ footer {
 
 .footerBottom .designer {
     color: #ffd700;
+}
+
+/* Responsive Table */
+@media screen and (max-width: 600px) {
+    .revenue-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 }
