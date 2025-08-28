@@ -83,17 +83,17 @@ body{
 }
 /* need to change */
 .rightSide .forgot-btn{
+    display: flex;
     background: transparent;
     color:#3a2dbf;
     border:1px solid #3a2dbf;
     padding: 5px 10px;
-    margin-top: 5px;
-    margin-left: 35px;
+    width:fit-content;
+    margin-left: 115px;
     border-radius: 25px;
     font-size: 10px;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
     transition: 0.3s;
 }
 
