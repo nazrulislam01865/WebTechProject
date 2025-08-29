@@ -30,10 +30,8 @@
     <div class="main-content">
         <!-- Header -->
         <div class="header">
-            <div class="header-bus-gif">
+            <div class="header22">
                 <h2>Bus Company Dashboard</h2>
-                <img src="../image/bus.gif" alt="Bus Animation" class="bus-gif">
-
             </div>
             <div class="user-profile" id="userProfile">
                 <img src="https://ui-avatars.com/api/?name=Bus+Company&background=2563eb&color=fff" alt="User">
@@ -96,7 +94,6 @@
                     <label>Arival:</label>
                     <input type="time" id="search-Arival time">
                     <button type="submit">Add Trip</button>
-
                 </form>
 
             </div>
@@ -121,9 +118,9 @@
                 <!-- Basic Search Form -->
                 <div class="search-form active" id="basic-search-form">
                     <div class="form-group">
-                        <input type="text" id="passenger-search-nid" placeholder="Passenger NID Number">
-                        <input type="text" id="passenger-search-name" placeholder="Passenger Name">
-                        <input type="date" id="passenger-search-date">
+                        <input type="text" id="passenger-search-nid" placeholder="Passenger NID Number" required>
+                        <input type="text" id="passenger-search-name" placeholder="Passenger Name" required>
+                        <input type="date" id="passenger-search-date" required>
                         <button id="search-passenger-btn">Search</button>
                     </div>
                 </div>
@@ -131,9 +128,9 @@
                 <!-- Date/Time Search Form -->
                 <div class="search-form" id="date-search-form">
                     <div class="form-group">
-                        <input type="text" id="search-from " placeholder="Form">
-                        <input type="text" id="search-To" placeholder="to">
-                        <input type="date" id="search date">
+                        <input type="text" id="search-from " placeholder="Form" required>
+                        <input type="text" id="search-To" placeholder="to" required>
+                        <input type="date" id="search date" required>
                     </div>
                     <button id="search-date-btn">Search list</button>
                 </div>
