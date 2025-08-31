@@ -1,0 +1,129 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(120deg, #422d71, #8995c9);
+}
+
+.container{
+    display: flex;
+    width:900px;
+    height: 450px;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    background: #fff;
+}
+
+.leftSide{
+    flex:1;
+    background: linear-gradient(135deg, #3a2dbf, #4231e0);
+    color:#fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 0 80px 80px 0;
+}
+
+.leftSide h2{
+    font-size:30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.leftSide .btn{
+    background: transparent;
+    color:#fff;
+    border:1px solid #fff;
+    padding: 10px 30px;
+    margin-top: 25px;
+    border-radius: 25px;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.leftSide .btn:hover{
+    background: #faf9fc;
+    color: #3a2dbf;
+}
+
+.rightSide{
+    flex:1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.rightSide h2{
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.rightSide a{
+    text-align: right;
+    margin-bottom: 20px;
+    text-decoration: none;
+    
+}
+/* need to change */
+.rightSide .forgot-btn{
+    background: transparent;
+    color:#3a2dbf;
+    border:1px solid #3a2dbf;
+    padding: 5px 10px;
+    margin-top: 5px;
+    margin-left: 35px;
+    border-radius: 25px;
+    font-size: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.input-box{
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-box input{
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #6874b9;
+    outline: none;
+    font-size: 15px;
+}
+
+.login-btn{
+    background: #3a2dbf;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    width:100%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.login-btn:hover{
+    background: #291c97;
+}
+
