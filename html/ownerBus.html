@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoBus - Bus Company Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles11.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>GoBus</h2>
+
+        </div>
+        <div class="nav-links">
+            <div class="nav-item active" data-tab="dashboard"><i class="fas fa-home"></i><span>Dashboard</span></div>
+            <div class="nav-item" data-tab="passengers"><i class="fas fa-users"></i><span>Passenger List</span></div>
+            <div class="nav-item" data-tab="revenue"><i class="fas fa-chart-line"></i><span>Revenue Report</span></div>
+            <div class="nav-item" data-tab="drivers"><i class="fas fa-id-card"></i><span>Assign Drivers</span></div>
+            <div class="nav-item" data-tab="trips"><i class="fas fa-bus"></i><span>Cancel Trip</span></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header22">
+                <h2>Bus Company Dashboard</h2>
+            </div>
+            <div class="user-profile" id="userProfile">
+                <img src="https://ui-avatars.com/api/?name=Bus+Company&background=2563eb&color=fff" alt="User">
+                <div>
+                    <div>Company Name</div>
+                    <small>Bus Company</small>
+                </div>
+
+                <!-- Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit">Update Password</button>
+                    </form>
+                    <hr>
+                    <button id="logoutBtn">Logout</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="content-tabs active" id="dashboard">
+            <div class="dashboard-cards">
+                <div class="card stat-card">
+                    <div class="label">Today's Trips</div>
+                    <div class="value" id="today-trips">--</div>
+                    <div class="icon"><i class="fas fa-route"></i></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="label">Total Revenue</div>
+                    <div class="value" id="total-revenue">--</div>
+                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                </div>
+            </div>
+
+            <div class="add-trip-form">
+                <h3>Add New Trip</h3>
+                <form id="tripForm">
+
+                    <input type="text" id="trip-from" placeholder="From" required>
+                    <label>Starting:</label>
+                    <input type="time" id="search-starting time" placeholder="From">
+
+                    <input type="date" id="trip-date" required>
+                </form>
+                <form id="trip-from">
+                    <input type="text" id="trip-to" placeholder="To" required>
+                    <label>Arival:</label>
+                    <input type="time" id="search-Arival time">
+                    <button type="submit">Add Trip</button>
+                </form>
+
+            </div>
+
+            <div class="trip-list" id="upcoming-trips">
+                <h3 class="section-title">Upcoming Trips</h3>
+            </div>
+
+        </div>
+        <!-- Passenger List Content -->
+        <div class="content-tabs" id="passengers">
+            <div class="card">
+                <h3 class="section-title">Passenger List</h3>
+
+                <!-- Search Options -->
+                <div class="search-options">
+                    <button class="search-option-btn active" data-search-type="basic">Individual Passenger
+                        Search</button>
+                    <button class="search-option-btn" data-search-type="date">Passenger list Search</button>
+                </div>
+
+                <!-- Basic Search Form -->
+                <div class="search-form active" id="basic-search-form">
+                    <div class="form-group">
+                        <input type="text" id="passenger-search-nid" placeholder="Passenger NID Number" required>
+                        <input type="text" id="passenger-search-name" placeholder="Passenger Name" required>
+                        <input type="date" id="passenger-search-date" required>
+                        <button id="search-passenger-btn">Search</button>
+                    </div>
+                </div>
+
+                <!-- Date/Time Search Form -->
+                <div class="search-form" id="date-search-form">
+                    <div class="form-group">
+                        <input type="text" id="search-from " placeholder="Form" required>
+                        <input type="text" id="search-To" placeholder="to" required>
+                        <input type="date" id="search date" required>
+                    </div>
+                    <button id="search-date-btn">Search list</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Report Content -->
+        <div class="content-tabs" id="revenue">
+            <div class="card">
+                <h3 class="section-title">Revenue Report</h3>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assign Drivers Content -->
+        <div class="content-tabs" id="drivers">
+            <div class="add-trip-form">
+                <h3>Add New Driver</h3>
+                <form id="driverForm">
+                    <input type="text" id="driver-name" placeholder="Driver Full Name" required>
+                    <input type="text" id="driver-license" placeholder="License Number" required>
+                    <input type="number" id="Driver number" placeholder="Phone Number" required>
+                    <button type="submit">Add Driver</button>
+                </form>
+            </div>
+
+            <div class="driver-list">
+                <h3 class="section-title">Assign Driver</h3>
+                <div id="driver-list"></div>
+            </div>
+        </div>
+
+        <!-- Cancel Trip Content -->
+        <div class="content-tabs" id="trips">
+            <div class="add-trip-form">
+                <h3>Cancel Trip</h3>
+                <form id="searchTripForm">
+                    <input type="text" id="search-from" placeholder="From">
+                    <label>Starting:</label>
+                    <input type="time" id="search-starting time" placeholder="From">
+                    <input type="date" id="search-date">
+
+                </form>
+                <form id="searchTripForm">
+                    <input type="text" id="search-to" placeholder="To">
+                    <label>Arival:</label>
+                    <input type="time" id="search-Arival time">
+                    <button type="submit">Search Trip</button>
+                </form>
+
+                <div class="trip-list" id="trip-list">
+                    <h3 class="section-title">All Trips</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel Trip Modal -->
+        <div class="modal" id="cancelModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Cancel Trip</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="cancelTripForm">
+                    <div class="form-group">
+                        <label for="cancelReason">Reason for cancellation</label>
+                        <select id="cancelReason" required>
+                            <option value="" disabled selected>Select a reason</option>
+                            <option value="Mechanical issues">Mechanical issues</option>
+                            <option value="Driver unavailable">Driver unavailable</option>
+                            <option value="Weather conditions">Weather conditions</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="otherReasonDiv" style="display:none;">
+                        <label for="otherReason">Please specify</label>
+                        <textarea id="otherReason" rows="3" placeholder="Enter your reason"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Notify passengers via</label>
+                        <div>
+                            <input type="checkbox" id="emailNotif"> <label for="emailNotif">Email</label>
+                            <input type="checkbox" id="smsNotif"> <label for="smsNotif">SMS</label>
+                        </div>
+                    </div>
+                    <button id="confirm-cancel-btn" type="submit" class="btn btn-danger" style="width:100%">Confirm
+                        Cancellation</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/script11.js"></script>
+</body>
+
+</html>
