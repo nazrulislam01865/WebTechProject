@@ -200,10 +200,10 @@ a{
 }
 
 footer{
-background: #f2f2f2;
-color: #27272b;
-padding: 40px 60px 20px;
-margin-top: 60px;
+    background: #f2f2f2;
+    color: #27272b;
+    padding: 40px 60px 20px;
+    margin-top: 60px;
 }
 
 .footerContainer{
