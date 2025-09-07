@@ -19,3 +19,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+function validateForm(event) {
+    event.preventDefault();
+                
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const phoneRegex = /^\d{11}$/;
+                
+    if (!phoneRegex.test(phone)) {
+        alert('Please enter a valid 10-digit phone number.');
+        return false;
+    }
+                
+    if (password.length < 8) {
+        alert('Password must be at least 8 characters long.');
+        return false;
+    }
+                
+    // If validation passes, you can submit the form or handle login
+    alert('Login successful!');
+    return true;
+}

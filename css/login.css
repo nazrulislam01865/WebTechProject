@@ -1,4 +1,4 @@
-*{
+/* *{
     margin:0;
     padding:0;
     box-sizing: border-box;
@@ -81,49 +81,180 @@ body{
     text-decoration: none;
     
 }
-/* need to change */
-.rightSide .forgot-btn{
+*/
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+body {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(120deg, #422d71, #8995c9);
+}
+
+.container {
+    display: flex;
+    width: 900px;
+    height: 450px;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    background: #fff;
+    max-width: 900px;
+    min-width: 900px;
+}
+
+.leftSide {
+    flex: 1;
+    background: linear-gradient(135deg, #3a2dbf, #4231e0);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 0 80px 80px 0;
+}
+
+.leftSide h2 {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.leftSide .btn {
     background: transparent;
-    color:#3a2dbf;
-    border:1px solid #3a2dbf;
-    padding: 5px 10px;
-    width:fit-content;
-    margin-left: 115px;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 10px 30px;
+    margin-top: 25px;
     border-radius: 25px;
-    font-size: 10px;
+    font-size: 15px;
     cursor: pointer;
     text-decoration: none;
+    display: inline-block;
     transition: 0.3s;
 }
 
-.input-box{
-    width: 100%;
-    margin-bottom: 15px;
+.leftSide .btn:hover {
+    background: #faf9fc;
+    color: #3a2dbf;
 }
 
-.input-box input{
+.rightSide {
+    flex: 1.2;
+    width: 360px; /* Fixed width */
+    max-width: 360px; /* Prevent growth */
+    min-width: 360px; /* Prevent shrinking */
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.rightSide h2 {
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.rightSide .forgot-btn {
+    align-self: flex-end;
+    background: transparent;
+    color: #3a2dbf;
+    border: 1px solid #3a2dbf;
+    padding: 5px 15px;
+    border-radius: 25px;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.rightSide .forgot-btn:hover {
+    background: #3a2dbf;
+    color: #fff;
+}
+
+.input-box {
     width: 100%;
+    max-width: 250px; /* Match inline style */
+    height: 60px;
+    position: relative;
+    margin-bottom: 20px;
+
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-box input {
+    width: 100%;
+    max-width: 250px; /* Enforce fixed width */
+    height: 40px;
     padding: 12px;
     border-radius: 10px;
     border: 1px solid #6874b9;
     outline: none;
     font-size: 15px;
+    display: block;
+    box-sizing: border-box;
 }
 
-.login-btn{
+.input-box .error-text {
+    width: 100%;
+    max-width: 250px; /* Constrain error message width */
+    color: red;
+    font-size: 0.8em;
+    text-align: center;
+    margin-top: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.login-btn {
     background: #3a2dbf;
     color: #fff;
     padding: 12px;
     border: none;
-    width:100%;
+    width: 100%;
+    max-width: 250px; /* Match input width */
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
     transition: 0.3s;
 }
 
-.login-btn:hover{
+.login-btn:hover {
     background: #291c97;
 }
 
+.rightSide .error-message {
+    color: red;
+    font-size: 0.8em;
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 250px; /* Match input width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rightSide form {
+    width: 100%;
+    max-width: 250px; /* Constrain form width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
