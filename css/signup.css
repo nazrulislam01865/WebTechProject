@@ -16,7 +16,7 @@ body{
 .container{
     display: flex;
     width:900px;
-    height: 450px;
+    height: auto;
     border-radius: 15px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
     overflow: hidden;
