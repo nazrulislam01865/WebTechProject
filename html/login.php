@@ -268,15 +268,15 @@
                 <a href="signup.php" class="btn">SIGN UP</a>
             </div>
             <div class="rightSide">
-                <h2>Log In</h2>
+                <h2>LOG IN</h2>
                 <form id="loginForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" onsubmit="return validateForm(event)">
                     <?php echo !empty($error) ? "<p class='error-message'>$error</p>" : ''; ?>
                     <div class="input-box"> 
-                        <input type="text" placeholder="Phone Number" required id="phone" name="phone" style="width: 250px; max-width: 250px;">
+                        <input type="text" placeholder="Phone Number" id="phone" name="phone" style="width: 250px; max-width: 250px;">
                         <span id="phoneError" class="error-text"></span>
                     </div>
                     <div class="input-box">
-                        <input type="password" placeholder="Password" required id="password" name="password" style="width: 250px; max-width: 250px;">
+                        <input type="password" placeholder="Password" id="password" name="password" style="width: 250px; max-width: 250px;">
                         <span id="passwordError" class="error-text"></span>
                     </div>
                     <a href="forgotPassword.html" class="forgot-btn">Forgot Password</a>

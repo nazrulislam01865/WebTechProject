@@ -88,8 +88,8 @@
                         if (!filter_var($form_data['email'], FILTER_VALIDATE_EMAIL)) {
                             $errors['email'] = "Invalid email format.";
                         }
-                        if (!preg_match("/^\d{10}$/", $form_data['phone'])) {
-                            $errors['phone'] = "Phone number must be 10 digits.";
+                        if (!preg_match("/^\d{11}$/", $form_data['phone'])) {
+                            $errors['phone'] = "Phone number must be 11 digits.";
                         }
                         if (!preg_match("/^\d{10}$/", $form_data['nid'])) {
                             $errors['nid'] = "NID number must be 10 digits.";
