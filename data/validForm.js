@@ -16,36 +16,36 @@
 //                 return true;
 //             }
 
-function validateForm(event) {
-    event.preventDefault(); // Prevent form submission for validation
+// function validateForm(event) {
+//     event.preventDefault(); // Prevent form submission for validation
 
-    const phone = document.getElementById('phone').value;
-    const password = document.getElementById('password').value;
-    const phoneError = document.getElementById('phoneError');
-    const passwordError = document.getElementById('passwordError');
+//     const phone = document.getElementById('phone').value;
+//     const password = document.getElementById('password').value;
+//     const phoneError = document.getElementById('phoneError');
+//     const passwordError = document.getElementById('passwordError');
 
-    // Clear previous error messages
-    phoneError.textContent = '';
-    passwordError.textContent = '';
+//     // Clear previous error messages
+//     phoneError.textContent = '';
+//     passwordError.textContent = '';
 
-    let isValid = true;
+//     let isValid = true;
 
-    // Validate phone number (e.g., 10 digits)
-    if (!/^\d{10}$/.test(phone)) {
-        phoneError.textContent = 'Please enter a valid 10-digit phone number.';
-        isValid = false;
-    }
+//     // Validate phone number (e.g., 10 digits)
+//     if (!/^\d{11}$/.test(phone)) {
+//         phoneError.textContent = 'Please enter a valid 11-digit phone number.';
+//         isValid = false;
+//     }
 
-    // Validate password (e.g., minimum 6 characters)
-    if (password.length < 6) {
-        passwordError.textContent = 'Password must be at least 6 characters.';
-        isValid = false;
-    }
+//     // Validate password (e.g., minimum 6 characters)
+//     if (password.length < 6) {
+//         passwordError.textContent = 'Password must be at least 6 characters.';
+//         isValid = false;
+//     }
 
-    // If valid, allow form submission
-    if (isValid) {
-        document.getElementById('loginForm').submit();
-    }
+//     // If valid, allow form submission
+//     if (isValid) {
+//         document.getElementById('loginForm').submit();
+//     }
 
-    return isValid;
-}
+//     return isValid;
+// }
