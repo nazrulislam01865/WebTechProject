@@ -205,7 +205,7 @@
                     <i class="fa-solid fa-user-circle"></i> <?php echo $username; ?>
                 </a>
             <?php else: ?>
-                <a href="login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+                <a href="./html/login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
             <?php endif; ?>
         </div>
     </header>
@@ -304,7 +304,7 @@
 
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="terms.php">Terms and Condition</a>
+                <a href="./html/terms.php">Terms and Condition</a>
                 <a href="privacy.php">Privacy Policy</a>
             </div>
         </div>
@@ -315,7 +315,7 @@
     </footer>
 
     <script>
-        // Client-side validation for travel type
+
         document.querySelectorAll('input[name="travel_type"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const returnDateInput = document.querySelector('input[name="return_date"]');
@@ -330,12 +330,11 @@
                     returnDateInput.disabled = true;
                     returnDateInput.required = false;
                     returnDateInput.removeAttribute('min');
-                    returnDateInput.value = ''; // Clear return date for One Way
+                    returnDateInput.value = ''; 
                 }
             });
         });
 
-        // Update return date min when journey date changes
         document.querySelector('input[name="journey_date"]').addEventListener('change', function() {
             const returnDateInput = document.querySelector('input[name="return_date"]');
             if (document.querySelector('input[value="Round Way"]').checked) {

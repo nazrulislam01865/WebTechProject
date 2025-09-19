@@ -84,16 +84,9 @@
 </head>
 <body>
     <?php
-    // Enable error reporting for debugging
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
 
-    // Start session
+
     session_start();
-
-    // Enable strict MySQLi error reporting
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
     $error = "";
     $phone = $_POST['phone'] ?? '';
 
@@ -101,13 +94,12 @@
         $phone = trim($_POST['phone']);
         $password = $_POST['password'];
 
-        // Server-side validation
         if (!preg_match("/^\d{11}$/", $phone)) {
             $error = "Phone number must be 11 digits.";
         } elseif (empty($password)) {
             $error = "Password is required.";
         } else {
-            // Database connection
+
             $servername = "localhost";
             $username = "root";
             $password_db = "";
@@ -119,7 +111,7 @@
                 if ($conn->connect_error) {
                     $error = "Database connection failed: " . $conn->connect_error;
                 } else {
-                    // Prepare and execute query
+
                     $sql = "SELECT id, username, password FROM users WHERE phone = ?";
                     $stmt = $conn->prepare($sql);
                     if (!$stmt) {
@@ -129,21 +121,14 @@
                         $stmt->execute();
                         $result = $stmt->get_result();
 
-                        // Debug: Log query result
-                        echo "<!-- DEBUG: Query returned " . $result->num_rows . " rows -->";
 
                         if ($result->num_rows > 0) {
                             $user = $result->fetch_assoc();
 
                             if (password_verify($password, $user['password'])) {
-                                // Successful login, set session variables
                                 $_SESSION['user_id'] = $user['id'];
                                 $_SESSION['username'] = $user['username'];
 
-                                // Debug: Log session variables
-                                echo "<!-- DEBUG: Session set - user_id: " . $_SESSION['user_id'] . ", username: " . $_SESSION['username'] . " -->";
-
-                                // Check for headers already sent
                                 if (headers_sent($file, $line)) {
                                     $error = "Cannot redirect, headers already sent in $file on line $line";
                                 } else {

@@ -100,6 +100,53 @@
 
 
 
+
+<?php
+session_start();
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+echo "<!-- DEBUG: Session - user_id: " . ($_SESSION['user_id'] ?? 'not set') . ", username: " . ($_SESSION['username'] ?? 'not set') . " -->";
+
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$username = htmlspecialchars($_SESSION['username']);
+$errors = [];
+$bookings = [];
+
+$servername = "localhost";
+$db_username = "root";
+$db_password = "";
+$dbname = "gobus";
+
+try {
+    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
+
+    if ($conn->connect_error) {
+        $errors['general'] = "Database connection failed: " . $conn->connect_error;
+    } else {
+        $sql = "SELECT booking_id, route, date, status FROM bookings WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $_SESSION['user_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $bookings[] = $row;
+        }
+        $stmt->close();
+        $conn->close();
+    }
+} catch (mysqli_sql_exception $e) {
+    $errors['general'] = "Database error: " . $e->getMessage();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,54 +157,6 @@
     <link rel="stylesheet" type="text/css" href="../css/userDashboard.css">
 </head>
 <body>
-    <?php
-
-    session_start();
-
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-    echo "<!-- DEBUG: Session - user_id: " . ($_SESSION['user_id'] ?? 'not set') . ", username: " . ($_SESSION['username'] ?? 'not set') . " -->";
-
-    if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
-        header("Location: login.php");
-        exit();
-    }
-
-    $username = htmlspecialchars($_SESSION['username']);
-    $errors = [];
-    $bookings = [];
-
-
-    $servername = "localhost";
-    $db_username = "root";
-    $db_password = "";
-    $dbname = "gobus";
-
-    try {
-        $conn = new mysqli($servername, $db_username, $db_password, $dbname);
-
-        if ($conn->connect_error) {
-            $errors['general'] = "Database connection failed: " . $conn->connect_error;
-        } else {
-            $sql = "SELECT booking_id, route, date, status FROM bookings WHERE user_id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $_SESSION['user_id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            while ($row = $result->fetch_assoc()) {
-                $bookings[] = $row;
-            }
-            $stmt->close();
-            $conn->close();
-        }
-    } catch (mysqli_sql_exception $e) {
-        $errors['general'] = "Database error: " . $e->getMessage();
-    }
-    ?>
-
     <header>
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
@@ -206,9 +205,9 @@
                                 <td><?php echo htmlspecialchars($booking['date']); ?></td>
                                 <td><?php echo htmlspecialchars($booking['status']); ?></td>
                                 <td>
-                                    <button class="view-btn">View Details</button>
+                                    <a href="./viewBookingDetails.php?booking_id=<?php echo urlencode($booking['booking_id']); ?>" class="view-btn">View Details</a>
                                     <?php if ($booking['status'] === 'Upcoming'): ?>
-                                        <button class="cancel-btn">Cancel Booking</button>
+                                        <a href="cancelTicket.php?booking_id=<?php echo urlencode($booking['booking_id']); ?>" class="cancel-btn">Cancel Booking</a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
