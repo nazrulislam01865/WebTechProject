@@ -97,33 +97,38 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBUS | Reset Password</title>
-    <link rel="stylesheet" type="text/css" href="../css/forgetPassword.css">
+    <link rel="stylesheet" type="text/css" href="../css/reset_password.css">
 </head>
-<body>
+<body><header>
+        <div class="logo">Go<span id="logo">Bus</span></div>
+        <div class="header-right">
+            <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
+            <a href="login.php" class="login-btn"><i class="fa-solid fa-sign-out-alt"></i> Login</a>
+        </div>
+    </header>
     <div class="container">
         <h1>Reset Password</h1>
-        <p>Enter your new password.</p>
-        <form method="POST" action="">
+        <form method="POST" action="password_reset_code.php">
+            <input type="hidden" name="password_token" value="<?php if(isset($_SESSION['token'])){echo $_SESSION['token'];}; ?>">
             <label for="email">Email<sup>*</sup></label>
             <div class="input-box">
-                <input type="email" name="email" placeholder="Enter email" value="<?php echo isset($_SESSION['reset_email']) ? htmlspecialchars($_SESSION['reset_email']) : ''; ?>" required>
+                <input type="email" name="email" placeholder="Enter email" value="<?php echo isset($_SESSION['reset_email']) ? htmlspecialchars($_SESSION['reset_email']) : ''; ?>">
             </div>
-            <label for="password">New Password<sup>*</sup></label>
+            <label for="new_password">New Password<sup>*</sup></label>
             <div class="input-box">
-                <input type="password" name="password" placeholder="Enter new password" required>
+                <input type="password" name="new_password" placeholder="Enter new password">
             </div>
-            <label for="confirm-password">Confirm Password<sup>*</sup></label>
+            <label for="confirm_password">Confirm Password<sup>*</sup></label>
             <div class="input-box">
-                <input type="password" name="confirm-password" placeholder="Confirm password" required>
+                <input type="password" name="confirm_password" placeholder="Confirm password">
             </div>
             <?php if ($error): ?>
                 <div id="password-error" style="color: red;"><?php echo htmlspecialchars($error); ?></div>
             <?php elseif ($success): ?>
                 <div id="success" style="color: green;"><?php echo htmlspecialchars($success); ?> <a href="login.php">Log In</a></div>
             <?php endif; ?>
-            <button class="OTP-btn" type="submit">Reset Password</button>
+            <button class="resetPassword-btn" type="submit" name="reset_password">Reset Password</button>
             <div class="back">
-                Go back to <a href="login.php">Log In</a>
             </div>
         </form>
     </div>

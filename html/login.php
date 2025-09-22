@@ -96,7 +96,7 @@
                     <input type="password" placeholder="Password" id="password" name="password"  style="width: 250px; max-width: 250px;">
                     <span id="passwordError" class="error-text"></span>
                 </div>
-                <a href="forgotPassword.php" class="forgot-btn">Forgot Password</a>
+                <a href="forgetReset.php" class="forgot-btn">Forgot Password</a>
                 <button type="submit" class="login-btn" style="width: 250px; max-width: 250px;">LOG IN</button>
             </form>
         </div>
