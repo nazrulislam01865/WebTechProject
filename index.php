@@ -118,37 +118,67 @@
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
             <div class="select-type">
                 <label>
-                    <input type="radio" name="travel_type" value="One Way" <?php echo $form_data['travel_type'] === 'One Way' ? 'checked' : ''; ?> required> One Way
+                    <input type="radio" name="travel_type" value="One Way" <?php echo $form_data['travel_type'] === 'One Way' ? 'checked' : ''; ?>> One Way
                 </label>
                 <label>
-                    <input type="radio" name="travel_type" value="Round Way" <?php echo $form_data['travel_type'] === 'Round Way' ? 'checked' : ''; ?> required> Round Way
+                    <input type="radio" name="travel_type" value="Round Way" <?php echo $form_data['travel_type'] === 'Round Way' ? 'checked' : ''; ?>> Round Way
                 </label>
                 <?php if (isset($errors['travel_type'])): ?>
-                    <span style="color: red; font-size: 0.8em;"><?php echo htmlspecialchars($errors['travel_type']); ?></span>
+                    <div class="error"><?php echo htmlspecialchars($errors['travel_type']); ?></div>
                 <?php endif; ?>
             </div>
 
             <div class="form-row">
-
-                <input type="text" name="from" placeholder="Going From" value="<?php echo htmlspecialchars($form_data['from']); ?>" >
-                <?php if (isset($errors['from'])): ?>
-                    <span style="color: red; font-size: 0.8em;"><?php echo htmlspecialchars($errors['from']); ?></span>
-                <?php endif; ?>
-                <input type="text" name="to" placeholder="Going To" value="<?php echo htmlspecialchars($form_data['to']); ?>" >
-                <?php if (isset($errors['to'])): ?>
-                    <span style="color: red; font-size: 0.8em;"><?php echo htmlspecialchars($errors['to']); ?></span>
-                <?php endif; ?>
+                <div class="input-group">
+                    <select name="from" class="form-input">
+                        <option value="">Going From</option>
+                        <option value="Dhaka" <?php echo htmlspecialchars($form_data['from']) === 'Dhaka' ? 'selected' : ''; ?>>Dhaka</option>
+                        <option value="Rajshahi" <?php echo htmlspecialchars($form_data['from']) === 'Rajshahi' ? 'selected' : ''; ?>>Rajshahi</option>
+                        <option value="Barisal" <?php echo htmlspecialchars($form_data['from']) === 'Barisal' ? 'selected' : ''; ?>>Barisal</option>
+                        <option value="Sylhet" <?php echo htmlspecialchars($form_data['from']) === 'Sylhet' ? 'selected' : ''; ?>>Sylhet</option>
+                        <option value="Khulna" <?php echo htmlspecialchars($form_data['from']) === 'Khulna' ? 'selected' : ''; ?>>Khulna</option>
+                        <option value="Mymensingh" <?php echo htmlspecialchars($form_data['from']) === 'Mymensingh' ? 'selected' : ''; ?>>Mymensingh</option>
+                        <option value="Bandarban" <?php echo htmlspecialchars($form_data['from']) === 'Bandarban' ? 'selected' : ''; ?>>Bandarban</option>
+                        <option value="Cox's Bazar" <?php echo htmlspecialchars($form_data['from']) === "Cox's Bazar" ? 'selected' : ''; ?>>Cox's Bazar</option>
+                        <option value="Chittagong" <?php echo htmlspecialchars($form_data['from']) === 'Chittagong' ? 'selected' : ''; ?>>Chittagong</option>
+                    </select>
+                    <?php if (isset($errors['from'])): ?>
+                        <span class="error"><?php echo htmlspecialchars($errors['from']); ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="input-group">
+                    <select name="to" class="form-input">
+                        <option value="">Going To</option>
+                        <option value="Dhaka" <?php echo htmlspecialchars($form_data['from']) === 'Dhaka' ? 'selected' : ''; ?>>Dhaka</option>
+                        <option value="Rajshahi" <?php echo htmlspecialchars($form_data['from']) === 'Rajshahi' ? 'selected' : ''; ?>>Rajshahi</option>
+                        <option value="Barisal" <?php echo htmlspecialchars($form_data['from']) === 'Barisal' ? 'selected' : ''; ?>>Barisal</option>
+                        <option value="Rangpur" <?php echo htmlspecialchars($form_data['from']) === 'Rangpur' ? 'selected' : ''; ?>>Rangpur</option>
+                        <option value="Sylhet" <?php echo htmlspecialchars($form_data['from']) === 'Sylhet' ? 'selected' : ''; ?>>Sylhet</option>
+                        <option value="Khulna" <?php echo htmlspecialchars($form_data['from']) === 'Khulna' ? 'selected' : ''; ?>>Khulna</option>
+                        <option value="Mymensingh" <?php echo htmlspecialchars($form_data['from']) === 'Mymensingh' ? 'selected' : ''; ?>>Mymensingh</option>
+                        <option value="Bandarban" <?php echo htmlspecialchars($form_data['from']) === 'Bandarban' ? 'selected' : ''; ?>>Bandarban</option>
+                        <option value="Cox's Bazar" <?php echo htmlspecialchars($form_data['from']) === "Cox's Bazar" ? 'selected' : ''; ?>>Cox's Bazar</option>
+                        <option value="Chittagong" <?php echo htmlspecialchars($form_data['from']) === 'Chittagong' ? 'selected' : ''; ?>>Chittagong</option>
+                    </select>
+                    <?php if (isset($errors['to'])): ?>
+                        <span class="error"><?php echo htmlspecialchars($errors['to']); ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="form-row">
-                <input type="date" name="journey_date" placeholder="Journey Date" value="<?php echo htmlspecialchars($form_data['journey_date']); ?>" min="<?php echo date('Y-m-d'); ?>" >
-                <?php if (isset($errors['journey_date'])): ?>
-                    <span style="color: red; font-size: 0.8em;"><?php echo htmlspecialchars($errors['journey_date']); ?></span>
-                <?php endif; ?>
-                <input type="date" name="return_date" placeholder="Return Date" value="<?php echo htmlspecialchars($form_data['return_date']); ?>" <?php echo $form_data['travel_type'] === 'Round Way' ? 'required' : 'disabled'; ?> <?php echo $form_data['travel_type'] === 'Round Way' && $form_data['journey_date'] ? 'min="' . htmlspecialchars($form_data['journey_date']) . '"' : ''; ?>>
-                <?php if (isset($errors['return_date'])): ?>
-                    <span style="color: red; font-size: 0.8em;"><?php echo htmlspecialchars($errors['return_date']); ?></span>
-                <?php endif; ?>
+                <div class="input-group">
+                    <input type="date" name="journey_date" placeholder="Journey Date" value="<?php echo htmlspecialchars($form_data['journey_date']); ?>" min="<?php echo date('Y-m-d'); ?>" >
+                    <?php if (isset($errors['journey_date'])): ?>
+                        <span class="error"><?php echo htmlspecialchars($errors['journey_date']); ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="input-group">
+                    <input type="date" name="return_date" placeholder="Return Date" value="<?php echo htmlspecialchars($form_data['return_date']); ?>" <?php echo $form_data['travel_type'] === 'Round Way' ? 'required' : 'disabled'; ?> <?php echo $form_data['travel_type'] === 'Round Way' && $form_data['journey_date'] ? 'min="' . htmlspecialchars($form_data['journey_date']) . '"' : ''; ?>>
+                    <?php if (isset($errors['return_date'])): ?>
+                        <span class="error"><?php echo htmlspecialchars($errors['return_date']); ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="trending">

@@ -158,13 +158,11 @@ a{
     margin-bottom:20px;
 }
 
-.form-row {
+/* .form-row {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
 }
-
-
 
 .form-row input {
     flex: 1;
@@ -172,6 +170,45 @@ a{
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
+}
+
+.form-row .error{
+    display: block;
+    color: red; 
+    font-size: 0.8em;
+    margin-top: 4px;
+} */
+.form-input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.form-row input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.error{
+    display: block;
+    color: rgb(140, 43, 43); 
+    font-size: 0.8em;
+    margin-top: 4px;
 }
 
 .search-btn {
