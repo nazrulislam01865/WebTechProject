@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBus</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
@@ -82,7 +81,7 @@
                     <i class="fa-solid fa-user-circle"></i> <?php echo $username; ?>
                 </a>
             <?php else: ?>
-                <a href="./html/login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+                <a href="./html/login.php" class="login-btn"><img src="picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
             <?php endif; ?>
         </div>
     </header>
@@ -92,21 +91,21 @@
         <h2><span class="highlight">Buy ticket</span> in 3 easy steps</h2>
         <div class="stepContainer">
             <div class="step">
-                <div class="icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div class="icon"><img src="picture/search_logo.png" alt="Search Icon" style="width: 25px; height: 25px; vertical-align: middle;"></div>
                 <h3>Search</h3>
                 <p>Enter your starting point, destination, and travel date to explore available buses.</p>
                 <div class="stepNumber">1</div>
             </div>
 
             <div class="step">
-                <div class="icon"><i class="fa-solid fa-check"></i></div>
+                <div class="icon"><img src="picture/check.png" alt="Check Icon" style="width: 25px; height: 25px; vertical-align: middle;"></div>
                 <h3>Select</h3>
                 <p>Choose your preferred bus and pick your seats.</p>
                 <div class="stepNumber">2</div>
             </div>
 
             <div class="step">
-                <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
+                <div class="icon"><img src="picture/card.png" alt="Card Icon" style="width: 25px; height: 24px; vertical-align: middle;"></div>
                 <h3>Pay</h3>
                 <p>Complete your booking securely using cards, mobile banking or other payment options.</p>
                 <div class="stepNumber">3</div>
