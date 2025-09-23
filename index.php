@@ -66,11 +66,7 @@
             if ($selected_type === 'Round Way') {
                 $query_params .= "&return_date=" . urlencode($form_data['return_date']);
             }
-<<<<<<< HEAD
-            header("Location: searchBus.php" . $query_params);
-=======
             header("Location: html/searchBus.php?" . $query_params);
->>>>>>> 9aa200e923073ad734d3fc4dc3857fe0b8842b2a
             exit();
         }
     }
