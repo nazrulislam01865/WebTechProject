@@ -756,10 +756,8 @@ if ($total_buses > 0) {
 </html> -->
 
 
-
 <?php
 // Start session
-
 
 // Enable error reporting for debugging
 ini_set('display_errors', 1);
@@ -768,9 +766,9 @@ error_reporting(E_ALL);
 
 // Database connection
 $servername = "localhost";
-$username = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$dbname = "gobus";          // Database name from SQL dump
+$username = "root";
+$password = "";
+$dbname = "gobus";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -779,16 +777,21 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Retrieve and sanitize session data
-$search_data = isset($_SESSION['search_data']) ? $_SESSION['search_data'] : [];
-$from = isset($search_data['from']) ? $conn->real_escape_string($search_data['from']) : 'Dhaka';
-$to = isset($search_data['to']) ? $conn->real_escape_string($search_data['to']) : 'Barisal';
-$journey_date = isset($search_data['journey_date']) ? $conn->real_escape_string($search_data['journey_date']) : '2025-08-29';
-$travel_type = isset($search_data['travel_type']) ? $conn->real_escape_string($search_data['travel_type']) : 'One Way';
-$return_date = isset($search_data['return_date']) ? $conn->real_escape_string($search_data['return_date']) : '';
+// Retrieve and sanitize query parameters
+$from = isset($_GET['from']) ? $conn->real_escape_string($_GET['from']) : 'Dhaka';
+$to = isset($_GET['to']) ? $conn->real_escape_string($_GET['to']) : 'Barisal';
+$journey_date = isset($_GET['journey_date']) ? $conn->real_escape_string($_GET['journey_date']) : date('Y-m-d');
+$travel_type = isset($_GET['travel_type']) ? $conn->real_escape_string($_GET['travel_type']) : 'One Way';
+$return_date = isset($_GET['return_date']) ? $conn->real_escape_string($_GET['return_date']) : '';
 
-// Debugging: Log session data
-error_log("Session data: " . print_r($search_data, true));
+// Store search data in session for potential use
+$_SESSION['search_data'] = [
+    'from' => $from,
+    'to' => $to,
+    'journey_date' => $journey_date,
+    'travel_type' => $travel_type,
+    'return_date' => $return_date
+];
 
 // Format journey date for display
 $formatted_journey_date = date('d M Y', strtotime($journey_date));
@@ -810,8 +813,6 @@ if ($total_buses > 0) {
         $total_seats += (int)$row['seats_available'];
     }
     $result->data_seek(0); // Reset result pointer
-} else {
-    echo "<p>Debug: No buses found for $from to $to on $journey_date. Check table data.</p>";
 }
 ?>
 
@@ -821,14 +822,21 @@ if ($total_buses > 0) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>GoBUS|Search Bus</title>
-        <link rel="stylesheet" type="text/css" href="css/searchBus.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/searchBus.css">
     </head>
     <body>
         <header>
             <div class="logo">Go<span id="logo">Bus</span></div>
             <div class="header-right">
                 <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
-                <a href="./html/login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
+                <?php if (isset($_SESSION['user_id']) && isset($_SESSION['username'])): ?>
+                    <a href="#" class="logout-btn" onclick="return confirm('Do you want to log out?') ? window.location.href='logout.php' : false;">
+                        <i class="fa-solid fa-user-circle"></i> <?php echo htmlspecialchars($_SESSION['username']); ?>
+                    </a>
+                <?php else: ?>
+                    <a href="./login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
+                <?php endif; ?>
             </div>
         </header>
 
@@ -836,6 +844,10 @@ if ($total_buses > 0) {
             <div class="search-details">
                 <span>ONWARD</span>
                 <span><?php echo htmlspecialchars("$from To $to On $formatted_journey_date"); ?></span>
+                <?php if ($travel_type === 'Round Way' && $return_date): ?>
+                    <span>RETURN</span>
+                    <span><?php echo htmlspecialchars("$to To $from On " . date('d M Y', strtotime($return_date))); ?></span>
+                <?php endif; ?>
             </div>
             <div class="modify-search">
                 <button onclick="window.location.href='../index.php'">MODIFY SEARCH</button>
@@ -858,8 +870,7 @@ if ($total_buses > 0) {
                         <h3><?php echo htmlspecialchars($row['operator_name']); ?></h3>
                         <h6><?php echo htmlspecialchars($row['bus_number']); ?></h6>
                         <div class="non-ac-bus_couch-type">
-                            <img src="../picture/snowflake.png" alt="Bus Type Icon" style="width: 18px; height: 18px; vertical-align: middle;">
-                            <span><?php echo htmlspecialchars($row['bus_type']); ?></span>
+                            <i class="fa-solid fa-snowflake"></i><span><?php echo htmlspecialchars($row['bus_type']); ?></span>
                         </div>
                         <a href="#">Cancellation policy</a>
                     </div>
@@ -906,7 +917,7 @@ if ($total_buses > 0) {
 
             <div id="seatSelectionContainer" class="seat-selection-container">
                 <div class="seat-legend">
-                    <span class="legend-item booked-m"><img src="../picture/sofa.png" alt="Sofa Icon" style="width: 18px; height: 18px; vertical-align: middle;"> BOOKED</span>
+                    <span class="legend-item booked-m"><i class="fa-solid fa-sofa"></i>BOOKED</span>
                     <span class="legend-item blocked">BLOCKED</span>
                     <span class="legend-item available">AVAILABLE</span>
                     <span class="legend-item selected">SELECTED</span>
