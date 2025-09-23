@@ -1,0 +1,1072 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GoBUS|Search Bus</title>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel = "stylesheet" type="text/css" href="../css/searchBus.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo">Go<span id = "logo">Bus</span></div>
+        
+            <div class="header-right">
+            <a href="tel:xxxxxxxxxxxxx" class="call-btn">Call xxxx</a>
+            <a href="html/login.html" class="login-btn"><i class = "fa-solid fa-user-circle"></i> Login</a>
+            </div>
+        </header>
+
+        <div class="search-info">
+            <div class="search-details">
+                <span>ONWARD</span>
+                <span>Dhaka To Barisal On 29 Aug 2025</span>
+            </div>
+            <div class="modify-search">
+                <button>MODIFY SEARCH</button>
+            </div>
+            <div class="stats">
+                <span>Total Buses Found:</span>
+                <span>Total Operators Found:</span>
+                <span>Total Seats Available:</span>
+            </div>
+        </div>
+
+        <div class = "container">
+            <div class = "bus-details">
+                <li>
+                    <div class = "bus-details-new-left">
+                        <h3>Sakura paribahan</h3>
+                        <h6>102. SBD-BSL (PADMA)*</h6>
+                        <div class = "non-ac-bus_couch-type">
+                            <i class="fa-solid fa-snowflake"></i><span>Non AC</span>
+                        </div>
+                        <a href="#">Cancellation policy</a>
+                    </div>
+                </li>
+                <li>
+                    <div class = "bus-details-new-middle">
+                        <div class = "middle-left">
+                            <h6>Starting</h6>
+                            <h5>5:00 AM</h5>
+                            <h6>Saydabad Terminal -1</h6>
+                        </div>
+
+                        <div class = "middle-middle">
+                            <div class = "bus-image">
+                                <img src="../picture/bus.png">
+                            </div>
+                            <h6 class ="seat-left">Seat left:</h6>
+                        </div>
+
+                        <div class = "middle-right">
+                            <h6>Arrival</h6>
+                            <h5>7:30 AM</h5>
+                            <h6>Barisal Terminal</h6>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class = "bus-details-new-right">
+                        <div class = "no-extra-charge">No Extra Charge</div>
+                        <div class = "price">
+                            <h3>550.00 tk</h3>
+                        </div>
+                        <div class = "view-seat">
+                            <button class="view-seat-btn">View Seat</button>
+                        </div>
+                    </div>
+                </li>
+            </div>
+
+            <div id="seatSelectionContainer" class="seat-selection-container">
+            <div class="seat-legend">
+                <span class="legend-item booked-m"><i class = "fa-solid fa-sofa"></i>BOOKED</span>
+                <span class="legend-item blocked">BLOCKED</span>
+                <span class="legend-item available">AVAILABLE</span>
+                <span class="legend-item selected">SELECTED</span>
+                <span class="legend-item sold-m">SOLD</span>
+            </div>
+            <div class="seat-selection-content">
+                <div class="seat-layout">
+                    # Seat layout will be dynamically generated here
+                </div>
+                <div class="selection-details">
+                    <div class="boarding-dropping">
+                        <div>
+                            <label>BOARDING POINT*</label>
+                            <select>
+                                <option value="05:00 AM">05:00 AM - Saydabad(D)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>DROPPING POINT*</label>
+                            <select>
+                                <option value="select">Select dropping point</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mobile-number">
+                        <label>PHONE NUMBER*</label>
+                        <input type="text" placeholder="Enter phone number">
+                    </div>
+                    <button class="submit-btn">SUBMIT</button>
+                    <p>I have already have a account. <a href="login.html">Login with password</a>.</p>
+                    <p>By logging in you are agreeing to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Notice of GoBUS</a></p>
+                    <div class="seat-info">
+                        <p>SEAT INFORMATION:</p>
+                        <p>Seat Fare: 0 Tk</p>
+                        <p>Service Charge: 0 Tk</p>
+                        <p>PGW Charge: 0 Tk</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class = "bus-details">
+                <li>
+                    <div class = "bus-details-new-left">
+                        <h3>Shyamoli NR Travels</h3>
+                        <h6>6301-Barisal</h6>
+                        <div class = "non-ac-bus_couch-type">
+                            <i class="fa-solid fa-snowflake"></i><span>Non AC</span>
+                        </div>
+                        <a href="#">Cancellation policy</a>
+                    </div>
+                </li>
+                <li>
+                    <div class = "bus-details-new-middle">
+                        <div class = "middle-left">
+                            <h6>Starting</h6>
+                            <h5>6:00 AM</h5>
+                            <h6>Rainkhola Counter</h6>
+                        </div>
+
+                        <div class = "middle-middle">
+                            <div class = "bus-image">
+                                <img src="../picture/bus.png">
+                            </div>
+                            <h6 class ="seat-left">Seat left:</h6>
+                        </div>
+
+                        <div class = "middle-right">
+                            <h6>Arrival</h6>
+                            <h5>11:00 AM</h5>
+                            <h6>Barisal Terminal</h6>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class = "bus-details-new-right">
+                        <div class = "no-extra-charge">No Extra Charge</div>
+                        <div class = "price">
+                            <h3>450.00 tk</h3>
+                        </div>
+                        <div class = "view-seat">
+                            <button  class="view-seat-btn">View Seat</button>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </div>
+
+        <footer>
+            <div class = "footerContainer">
+                <div class = "footerSection">
+                    <h2>GO BUS</h2>
+                    <p>
+                        gobus.com is a premium online booking portal which allows you to purchase ticket 
+                        for various bus booking services locally across the country.
+                    </p>
+                </div>
+
+                <div class = "footerSection">
+                    <h3>About GoBUS</h3>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact Us</a>
+                    <a href="cancelTicket.html">Cancel Ticket</a>
+                </div>
+
+                <div class = "footerSection">
+                    <h3>Company Info</h3>
+                    <a href="">Terms and Condition</a>
+                    <a href="">Privacy Policy</a>
+                </div>
+            </div>
+
+            <div class="footerBottom">
+                Copyright &copy;2025 | All Rights Reserved Designed by <span class = "designer">Group 1</span></p>
+            </div>
+        </footer>
+
+        <script>
+            document.querySelector('.view-seat-btn').addEventListener('click', function() {
+                const seatContainer = document.getElementById('seatSelectionContainer');
+                seatContainer.style.display = seatContainer.style.display === 'block' ? 'none' : 'block';
+
+                // Dynamically generate seat layout (example 5x4 grid)
+                // const seatLayout = document.querySelector('.seat-layout');
+                // seatLayout.innerHTML = '';
+                // for (let i = 0; i < 20; i++) {
+                //     const seat = document.createElement('div');
+                //     seat.classList.add('seat');
+                //     if (i === 5) seat.classList.add('selected');
+                //     else if ([0, 1, 2, 3].includes(i)) seat.classList.add('booked-m');
+                //     else if ([4].includes(i)) seat.classList.add('blocked');
+                //     else if ([6, 7].includes(i)) seat.classList.add('sold-m');
+                //     else seat.classList.add('available');
+                //     seatLayout.appendChild(seat);
+                // }
+            });
+        </script>
+    </body>
+</html> 
+
+ -->
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GoBUS|Search Bus</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/searchBus.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo">Go<span id="logo">Bus</span></div>
+            <div class="header-right">
+                <a href="tel:xxxxxxxxxxxxx" class="call-btn">Call xxxx</a>
+                <a href="html/login.html" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+            </div>
+        </header>
+
+        <div class="search-info">
+            <div class="search-details">
+                <span>ONWARD</span>
+                <span>Dhaka To Barisal On 29 Aug 2025</span>
+            </div>
+            <div class="modify-search">
+                <button>MODIFY SEARCH</button>
+            </div>
+            <div class="stats">
+                <span>Total Buses Found:</span>
+                <span>Total Operators Found:</span>
+                <span>Total Seats Available:</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="bus-details">
+                <li>
+                    <div class="bus-details-new-left">
+                        <h3>Sakura paribahan</h3>
+                        <h6>102. SBD-BSL (PADMA)*</h6>
+                        <div class="non-ac-bus_couch-type">
+                            <i class="fa-solid fa-snowflake"></i><span>Non AC</span>
+                        </div>
+                        <a href="#">Cancellation policy</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="bus-details-new-middle">
+                        <div class="middle-left">
+                            <h6>Starting</h6>
+                            <h5>5:00 AM</h5>
+                            <h6>Saydabad Terminal -1</h6>
+                        </div>
+                        <div class="middle-middle">
+                            <div class="bus-image">
+                                <img src="../picture/bus.png">
+                            </div>
+                            <h6 class="seat-left">Seat left:</h6>
+                        </div>
+                        <div class="middle-right">
+                            <h6>Arrival</h6>
+                            <h5>7:30 AM</h5>
+                            <h6>Barisal Terminal</h6>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="bus-details-new-right">
+                        <div class="no-extra-charge">No Extra Charge</div>
+                        <div class="price">
+                            <h3>550.00 tk</h3>
+                        </div>
+                        <div class="view-seat">
+                            <button class="view-seat-btn">View Seat</button>
+                        </div>
+                    </div>
+                </li>
+            </div>
+
+        
+            <div id="seatSelectionContainer" class="seat-selection-container">
+                <div class="seat-legend">
+                    <span class="legend-item booked-m"><i class="fa-solid fa-sofa"></i>BOOKED</span>
+                    <span class="legend-item blocked">BLOCKED</span>
+                    <span class="legend-item available">AVAILABLE</span>
+                    <span class="legend-item selected">SELECTED</span>
+                    <span class="legend-item sold-m">SOLD</span>
+                </div>
+                <div class="seat-selection-content">
+                    <ul class="seat-layout">
+
+                    </ul>
+                    <div class="selection-details">
+                        <div class="boarding-dropping">
+                            <div>
+                                <label>BOARDING POINT*</label>
+                                <select>
+                                    <option value="05:00 AM">05:00 AM - Saydabad(D)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>DROPPING POINT*</label>
+                                <select>
+                                    <option value="select">Select dropping point</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mobile-number">
+                            <label>PHONE NUMBER*</label>
+                            <input type="text" placeholder="Enter phone number">
+                        </div>
+                        <button class="submit-btn">SUBMIT</button>
+                        <p>I have already have a account. <a href="login.html">Login with password</a>.</p>
+                        <p>By logging in you are agreeing to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Notice of GoBUS</a></p>
+                        <div class="seat-info">
+                            <p>SEAT INFORMATION:</p>
+                            <p>Seat Fare: 0 Tk</p>
+                            <p>Service Charge: 0 Tk</p>
+                            <p>PGW Charge: 0 Tk</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        <footer>
+            <div class="footerContainer">
+                <div class="footerSection">
+                    <h2>GO BUS</h2>
+                    <p>
+                        gobus.com is a premium online booking portal which allows you to purchase ticket 
+                        for various bus booking services locally across the country.
+                    </p>
+                </div>
+
+                <div class="footerSection">
+                    <h3>About GoBUS</h3>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact Us</a>
+                    <a href="cancelTicket.html">Cancel Ticket</a>
+                </div>
+
+                <div class="footerSection">
+                    <h3>Company Info</h3>
+                    <a href="">Terms and Condition</a>
+                    <a href="">Privacy Policy</a>
+                </div>
+            </div>
+
+            <div class="footerBottom">
+                Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group 1</span>
+            </div>
+        </footer>
+
+        <script>
+            document.querySelectorAll('.view-seat-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const seatContainer = document.getElementById('seatSelectionContainer');
+                    const isVisible = seatContainer.style.display === 'block';
+                    seatContainer.style.display = isVisible ? 'none' : 'block';
+
+                    if (!isVisible) {
+                        // Get the price for this bus
+                        const selectedPrice = this.closest('.bus-details').querySelector('.price h3').textContent;
+                        const seatFareP = document.querySelector('.seat-info p:nth-of-type(2)');
+
+                        // Dynamically generate seat layout (10 rows x 4 columns with gap between 2nd and 3rd columns)
+                        const seatLayout = document.querySelector('.seat-layout');
+                        seatLayout.innerHTML = '';
+                        for (let i = 0; i < 40; i++) {
+                            const row = Math.floor(i / 4);
+                            const col = i % 4;
+                            const seat = document.createElement('li');
+                            seat.classList.add('seat');
+
+                            // Adjust column placement to create a gap between 2nd and 3rd columns
+                            let gridCol = col;
+                            if (col >= 2) {
+                                gridCol += 1; // Shift 3rd and 4th columns to account for the gap
+                            }
+                            seat.style.gridRow = row + 1;
+                            seat.style.gridColumn = gridCol + 1;
+
+                            // Assign seat status classes
+                            if (i === 5) {
+                                seat.classList.add('selected');
+                            } else if ([0, 1, 2, 3].includes(i)) {
+                                seat.classList.add('booked-m');
+                            } else if ([4].includes(i)) {
+                                seat.classList.add('blocked');
+                            } else if ([6, 7].includes(i)) {
+                                seat.classList.add('sold-m');
+                            } else if ([8].includes(i)) {
+                                seat.classList.add('sold-f');
+                            } else {
+                                seat.classList.add('available');
+                            }
+
+                            seatLayout.appendChild(seat);
+                        }
+
+
+                        const allSeats = seatLayout.querySelectorAll('.seat');
+                        allSeats.forEach(seat => {
+                            seat.addEventListener('click', function() {
+                                if (this.classList.contains('available') || this.classList.contains('selected')) {
+                                    if (this.classList.contains('selected')) {
+                                        // Deselect
+                                        this.classList.remove('selected');
+                                        this.classList.add('available');
+                                        seatFareP.textContent = 'Seat Fare: 0 Tk';
+                                    } else {
+                                        // Select this seat, deselect others
+                                        document.querySelectorAll('.seat.selected').forEach(s => {
+                                            s.classList.remove('selected');
+                                            s.classList.add('available');
+                                        });
+                                        this.classList.remove('available');
+                                        this.classList.add('selected');
+                                        seatFareP.textContent = `Seat Fare: ${selectedPrice}`;
+                                    }
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        </script>
+    </body>
+</html> -->
+
+<!-- 
+
+<?php
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Database connection
+$servername = "localhost";
+$username = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$dbname = "gobus";          // Database name from SQL dump
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch buses from database for Dhaka to Barisal on 2025-08-29
+$sql = "SELECT * FROM buses WHERE starting_point = 'Rainkhola Counter' AND destination = 'Barisal Terminal' AND journey_date = '2025-08-29'";
+$result = $conn->query($sql);
+
+// Check if query executed successfully
+if (!$result) {
+    die("Query failed: " . $conn->error);
+}
+
+$total_buses = $result->num_rows;
+$total_operators = $conn->query("SELECT COUNT(DISTINCT operator_name) as count FROM buses WHERE starting_point = 'Dhaka' AND destination = 'Barisal' AND journey_date = '2025-08-29'")->fetch_assoc()['count'];
+$total_seats = 0;
+if ($total_buses > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $total_seats += (int)$row['seats_available'];
+    }
+    $result->data_seek(0); // Reset result pointer
+} else {
+    echo "<p>Debug: No buses found for Dhaka to Barisal on 2025-08-29. Check table data.</p>";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GoBUS|Search Bus</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/searchBus.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo">Go<span id="logo">Bus</span></div>
+            <div class="header-right">
+                <a href="tel:xxxxxxxxxxxxx" class="call-btn">Call xxxx</a>
+                <a href="login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+            </div>
+        </header>
+
+        <div class="search-info">
+            <div class="search-details">
+                <span>ONWARD</span>
+                <span>Dhaka To Barisal On 29 Aug 2025</span>
+            </div>
+            <div class="modify-search">
+                <button>MODIFY SEARCH</button>
+            </div>
+            <div class="stats">
+                <span>Total Buses Found: <?php echo $total_buses; ?></span>
+                <span>Total Operators Found: <?php echo $total_operators; ?></span>
+                <span>Total Seats Available: <?php echo $total_seats; ?></span>
+            </div>
+        </div>
+
+        <div class="container">
+            <?php
+            if ($total_buses > 0) {
+                while ($row = $result->fetch_assoc()) {
+            ?>
+            <div class="bus-details">
+                <li>
+                    <div class="bus-details-new-left">
+                        <h3><?php echo htmlspecialchars($row['operator_name']); ?></h3>
+                        <h6><?php echo htmlspecialchars($row['bus_number']); ?></h6>
+                        <div class="non-ac-bus_couch-type">
+                            <i class="fa-solid fa-snowflake"></i><span><?php echo htmlspecialchars($row['bus_type']); ?></span>
+                        </div>
+                        <a href="#">Cancellation policy</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="bus-details-new-middle">
+                        <div class="middle-left">
+                            <h6>Starting</h6>
+                            <h5><?php echo htmlspecialchars(date('h:i A', strtotime($row['starting_time']))); ?></h5>
+                            <h6><?php echo htmlspecialchars($row['starting_point']); ?></h6>
+                        </div>
+                        <div class="middle-middle">
+                            <div class="bus-image">
+                                <img src="../picture/bus.png" alt="Bus Image">
+                            </div>
+                            <h6 class="seat-left">Seat left: <?php echo htmlspecialchars($row['seats_available']); ?></h6>
+                        </div>
+                        <div class="middle-right">
+                            <h6>Arrival</h6>
+                            <h5><?php echo htmlspecialchars(date('h:i A', strtotime($row['arrival_time']))); ?></h5>
+                            <h6><?php echo htmlspecialchars($row['destination']); ?></h6>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="bus-details-new-right">
+                        <div class="no-extra-charge">No Extra Charge</div>
+                        <div class="price">
+                            <h3><?php echo number_format($row['fare'], 2); ?> tk</h3>
+                        </div>
+                        <div class="view-seat">
+                            <button class="view-seat-btn">View Seat</button>
+                        </div>
+                    </div>
+                </li>
+            </div>
+            <?php
+                }
+            } else {
+                echo '<p>No buses found for the selected route.</p>';
+            }
+            $conn->close();
+            ?>
+
+            <div id="seatSelectionContainer" class="seat-selection-container">
+                <div class="seat-legend">
+                    <span class="legend-item booked-m"><i class="fa-solid fa-sofa"></i>BOOKED</span>
+                    <span class="legend-item blocked">BLOCKED</span>
+                    <span class="legend-item available">AVAILABLE</span>
+                    <span class="legend-item selected">SELECTED</span>
+                    <span class="legend-item sold-m">SOLD</span>
+                </div>
+                <div class="seat-selection-content">
+                    <ul class="seat-layout">
+
+                    </ul>
+                    <div class="selection-details">
+                        <div class="boarding-dropping">
+                            <div>
+                                <label>BOARDING POINT*</label>
+                                <select>
+                                    <?php
+                                    // Reopen connection to fetch boarding points
+                                    $conn = new mysqli($servername, $username, $password, $dbname);
+                                    if ($conn->connect_error) {
+                                        die("Connection failed: " . $conn->connect_error);
+                                    }
+                                    $sql_boarding = "SELECT DISTINCT starting_point, starting_time FROM buses WHERE starting_point = 'Dhaka' AND destination = 'Barisal' AND journey_date = '2025-08-29'";
+                                    $result_boarding = $conn->query($sql_boarding);
+                                    if ($result_boarding->num_rows > 0) {
+                                        while ($row_boarding = $result_boarding->fetch_assoc()) {
+                                            echo '<option value="' . htmlspecialchars(date('h:i A', strtotime($row_boarding['starting_time']))) . '">' . htmlspecialchars(date('h:i A', strtotime($row_boarding['starting_time']))) . ' - ' . htmlspecialchars($row_boarding['starting_point']) . '</option>';
+                                        }
+                                    }
+                                    $conn->close();
+                                    ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label>DROPPING POINT*</label>
+                                <select>
+                                    <option value="select">Select dropping point</option>
+                                    <option value="Barisal Terminal">Barisal Terminal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mobile-number">
+                            <label>PHONE NUMBER*</label>
+                            <input type="text" placeholder="Enter phone number">
+                        </div>
+                        <button class="submit-btn">SUBMIT</button>
+                        <p>I have already have an account. <a href="login.php">Login with password</a>.</p>
+                        <p>By logging in you are agreeing to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Notice of GoBUS</a></p>
+                        <div class="seat-info">
+                            <p>SEAT INFORMATION:</p>
+                            <p>Seat Fare: 0 Tk</p>
+                            <p>Service Charge: 0 Tk</p>
+                            <p>PGW Charge: 0 Tk</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footerContainer">
+                <div class="footerSection">
+                    <h2>GO BUS</h2>
+                    <p>
+                        gobus.com is a premium online booking portal which allows you to purchase ticket 
+                        for various bus booking services locally across the country.
+                    </p>
+                </div>
+
+                <div class="footerSection">
+                    <h3>About GoBUS</h3>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact Us</a>
+                    <a href="cancelTicket.php">Cancel Ticket</a>
+                </div>
+
+                <div class="footerSection">
+                    <h3>Company Info</h3>
+                    <a href="#">Terms and Condition</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+
+            <div class="footerBottom">
+                Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group 1</span>
+            </div>
+        </footer>
+
+        <script>
+            document.querySelectorAll('.view-seat-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const seatContainer = document.getElementById('seatSelectionContainer');
+                    const isVisible = seatContainer.style.display === 'block';
+                    seatContainer.style.display = isVisible ? 'none' : 'block';
+
+                    if (!isVisible) {
+                        // Get the price for this bus
+                        const selectedPrice = this.closest('.bus-details').querySelector('.price h3').textContent;
+                        const seatFareP = document.querySelector('.seat-info p:nth-of-type(2)');
+
+                        // Dynamically generate seat layout (10 rows x 4 columns with gap between 2nd and 3rd columns)
+                        const seatLayout = document.querySelector('.seat-layout');
+                        seatLayout.innerHTML = '';
+                        for (let i = 0; i < 40; i++) {
+                            const row = Math.floor(i / 4);
+                            const col = i % 4;
+                            const seat = document.createElement('li');
+                            seat.classList.add('seat');
+
+                            // Adjust column placement to create a gap between 2nd and 3rd columns
+                            let gridCol = col;
+                            if (col >= 2) {
+                                gridCol += 1; // Shift 3rd and 4th columns to account for the gap
+                            }
+                            seat.style.gridRow = row + 1;
+                            seat.style.gridColumn = gridCol + 1;
+
+                            // Assign seat status classes
+                            if (i === 5) {
+                                seat.classList.add('selected');
+                            } else if ([0, 1, 2, 3].includes(i)) {
+                                seat.classList.add('booked-m');
+                            } else if ([4].includes(i)) {
+                                seat.classList.add('blocked');
+                            } else if ([6, 7].includes(i)) {
+                                seat.classList.add('sold-m');
+                            } else if ([8].includes(i)) {
+                                seat.classList.add('sold-f');
+                            } else {
+                                seat.classList.add('available');
+                            }
+
+                            seatLayout.appendChild(seat);
+                        }
+
+                        const allSeats = seatLayout.querySelectorAll('.seat');
+                        allSeats.forEach(seat => {
+                            seat.addEventListener('click', function() {
+                                if (this.classList.contains('available') || this.classList.contains('selected')) {
+                                    if (this.classList.contains('selected')) {
+                                        // Deselect
+                                        this.classList.remove('selected');
+                                        this.classList.add('available');
+                                        seatFareP.textContent = 'Seat Fare: 0 Tk';
+                                    } else {
+                                        // Select this seat, deselect others
+                                        document.querySelectorAll('.seat.selected').forEach(s => {
+                                            s.classList.remove('selected');
+                                            s.classList.add('available');
+                                        });
+                                        this.classList.remove('available');
+                                        this.classList.add('selected');
+                                        seatFareP.textContent = `Seat Fare: ${selectedPrice}`;
+                                    }
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        </script>
+    </body>
+</html> -->
+
+
+
+<?php
+// Start session
+
+
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Database connection
+$servername = "localhost";
+$username = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$dbname = "gobus";          // Database name from SQL dump
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Retrieve and sanitize session data
+$search_data = isset($_SESSION['search_data']) ? $_SESSION['search_data'] : [];
+$from = isset($search_data['from']) ? $conn->real_escape_string($search_data['from']) : 'Dhaka';
+$to = isset($search_data['to']) ? $conn->real_escape_string($search_data['to']) : 'Barisal';
+$journey_date = isset($search_data['journey_date']) ? $conn->real_escape_string($search_data['journey_date']) : '2025-08-29';
+$travel_type = isset($search_data['travel_type']) ? $conn->real_escape_string($search_data['travel_type']) : 'One Way';
+$return_date = isset($search_data['return_date']) ? $conn->real_escape_string($search_data['return_date']) : '';
+
+// Debugging: Log session data
+error_log("Session data: " . print_r($search_data, true));
+
+// Format journey date for display
+$formatted_journey_date = date('d M Y', strtotime($journey_date));
+
+// Fetch buses from database
+$sql = "SELECT * FROM buses WHERE starting_point = '$from' AND destination = '$to' AND journey_date = '$journey_date'";
+$result = $conn->query($sql);
+
+// Check if query executed successfully
+if (!$result) {
+    die("Query failed: " . $conn->error);
+}
+
+$total_buses = $result->num_rows;
+$total_operators = $conn->query("SELECT COUNT(DISTINCT operator_name) as count FROM buses WHERE starting_point = '$from' AND destination = '$to' AND journey_date = '$journey_date'")->fetch_assoc()['count'];
+$total_seats = 0;
+if ($total_buses > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $total_seats += (int)$row['seats_available'];
+    }
+    $result->data_seek(0); // Reset result pointer
+} else {
+    echo "<p>Debug: No buses found for $from to $to on $journey_date. Check table data.</p>";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GoBUS|Search Bus</title>
+        <link rel="stylesheet" type="text/css" href="css/searchBus.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo">Go<span id="logo">Bus</span></div>
+            <div class="header-right">
+                <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
+                <a href="./html/login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
+            </div>
+        </header>
+
+        <div class="search-info">
+            <div class="search-details">
+                <span>ONWARD</span>
+                <span><?php echo htmlspecialchars("$from To $to On $formatted_journey_date"); ?></span>
+            </div>
+            <div class="modify-search">
+                <button onclick="window.location.href='../index.php'">MODIFY SEARCH</button>
+            </div>
+            <div class="stats">
+                <span>Total Buses Found: <?php echo $total_buses; ?></span>
+                <span>Total Operators Found: <?php echo $total_operators; ?></span>
+                <span>Total Seats Available: <?php echo $total_seats; ?></span>
+            </div>
+        </div>
+
+        <div class="container">
+            <?php
+            if ($total_buses > 0) {
+                while ($row = $result->fetch_assoc()) {
+            ?>
+            <div class="bus-details">
+                <li>
+                    <div class="bus-details-new-left">
+                        <h3><?php echo htmlspecialchars($row['operator_name']); ?></h3>
+                        <h6><?php echo htmlspecialchars($row['bus_number']); ?></h6>
+                        <div class="non-ac-bus_couch-type">
+                            <img src="../picture/snowflake.png" alt="Bus Type Icon" style="width: 18px; height: 18px; vertical-align: middle;">
+                            <span><?php echo htmlspecialchars($row['bus_type']); ?></span>
+                        </div>
+                        <a href="#">Cancellation policy</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="bus-details-new-middle">
+                        <div class="middle-left">
+                            <h6>Starting</h6>
+                            <h5><?php echo htmlspecialchars(date('h:i A', strtotime($row['starting_time']))); ?></h5>
+                            <h6><?php echo htmlspecialchars($row['starting_point']); ?></h6>
+                        </div>
+                        <div class="middle-middle">
+                            <div class="bus-image">
+                                <img src="../picture/bus.png" alt="Bus Image">
+                            </div>
+                            <h6 class="seat-left">Seat left: <?php echo htmlspecialchars($row['seats_available']); ?></h6>
+                        </div>
+                        <div class="middle-right">
+                            <h6>Arrival</h6>
+                            <h5><?php echo htmlspecialchars(date('h:i A', strtotime($row['arrival_time']))); ?></h5>
+                            <h6><?php echo htmlspecialchars($row['destination']); ?></h6>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="bus-details-new-right">
+                        <div class="no-extra-charge">No Extra Charge</div>
+                        <div class="price">
+                            <h3><?php echo number_format($row['fare'], 2); ?> tk</h3>
+                        </div>
+                        <div class="view-seat">
+                            <button class="view-seat-btn">View Seat</button>
+                        </div>
+                    </div>
+                </li>
+            </div>
+            <?php
+                }
+            } else {
+                echo '<p>No buses found for the selected route.</p>';
+            }
+            $conn->close();
+            ?>
+
+            <div id="seatSelectionContainer" class="seat-selection-container">
+                <div class="seat-legend">
+                    <span class="legend-item booked-m"><img src="../picture/sofa.png" alt="Sofa Icon" style="width: 18px; height: 18px; vertical-align: middle;"> BOOKED</span>
+                    <span class="legend-item blocked">BLOCKED</span>
+                    <span class="legend-item available">AVAILABLE</span>
+                    <span class="legend-item selected">SELECTED</span>
+                    <span class="legend-item sold-m">SOLD</span>
+                </div>
+                <div class="seat-selection-content">
+                    <ul class="seat-layout">
+                        <!-- Seat layout will be dynamically generated here -->
+                    </ul>
+                    <div class="selection-details">
+                        <div class="boarding-dropping">
+                            <div>
+                                <label>BOARDING POINT*</label>
+                                <select>
+                                    <?php
+                                    // Reopen connection to fetch boarding points
+                                    $conn = new mysqli($servername, $username, $password, $dbname);
+                                    if ($conn->connect_error) {
+                                        die("Connection failed: " . $conn->connect_error);
+                                    }
+                                    $sql_boarding = "SELECT DISTINCT starting_point, starting_time FROM buses WHERE starting_point = '$from' AND destination = '$to' AND journey_date = '$journey_date'";
+                                    $result_boarding = $conn->query($sql_boarding);
+                                    if ($result_boarding->num_rows > 0) {
+                                        while ($row_boarding = $result_boarding->fetch_assoc()) {
+                                            echo '<option value="' . htmlspecialchars(date('h:i A', strtotime($row_boarding['starting_time']))) . '">' . htmlspecialchars(date('h:i A', strtotime($row_boarding['starting_time']))) . ' - ' . htmlspecialchars($row_boarding['starting_point']) . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="">No boarding points available</option>';
+                                    }
+                                    $conn->close();
+                                    ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label>DROPPING POINT*</label>
+                                <select>
+                                    <option value="select">Select dropping point</option>
+                                    <option value="<?php echo htmlspecialchars($to); ?>"><?php echo htmlspecialchars($to); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mobile-number">
+                            <label>PHONE NUMBER*</label>
+                            <input type="text" placeholder="Enter phone number">
+                        </div>
+                        <button class="submit-btn">SUBMIT</button>
+                        <p>I have already have an account. <a href="login.php">Login with password</a>.</p>
+                        <p>By logging in you are agreeing to the <a href="terms.php">Terms & Conditions</a> and <a href="../privacy.php">Privacy Notice of GoBUS</a></p>
+                        <div class="seat-info">
+                            <p>SEAT INFORMATION:</p>
+                            <p>Seat Fare: 0 Tk</p>
+                            <p>Service Charge: 0 Tk</p>
+                            <p>PGW Charge: 0 Tk</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footerContainer">
+                <div class="footerSection">
+                    <h2>GO BUS</h2>
+                    <p>
+                        gobus.com is a premium online booking portal which allows you to purchase ticket 
+                        for various bus booking services locally across the country.
+                    </p>
+                </div>
+
+                <div class="footerSection">
+                    <h3>About GoBUS</h3>
+                    <a href="../aboutUs.php">About Us</a>
+                    <a href="../contact.php">Contact Us</a>
+                    <a href="../cancelTicket.php">Cancel Ticket</a>
+                </div>
+
+                <div class="footerSection">
+                    <h3>Company Info</h3>
+                    <a href="terms.php">Terms and Condition</a>
+                    <a href="../privacy.php">Privacy Policy</a>
+                </div>
+            </div>
+
+            <div class="footerBottom">
+                Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group 1</span>
+            </div>
+        </footer>
+
+        <script>
+            document.querySelectorAll('.view-seat-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const seatContainer = document.getElementById('seatSelectionContainer');
+                    const isVisible = seatContainer.style.display === 'block';
+                    seatContainer.style.display = isVisible ? 'none' : 'block';
+
+                    if (!isVisible) {
+                        // Get the price for this bus
+                        const selectedPrice = this.closest('.bus-details').querySelector('.price h3').textContent;
+                        const seatFareP = document.querySelector('.seat-info p:nth-of-type(2)');
+
+                        // Dynamically generate seat layout (10 rows x 4 columns with gap between 2nd and 3rd columns)
+                        const seatLayout = document.querySelector('.seat-layout');
+                        seatLayout.innerHTML = '';
+                        for (let i = 0; i < 40; i++) {
+                            const row = Math.floor(i / 4);
+                            const col = i % 4;
+                            const seat = document.createElement('li');
+                            seat.classList.add('seat');
+
+                            // Adjust column placement to create a gap between 2nd and 3rd columns
+                            let gridCol = col;
+                            if (col >= 2) {
+                                gridCol += 1; // Shift 3rd and 4th columns to account for the gap
+                            }
+                            seat.style.gridRow = row + 1;
+                            seat.style.gridColumn = gridCol + 1;
+
+                            // Assign seat status classes
+                            if (i === 5) {
+                                seat.classList.add('selected');
+                            } else if ([0, 1, 2, 3].includes(i)) {
+                                seat.classList.add('booked-m');
+                            } else if ([4].includes(i)) {
+                                seat.classList.add('blocked');
+                            } else if ([6, 7].includes(i)) {
+                                seat.classList.add('sold-m');
+                            } else if ([8].includes(i)) {
+                                seat.classList.add('sold-f');
+                            } else {
+                                seat.classList.add('available');
+                            }
+
+                            seatLayout.appendChild(seat);
+                        }
+
+                        const allSeats = seatLayout.querySelectorAll('.seat');
+                        allSeats.forEach(seat => {
+                            seat.addEventListener('click', function() {
+                                if (this.classList.contains('available') || this.classList.contains('selected')) {
+                                    if (this.classList.contains('selected')) {
+                                        // Deselect
+                                        this.classList.remove('selected');
+                                        this.classList.add('available');
+                                        seatFareP.textContent = 'Seat Fare: 0 Tk';
+                                    } else {
+                                        // Select this seat, deselect others
+                                        document.querySelectorAll('.seat.selected').forEach(s => {
+                                            s.classList.remove('selected');
+                                            s.classList.add('available');
+                                        });
+                                        this.classList.remove('available');
+                                        this.classList.add('selected');
+                                        seatFareP.textContent = `Seat Fare: ${selectedPrice}`;
+                                    }
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
