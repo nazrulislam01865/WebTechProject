@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBus - Bus Company Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../css/styles11.css">
@@ -19,11 +18,21 @@
 
         </div>
         <div class="nav-links">
-            <div class="nav-item active" data-tab="dashboard"><i class="fas fa-home"></i><span>Dashboard</span></div>
-            <div class="nav-item" data-tab="passengers"><i class="fas fa-users"></i><span>Passenger List</span></div>
-            <div class="nav-item" data-tab="revenue"><i class="fas fa-chart-line"></i><span>Revenue Report</span></div>
-            <div class="nav-item" data-tab="drivers"><i class="fas fa-id-card"></i><span>Assign Drivers</span></div>
-            <div class="nav-item" data-tab="trips"><i class="fas fa-bus"></i><span>Cancel Trip</span></div>
+            <div class="nav-item active" data-tab="dashboard"><img src="../picture/home.png" alt="Home Icon"
+                    style="width: 18px; height: 18px; margin-right: 10px; vertical-align: middle;"><span>Dashboard</span>
+            </div>
+            <div class="nav-item" data-tab="passengers"><img src="../picture/user_group.png" alt="User List Icon"
+                    style="width: 18px; height: 18px; margin-right: 10px; vertical-align: middle;"><span>Passenger
+                    List</span></div>
+            <div class="nav-item" data-tab="revenue"><img src="../picture/chart.png" alt="Chart Icon"
+                    style="width: 18px; height: 18px; margin-right: 10px; vertical-align: middle;"><span>Revenue
+                    Report</span></div>
+            <div class="nav-item" data-tab="drivers"><img src="../picture/driver.png" alt="License Icon"
+                    style="width: 18px; height: 18px; margin-right: 10px; vertical-align: middle;"><span>Assign
+                    Drivers</span></div>
+            <div class="nav-item" data-tab="trips"><img src="../picture/busCancel.png" alt="Cancel Bus Icon"
+                    style="width: 18px; height: 18px; margin-right: 10px; vertical-align: middle;"><span>Cancel
+                    Trip</span></div>
         </div>
     </div>
 
@@ -70,31 +79,40 @@
                 <div class="card stat-card">
                     <div class="label">Today's Trips</div>
                     <div class="value" id="today-trips">--</div>
-                    <div class="icon"><i class="fas fa-route"></i></div>
+                    <div class="icon"><img src="../picture/path.png" alt="Money Icon"
+                            style="width: 35px; height: 35px; vertical-align: middle;"></div>
                 </div>
                 <div class="card stat-card">
                     <div class="label">Total Revenue</div>
                     <div class="value" id="total-revenue">--</div>
-                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="icon"><img src="../picture/taka.png" alt="Money Icon"
+                            style="width: 24px; height: 24px; vertical-align: middle;"></div>
                 </div>
             </div>
 
             <div class="add-trip-form">
                 <h3>Add New Trip</h3>
                 <form id="tripForm">
-
-                    <input type="text" id="trip-from" placeholder="From" required>
                     <label>Starting:</label>
+                    <input type="text" id="trip-from" placeholder="From">
                     <input type="time" id="search-starting time" placeholder="From">
 
-                    <input type="date" id="trip-date" required>
                 </form>
                 <form id="trip-from">
+                    <label>Arrival:</label>
                     <input type="text" id="trip-to" placeholder="To" required>
-                    <label>Arival:</label>
                     <input type="time" id="search-Arival time">
-                    <button type="submit">Add Trip</button>
                 </form>
+
+                <div class="bus-type-group">
+                    <input type="date" id="trip-date">
+                    <div class="bus-options">
+                        <label class="bus-type-label">Bus Type:</label>
+                        <input type="radio" id="ac" name="bus-type" value="AC">AC
+                        <input type="radio" id="non-ac" name="bus-type" value="Non-AC">Non-AC
+                    </div>
+                </div>
+                <button type="submit" class="add-trip-btn">Add Trip</button>
 
             </div>
 

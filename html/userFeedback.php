@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBus|User Feedback</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../css/userFeedback.css">
 </head>
 <body>
@@ -96,7 +95,7 @@
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
             <a href="#" class="logout-btn" onclick="return confirm('Do you want to log out?') ? window.location.href='logout.php' : false;">
-                <i class="fa-solid fa-user-circle"></i> <?php echo $username; ?>
+            <img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"><?php echo $username; ?>
             </a>
         </div>
     </header>

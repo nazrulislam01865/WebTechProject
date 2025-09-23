@@ -622,3 +622,18 @@ select {
     border: none;
     border-top: 1px solid #e2e8f0;
 }
+
+.add-trip-form .bus-type-group {
+    grid-column: 1 / -1;   /* full width */
+    display: flex;
+    align-items: center;
+    gap: 260px;  /* controls space between date and bus options */
+    margin-top: 10px;
+}
+
+.add-trip-form .bus-options {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* space between AC and Non-AC */
+    margin-right: 15px;
+}
