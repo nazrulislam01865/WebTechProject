@@ -120,6 +120,22 @@ a{
     border-collapse: collapse;
 }
 
+
+/* In ../css/userDashboard.css */
+.home-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.home-btn:hover {
+    background-color: #0056b3;
+}
+
 .booking-table td {
     border: 1px solid #ddd;
     padding: 12px;

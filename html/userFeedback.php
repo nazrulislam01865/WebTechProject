@@ -105,6 +105,7 @@
             <li><a href="userDashboard.php" class="sidebar-link">Booking Details</a></li>
             <li><a href="userFeedback.php" class="sidebar-link active">Share Feedback</a></li>
             <li><a href="userAccountSettings.php" class="sidebar-link">Account Settings</a></li>
+            <li><a href="../index.php" class="sidebar-link">Search Bus</a></li>
         </ul>
     </nav>
 

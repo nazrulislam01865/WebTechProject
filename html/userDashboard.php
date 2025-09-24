@@ -65,9 +65,11 @@ try {
 
     <nav class="sidebar">
         <ul>
+            
             <li><a href="userDashboard.php" class="sidebar-link active">Booking Details</a></li>
             <li><a href="userFeedback.php" class="sidebar-link">Share Feedback</a></li>
             <li><a href="userAccountSettings.php" class="sidebar-link">Account Settings</a></li>
+            <li><a href="../index.php" class="sidebar-link">Search Bus</a></li>
         </ul>
     </nav>
 
@@ -127,15 +129,15 @@ try {
 
             <div class="footerSection">
                 <h3>About GoBUS</h3>
-                <a href="#">About Us</a>
-                <a href="#">Contact Us</a>
+                <a href="aboutUs.php">About Us</a>
+                <a href="contact.php">Contact Us</a>
                 <a href="cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="#">Terms and Condition</a>
-                <a href="#">Privacy Policy</a>
+                <a href="terms.php">Terms and Condition</a>
+                <a href="privacy.php">Privacy Policy</a>
             </div>
         </div>
 
