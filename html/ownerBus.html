@@ -92,27 +92,50 @@
 
             <div class="add-trip-form">
                 <h3>Add New Trip</h3>
-                <form id="tripForm">
-                    <label>Starting:</label>
-                    <input type="text" id="trip-from" placeholder="From">
-                    <input type="time" id="search-starting time" placeholder="From">
-
-                </form>
-                <form id="trip-from">
-                    <label>Arrival:</label>
-                    <input type="text" id="trip-to" placeholder="To" required>
-                    <input type="time" id="search-Arival time">
-                </form>
-
-                <div class="bus-type-group">
-                    <input type="date" id="trip-date">
-                    <div class="bus-options">
-                        <label class="bus-type-label">Bus Type:</label>
-                        <input type="radio" id="ac" name="bus-type" value="AC">AC
-                        <input type="radio" id="non-ac" name="bus-type" value="Non-AC">Non-AC
+                <form id="trip">
+                    <div class="form-group">
+                        <label for="trip-from">Starting:</label>
+                        <input type="text" id="trip-from" name="trip-from" placeholder="From">
                     </div>
-                </div>
-                <button type="submit" class="add-trip-btn">Add Trip</button>
+                    <div class="form-group">
+                        <label for="starting-time">Starting Time:</label>
+                        <input type="time" id="starting-time" name="starting-time" placeholder="From">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trip-to">Arrival:</label>
+                        <input type="text" id="trip-to" name="trip-to" placeholder="To">
+                    </div>
+                    <div class="form-group">
+                        <label for="arrival-time">Arrival Time:</label>
+                        <input type="time" id="arrival-time" name="arrival-time" placeholder="To">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trip-date">Date:</label>
+                        <input type="date" id="trip-date" name="trip-date">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bus-type">Bus Type:</label>
+                        <div class="bus-options">
+                            <input type="radio" id="ac" name="bus-type" value="AC"><label for="ac">AC</label>
+                            <input type="radio" id="non-ac" name="bus-type" value="Non-AC"><label for="non-ac">Non-AC</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seat-number">Number of Seats:</label>
+                        <input type="text" id="seat-number" name="seat-number" placeholder="Enter Number of Seats">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fare">Fare (Tk):</label>
+                        <input type="text" id="fare" name="fare" placeholder="Enter Fare">
+                    </div>
+
+                    <button type="submit" class="add-trip-btn">Add Trip</button>
+                </form>
 
             </div>
 
@@ -185,17 +208,15 @@
             <div class="add-trip-form">
                 <h3>Cancel Trip</h3>
                 <form id="searchTripForm">
-                    <input type="text" id="search-from" placeholder="From">
-                    <label>Starting:</label>
-                    <input type="time" id="search-starting time" placeholder="From">
-                    <input type="date" id="search-date">
-
-                </form>
-                <form id="searchTripForm">
-                    <input type="text" id="search-to" placeholder="To">
-                    <label>Arival:</label>
-                    <input type="time" id="search-Arival time">
-                    <button type="submit">Search Trip</button>
+                    <div class="form-group">
+                        <label for="bus-number">Bus Number:</label>
+                        <input type="text" id="bus-number" name="bus-number" placeholder="Enter Bus Number">
+                    </div>
+                    <div class="form-group">
+                         <label for="search-date">Date:</label>
+                        <input type="date" id="search-date" name="search-date">
+                    </div>
+                    <button type="submit" class="cancel-btn">Cancel Trip</button>
                 </form>
 
                 <div class="trip-list" id="trip-list">

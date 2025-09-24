@@ -329,9 +329,27 @@ select {
 
 .add-trip-form form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     align-items: center;
+}
+
+.add-trip-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap:3px;
+}
+
+.add-trip-form .form-group .bus-options{
+    display: flex;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.add-trip-form input[type="radio"]{
+    width: 12px;
+    height: 12px;
+    margin-top: 5px;
 }
 
 .add-trip-form input,
@@ -342,17 +360,23 @@ select {
     border: 1px solid #cbd5e1;
 }
 
+/* Button spans full width */
 .add-trip-form button {
+    grid-column: 1 / -1;
+    padding: 12px;
     background-color: var(--primary);
     color: white;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
     transition: all 0.3s ease;
 }
 
 .add-trip-form button:hover {
     background-color: var(--primary-dark);
-}
+} */
+
 
 /* Passenger Search Form Styles (Dynamic) */
 .passenger-search-form {
@@ -623,17 +647,3 @@ select {
     border-top: 1px solid #e2e8f0;
 }
 
-.add-trip-form .bus-type-group {
-    grid-column: 1 / -1;   /* full width */
-    display: flex;
-    align-items: center;
-    gap: 260px;  /* controls space between date and bus options */
-    margin-top: 10px;
-}
-
-.add-trip-form .bus-options {
-    display: flex;
-    align-items: center;
-    gap: 30px; /* space between AC and Non-AC */
-    margin-right: 15px;
-}
