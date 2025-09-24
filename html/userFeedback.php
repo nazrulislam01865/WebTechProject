@@ -106,6 +106,7 @@
             <li><a href="userFeedback.php" class="sidebar-link active">Share Feedback</a></li>
             <li><a href="userAccountSettings.php" class="sidebar-link">Account Settings</a></li>
             <li><a href="../index.php" class="sidebar-link">Search Bus</a></li>
+            <li><a href="./userComplaint.php" class="sidebar-link">Complain</a></li>
         </ul>
     </nav>
 
