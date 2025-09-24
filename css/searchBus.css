@@ -646,14 +646,28 @@ header {
 
 /* ... (keep all existing CSS rules above this point) ... */
 
+.seat-selection-container {
+    display: none; 
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.seat-legend {
+    margin-bottom: 10px;
+}
+
+.seat-legend .legend-item {
+    margin-right: 15px;
+    font-size: 14px;
+}
+
 .seat-layout {
     display: grid;
-    grid-template-columns: 40px 40px 50px 40px; /* 2 seats, 50px gap, 2 seats */
-    grid-template-rows: repeat(10, 40px); /* 10 rows */
-    gap: 5px;
-    padding: 20px;
-    list-style: none;
-    margin: 0;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns to create gap */
+    gap: 10px;
+    padding: 10px;
 }
 
 .seat {
@@ -664,14 +678,16 @@ header {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    background-color: #fff;
 }
 
-.seat.booked-m { background-color: #800080; }
-.seat.booked-f { background-color: #800080; }
-.seat.blocked { background-color: #000; }
-.seat.available { background-color: #90ee90; }
-.seat.selected { background-color: #adff2f; }
-.seat.sold-m { background-color: #ff4500; }
+.seat.booked-m { background-color: #ff5555; color: #fff; }
+.seat.blocked { background-color: #cccccc; }
+.seat.available { background-color: #55ff55; }
+.seat.selected { background-color: #5555ff; color: #fff; }
+.seat.sold-m { background-color: #ffaa00; }
 .seat.sold-f { background-color: #ff69b4; }
 
 /* ... (keep all existing CSS rules below this point) ... */
@@ -729,7 +745,7 @@ footer {
     color: rgb(92, 115, 225);
 }
 
-.seat-selection-container {
+/* .seat-selection-container {
     display: none;
     max-width: 600px;
     margin: 20px auto;
@@ -751,7 +767,7 @@ footer {
     padding: 5px 10px;
     border-radius: 3px;
     font-size: 12px;
-}
+} */
 
 .booked-m { background-color: #800080; color: #fff; }
 .booked-f { background-color: #800080; color: #fff; }

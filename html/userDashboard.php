@@ -51,7 +51,6 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBus|User Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../css/userDashboard.css">
 </head>
 <body>
@@ -59,16 +58,18 @@ try {
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
             <a href="#" class="logout-btn" onclick="return confirm('Do you want to log out?') ? window.location.href='logout.php' : false;">
-                <i class="fa-solid fa-user-circle"></i> <?php echo $username; ?>
+                <img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> <?php echo $username; ?>
             </a>
         </div>
     </header>
 
     <nav class="sidebar">
         <ul>
+            
             <li><a href="userDashboard.php" class="sidebar-link active">Booking Details</a></li>
             <li><a href="userFeedback.php" class="sidebar-link">Share Feedback</a></li>
             <li><a href="userAccountSettings.php" class="sidebar-link">Account Settings</a></li>
+            <li><a href="../index.php" class="sidebar-link">Search Bus</a></li>
         </ul>
     </nav>
 
@@ -128,15 +129,15 @@ try {
 
             <div class="footerSection">
                 <h3>About GoBUS</h3>
-                <a href="#">About Us</a>
-                <a href="#">Contact Us</a>
+                <a href="aboutUs.php">About Us</a>
+                <a href="contact.php">Contact Us</a>
                 <a href="cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="#">Terms and Condition</a>
-                <a href="#">Privacy Policy</a>
+                <a href="terms.php">Terms and Condition</a>
+                <a href="privacy.php">Privacy Policy</a>
             </div>
         </div>
 
