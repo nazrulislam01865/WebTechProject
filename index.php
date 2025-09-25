@@ -633,7 +633,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
             <?php if ($is_logged_in): ?>
                 <a href="#" class="logout-btn" onclick="return confirm('Do you want to log out?') ? window.location.href='./html/logout.php' : false;">
-                    <i class="fa-solid fa-user-circle"></i> <?php echo $username; ?>
+                    <img src="picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> <?php echo $username; ?>
                 </a>
                 <a href="./html/userDashboard.php" class="dashboard-btn enabled">Dashboard</a>
             <?php else: ?>

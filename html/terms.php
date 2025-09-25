@@ -39,14 +39,13 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms & Conditions - GoBus</title>
     <link rel="stylesheet" href="../css/terms.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header>
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
             <a href="tel:+8809611123456" class="call-btn">Call +880</a>
-            <a href="login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+            <a href="login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"></i> Login</a>
         </div>
     </header>
     

@@ -95,7 +95,7 @@
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
             <a href="#" class="logout-btn" onclick="return confirm('Do you want to log out?') ? window.location.href='logout.php' : false;">
-            <img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"><?php echo $username; ?>
+            <img src="../picture/user_logo.png" alt="User Icon" style="width:18px; height:18px; vertical-align: middle;"> <?php echo $username; ?>
             </a>
         </div>
     </header>
@@ -159,4 +159,33 @@
                 <button type="submit">Submit Feedback</button>
             </form>
         </section>
-    </main
+    </main>
+     <footer>
+        <div class="footerContainer">
+            <div class="footerSection">
+                <h2>GO BUS</h2>
+                <p>
+                    gobus.com is a premium online booking portal which allows you to purchase ticket 
+                    for various bus booking services locally across the country.
+                </p>
+            </div>
+
+            <div class="footerSection">
+                <h3>About GoBUS</h3>
+                <a href="aboutUs.php">About Us</a>
+                <a href="contact.php">Contact Us</a>
+            </div>
+
+            <div class="footerSection">
+                <h3>Company Info</h3>
+                <a href="terms.php">Terms and Condition</a>
+                <a href="privacy.php">Privacy Policy</a>
+            </div>
+        </div>
+
+        <div class="footerBottom">
+            Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group 1</span>
+        </div>
+    </footer>
+</body>
+</html>

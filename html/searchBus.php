@@ -1220,7 +1220,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>GoBUS | Search Bus</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="../css/searchBus.css">
     </head>
     <body>
@@ -1230,7 +1229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
                 <?php if (isset($_SESSION['user_id']) && isset($_SESSION['username'])): ?>
                     <a href="#" class="logout-btn" onclick="return confirm('Do you want to log out?') ? window.location.href='logout.php' : false;">
-                        <i class="fa-solid fa-user-circle"></i> <?php echo htmlspecialchars($_SESSION['username']); ?>
+                        <img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> <?php echo htmlspecialchars($_SESSION['username']); ?>
                     </a>
                 <?php else: ?>
                     <a href="./login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
@@ -1269,7 +1268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                         <h3><?php echo htmlspecialchars($row['operator_name']); ?></h3>
                         <h6><?php echo htmlspecialchars($row['bus_number']); ?></h6>
                         <div class="non-ac-bus_couch-type">
-                            <i class="fa-solid fa-snowflake"></i><span><?php echo htmlspecialchars($row['bus_type']); ?></span>
+                            <img src="../picture/snowflake.png" alt="AC Icon" style="width: 14px; height: 14px; vertical-align: middle;"><span> <?php echo htmlspecialchars($row['bus_type']); ?></span>
                         </div>
                         <a href="#">Cancellation policy</a>
                     </div>

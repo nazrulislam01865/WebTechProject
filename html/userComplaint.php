@@ -126,7 +126,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBus|File a Complaint</title>
-    <link rel="stylesheet" type="text/css" href="../css/userDashboard.css">
+    <link rel="stylesheet" type="text/css" href="../css/userComplaint.css">
 </head>
 <body>
     <header>
@@ -245,7 +245,6 @@ try {
                 <h3>About GoBUS</h3>
                 <a href="aboutUs.php">About Us</a>
                 <a href="contact.php">Contact Us</a>
-                <a href="cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">
@@ -261,7 +260,7 @@ try {
     </footer>
 </body>
 </html>
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -374,4 +373,4 @@ try {
         </div>
     </footer>
 </body>
-</html> -->
+</html> --> -->
