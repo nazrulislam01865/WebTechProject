@@ -232,12 +232,8 @@ body{
     color: #333;
     cursor: pointer;
     padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
     flex: 1;
     margin: 0 5px;
-    background-color: #f9f9f9;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
@@ -249,7 +245,6 @@ body{
 .radio-label input[type="radio"]:checked + .radio-label {
     background-color: #007bff; /* Match login-btn color */
     color: white;
-    border-color: #0056b3;
 }
 
 .rightSide .error-message {

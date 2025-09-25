@@ -1086,9 +1086,7 @@ if ($total_buses > 0) {
 </html> -->
 
 
-
 <?php
-
 
 // Enable error reporting for debugging
 ini_set('display_errors', 1);
@@ -1176,13 +1174,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
     if ($seat_result->num_rows > 0) {
         echo "<script>alert('This seat is already booked.');</script>";
     } else {
-        // Check if seats are available
-        $check_seats = "SELECT seats_available, fare FROM buses WHERE id = '$bus_id' AND journey_date = '$journey_date'";
+        // Fetch bus details including operator_name
+        $check_seats = "SELECT seats_available, fare, operator_name FROM buses WHERE id = '$bus_id' AND journey_date = '$journey_date'";
         $seats_result = $conn->query($check_seats);
         if ($seats_result && $seats_result->num_rows > 0) {
             $bus_data = $seats_result->fetch_assoc();
             if ($bus_data['seats_available'] > 0) {
-                // Store booking details in session and redirect to payment page
+                // Debug: Log operator_name to ensure it's retrieved
+                error_log("Retrieved operator_name: " . ($bus_data['operator_name'] ?? 'Not found'));
+
+                // Store booking details in session
                 $_SESSION['booking_data'] = [
                     'user_id' => $_SESSION['user_id'],
                     'bus_id' => $bus_id,
@@ -1192,14 +1193,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     'dropping_point' => $dropping_point,
                     'route' => $route,
                     'journey_date' => $journey_date,
-                    'fare' => $bus_data['fare']
+                    'fare' => $bus_data['fare'],
+                    'operator_name' => $bus_data['operator_name'] ?? 'Unknown Operator' // Fallback if operator_name is null
                 ];
+
+                // Debug: Log session data
+                error_log("Booking data stored in session: " . print_r($_SESSION['booking_data'], true));
+
+                // Redirect to payment page
                 echo "<script>window.location.href='payment.php';</script>";
                 exit;
             } else {
                 echo "<script>alert('No seats available for this bus.');</script>";
             }
         } else {
+            error_log("Error fetching bus details: " . $conn->error);
             echo "<script>alert('Error fetching bus details: " . $conn->error . "');</script>";
         }
     }
@@ -1418,7 +1426,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                         busIdInput.value = busId;
 
                         console.log('Fetching reserved seats for bus_id:', busId, 'journey_date:', '<?php echo $journey_date; ?>');
-                        // Adjust the fetch URL if get_reserved_seats.php is in a different directory (e.g., fetch(`scripts/get_reserved_seats.php?...`))
                         fetch(`get_reserved_seats.php?bus_id=${busId}&journey_date=<?php echo $journey_date; ?>`)
                             .then(response => {
                                 console.log('Fetch response status:', response.status);
@@ -1446,19 +1453,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                     const col = i % 4;
                                     const seat = document.createElement('li');
                                     seat.classList.add('seat');
-                                    const seatNumber = String.fromCharCode(65 + row) + (col + 1); // e.g., A1, A2
+                                    const seatNumber = String.fromCharCode(65 + row) + (col + 1);
 
-                                    // Adjust column for gap
                                     let gridCol = col + 1;
                                     if (col >= 2) {
-                                        gridCol += 1; // Shift for gap
+                                        gridCol += 1;
                                     }
                                     seat.style.gridRow = row + 1;
                                     seat.style.gridColumn = gridCol;
 
-                                    // Assign seat status and display seat number
                                     seat.dataset.seatNumber = seatNumber;
-                                    seat.textContent = seatNumber; // Display seat number
+                                    seat.textContent = seatNumber;
                                     if (reservedSeats.includes(seatNumber)) {
                                         seat.classList.add('booked-m');
                                     } else {
@@ -1475,13 +1480,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                         console.log('Seat clicked:', this.dataset.seatNumber);
                                         if (this.classList.contains('available') || this.classList.contains('selected')) {
                                             if (this.classList.contains('selected')) {
-                                                // Deselect
                                                 this.classList.remove('selected');
                                                 this.classList.add('available');
                                                 seatFareP.textContent = '0 Tk';
                                                 document.getElementById('seat_number').value = '';
                                             } else {
-                                                // Select this seat, deselect others
                                                 document.querySelectorAll('.seat.selected').forEach(s => {
                                                     s.classList.remove('selected');
                                                     s.classList.add('available');

@@ -181,8 +181,12 @@ changePasswordForm.addEventListener('submit', (e) => {
 });
 
 // Logout
-const logoutBtn = document.getElementById('logoutBtn');
-logoutBtn.addEventListener('click', () => {
-    alert("Logged out successfully!");
-    // window.location.href = "login.html";
-});
+// const logoutBtn = document.getElementById('logoutBtn');
+// logoutBtn.addEventListener('click', () => {
+//     alert("Logged out successfully!");
+//     window.location.href = "login.html";
+// });
+
+
+
+
