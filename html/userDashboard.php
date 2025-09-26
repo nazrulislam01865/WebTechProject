@@ -132,7 +132,6 @@ try {
                 <h3>About GoBUS</h3>
                 <a href="aboutUs.php">About Us</a>
                 <a href="contact.php">Contact Us</a>
-                <a href="cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">

@@ -481,6 +481,15 @@ header {
     font-weight: bold;
 }
 
+.logout-btn {
+    border: 2px solid blue;
+    color: blue;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 .search-info {
     position: relative;
     background: url('../picture/indexbackground.jpg') no-repeat center center/cover;

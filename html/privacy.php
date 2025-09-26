@@ -15,7 +15,7 @@
 
         <div class="header-right">
             <a href="tel:xxxxxxxxxxxxx" class="call-btn">Call +880</a>
-            <a href="html/login.html" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+            <a href="html/login.html" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
         </div>
     </header>
     <div class="container">

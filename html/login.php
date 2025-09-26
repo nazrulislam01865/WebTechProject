@@ -83,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if (password_verify($password, $company['password'])) {
                                     $_SESSION['company_id'] = $company['id'];
                                     $_SESSION['company_name'] = $company['company_name'];
-                                    header("Location: ./ownerBus.html");
+                                    header("Location: ./ownerBus.php");
                                     exit();
                                 } else {
                                     $error = "Invalid phone number or password.";

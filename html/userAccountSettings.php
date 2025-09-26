@@ -208,15 +208,14 @@
 
             <div class="footerSection">
                 <h3>About GoBUS</h3>
-                <a href="#">About Us</a>
-                <a href="#">Contact Us</a>
-                <a href="cancelTicket.php">Cancel Ticket</a>
+                <a href="aboutUs.php">About Us</a>
+                <a href="contact.php">Contact Us</a>
             </div>
 
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="#">Terms and Condition</a>
-                <a href="#">Privacy Policy</a>
+                <a href="terms.php">Terms and Condition</a>
+                <a href="privacy.php">Privacy Policy</a>
             </div>
         </div>
 

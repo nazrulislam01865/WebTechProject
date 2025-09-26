@@ -40,7 +40,8 @@ header {
     text-decoration: none;
 }
 
-.login-btn {
+.login-btn,
+.logout-btn{
     border: 2px solid blue;
     color: blue;
     padding: 8px 15px;

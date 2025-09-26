@@ -1,11 +1,13 @@
 <?php
-// payment.php - No whitespace before this
 session_start();
 
 // Enable error reporting for debugging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// Debug: Log session booking data
+error_log("Session booking data: " . print_r($_SESSION['booking_data'], true));
 
 // Check if user is logged in and booking data exists
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['booking_data'])) {
@@ -48,9 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
     $dropping_point = $conn->real_escape_string($booking_data['dropping_point']);
     $route = $conn->real_escape_string($booking_data['route']);
     $journey_date = $conn->real_escape_string($booking_data['journey_date']);
+    $fare = $conn->real_escape_string($booking_data['fare']);
+    $operator_name = isset($booking_data['operator_name']) && $booking_data['operator_name'] !== null 
+        ? $conn->real_escape_string($booking_data['operator_name']) 
+        : 'Unknown Operator'; // Fallback if operator_name is missing
+
     $payment_method = $conn->real_escape_string($_POST['payment_method']);
     $transaction_id = $payment_method === 'mobile_banking' ? $conn->real_escape_string($_POST['transaction_id']) : NULL;
-    $fare = $conn->real_escape_string($booking_data['fare']);
+
+    // Debug: Log operator_name and payment details
+    error_log("Operator name: " . $operator_name);
+    error_log("Payment method: " . $payment_method . ", Transaction ID: " . ($transaction_id ?? 'None'));
 
     // Validate payment method
     if (!in_array($payment_method, ['credit_card', 'mobile_banking'])) {
@@ -67,6 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
     // Validate fare
     if (!is_numeric($fare) || $fare <= 0) {
         echo "<script>alert('Invalid fare amount.');</script>";
+        exit;
+    }
+
+    // Validate operator_name
+    if ($operator_name === 'Unknown Operator') {
+        error_log("Warning: Operator name is missing or invalid for bus_id: $bus_id");
+        echo "<script>alert('Operator name is missing. Please try again.'); window.location.href='searchBus.php';</script>";
+        unset($_SESSION['booking_data']);
         exit;
     }
 
@@ -91,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
         $booking_id = generateBookingId($conn);
 
         // Insert booking into bookings table
-        $insert_booking = "INSERT INTO bookings (user_id, bus_id, booking_id, route, date, status, seat_number, phone_number, boarding_point, dropping_point, fare, payment_method, transaction_id) 
-                           VALUES ('$user_id', '$bus_id', '$booking_id', '$route', '$journey_date', 'Upcoming', '$seat_number', '$phone_number', '$boarding_point', '$dropping_point', '$fare', '$payment_method', " . ($transaction_id ? "'$transaction_id'" : "NULL") . ")";
+        $insert_booking = "INSERT INTO bookings (user_id, bus_id, booking_id, route, date, status, seat_number, phone_number, boarding_point, dropping_point, fare, payment_method, transaction_id, operator_name) 
+                           VALUES ('$user_id', '$bus_id', '$booking_id', '$route', '$journey_date', 'Upcoming', '$seat_number', '$phone_number', '$boarding_point', '$dropping_point', '$fare', '$payment_method', " . ($transaction_id ? "'$transaction_id'" : "NULL") . ", '$operator_name')";
         if ($conn->query($insert_booking)) {
             // Update seats_available in buses table
             $update_seats = "UPDATE buses SET seats_available = seats_available - 1 WHERE id = '$bus_id' AND journey_date = '$journey_date'";
@@ -123,6 +141,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
     <title>GoBUS | Payment</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../css/payment.css">
+    <style>
+        .booking-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .detail-item {
+            flex: 1 1 300px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .detail-item span {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .detail-item span strong {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -141,14 +182,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
             <h2>Booking Summary</h2>
             <div class="booking-details">
                 <div class="detail-item">
+                    <span><strong>Operator:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['operator_name'] ?? 'Unknown Operator'); ?></span>
                     <span><strong>Route:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['route']); ?></span>
                     <span><strong>Journey Date:</strong> <?php echo htmlspecialchars(date('d M Y', strtotime($_SESSION['booking_data']['journey_date']))); ?></span>
-                    <span><strong>Seat Number:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['seat_number']); ?></span>
                 </div>
                 <div class="detail-item">
+                    <span><strong>Seat Number:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['seat_number']); ?></span>
                     <span><strong>Boarding Point:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['boarding_point']); ?></span>
                     <span><strong>Dropping Point:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['dropping_point']); ?></span>
+                </div>
+                <div class="detail-item">
                     <span><strong>Fare:</strong> <?php echo number_format($_SESSION['booking_data']['fare'], 2); ?> tk</span>
+                    <span><strong>Phone Number:</strong> <?php echo htmlspecialchars($_SESSION['booking_data']['phone_number']); ?></span>
                 </div>
             </div>
 

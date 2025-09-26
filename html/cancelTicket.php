@@ -117,7 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoBus|Cancel Booking</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../css/cancelTicket1.css">
 </head>
 <body>
@@ -125,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
             <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
-            <a href="logout.php"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
+            <a href="logout.php" class="logout-btn"><img src="../picture/logout.png" alt="Logout Icon" style="width: 18px; height: 18px; vertical-align: middle;"></i> Logout</a>
         </div>
     </header>
     <div class="nav-bar">
