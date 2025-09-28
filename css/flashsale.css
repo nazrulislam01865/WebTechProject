@@ -1,0 +1,331 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: blue;
+}
+
+#logo {
+    color: white;
+    background: blue;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.header-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.call-btn {
+    background: red;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-btn {
+    border: 2px solid blue;
+    color: blue;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Flash Sale Header */
+.flashsale-header {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.flashsale-header h2 {
+    font-size: 32px;
+    color: #2c6fd1;
+    margin-bottom: 10px;
+}
+
+.flashsale-header p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Banner Section */
+.banner-section {
+    margin-bottom: 40px;
+}
+
+.banner-card {
+    background: linear-gradient(135deg, #ffffff 100%);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    color: rgb(12, 12, 12);
+}
+
+.banner-text {
+    flex: 1;
+    padding-right: 30px;
+}
+
+.banner-text .validity {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.banner-text h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.banner-text .bigger-text {
+    font-size: 28px;
+    color: #2c6fd1;
+    margin-bottom: 15px;
+}
+
+.banner-text p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+.banner-image {
+    flex: 1;
+    text-align: center;
+}
+
+.banner-image img {
+    max-width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Discount Offers Section */
+.discount-offers {
+    margin-bottom: 50px;
+}
+
+.discount-offers h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #2c6fd1;
+    margin-bottom: 30px;
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.offer-card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.offer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: #2c6fd1;
+}
+
+.offer-card:hover {
+    transform: translateY(-10px);
+}
+
+.offer-icon {
+    width: 70px;
+    height: 70px;
+    background: #f0f7ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.offer-icon i {
+    font-size: 30px;
+    color: #2c6fd1;
+}
+
+.offer-card h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.discount-amount {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c6fd1;
+    margin-bottom: 15px;
+}
+
+.offer-card p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.offer-code {
+    background: #f5f7fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.offer-code strong {
+    color: #2c6fd1;
+    font-size: 18px;
+}
+
+.offer-btn {
+    background: #2c6fd1;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.offer-btn:hover {
+    background: #1c5bb8;
+}
+
+/* Terms Section */
+.terms-section {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
+.terms-section h3 {
+    color: #2c6fd1;
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+.terms-section ul {
+    list-style-type: none;
+}
+
+.terms-section li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #666;
+    position: relative;
+    padding-left: 20px;
+}
+
+.terms-section li:before {
+    content: '•';
+    color: #2c6fd1;
+    position: absolute;
+    left: 0;
+}
+
+.terms-section li:last-child {
+    border-bottom: none;
+}
+
+/* Footer Styles */
+footer {
+    background: #f2f2f2;
+    color: #27272b;
+    padding: 40px 60px 20px;
+    margin-top: 60px;
+}
+
+.footerContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 80px;
+}
+
+.footerSection h2,
+.footerSection h3 {
+    color: #60606b;
+    margin-bottom: 15px;
+}
+
+.footerSection p,
+.footerSection a {
+    font-size: 14px;
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    margin: 5px 0;
+}
+
+.footerSection a:hover {
+    color: blue;
+}
+
+.footerBottom {
+    text-align: center;
+    border-top: 1px solid #444;
+    margin-top: 30px;
+    padding-top: 15px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.designer {
+    font-weight: bold;
+    color: rgb(92, 115, 225);
+}

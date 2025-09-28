@@ -14,7 +14,7 @@
         <div class="logo">Go<span id="logo">Bus</span></div>
 
         <div class="header-right">
-            <a href="tel:xxxxxxxxxxxxx" class="call-btn">Call +880</a>
+             <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
             <a href="html/login.html" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
         </div>
     </header>
@@ -88,15 +88,15 @@
 
             <div class="footerSection">
                 <h3>About GoBUS</h3>
-                <a href="../html/about us.html">About Us</a>
-                <a href="../html/contact.html">Contact Us</a>
-                <a href="../html/cancelTicket.html">Cancel Ticket</a>
+                <a href="aboutUs.php">About Us</a>
+                <a href="contact.php">Contact Us</a>
+                <a href="cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="../html/terms.html">Terms and Condition</a>
-                <a href="../html/privacy.html">Privacy Policy</a>
+                <a href="terms.php">Terms and Condition</a>
+                <a href="privacy.php">Privacy Policy</a>
             </div>
         </div>
 
