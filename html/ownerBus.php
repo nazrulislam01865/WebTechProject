@@ -19,6 +19,17 @@ $upcoming_trips = [];
 $passengers = [];
 $drivers = [];
 
+// Initialize form data session if not set
+if (!isset($_SESSION['form_data'])) {
+    $_SESSION['form_data'] = [
+        'trip' => [],
+        'driver' => [],
+        'passenger_search' => [],
+        'date_search' => [],
+        'cancel_trip' => []
+    ];
+}
+
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -108,6 +119,7 @@ try {
 
         // Handle Add Trip Form
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_trip'])) {
+            error_log("Add Trip form submitted: " . print_r($_POST, true));
             $starting_point = trim($_POST['trip-from'] ?? '');
             $destination = trim($_POST['trip-to'] ?? '');
             $starting_time = $_POST['starting-time'] ?? '';
@@ -154,14 +166,29 @@ try {
                 $errors['fare'] = "Fare must be a positive number.";
             }
 
-            // Insert trip if no errors
-            if (empty($errors)) {
+            // Store form data in session if there are errors
+            if (!empty($errors)) {
+                $_SESSION['form_data']['trip'] = [
+                    'trip-from' => $starting_point,
+                    'trip-to' => $destination,
+                    'starting-time' => $starting_time,
+                    'arrival-time' => $arrival_time,
+                    'trip-date' => $journey_date,
+                    'bus-type' => $bus_type,
+                    'seat-number' => $seats,
+                    'fare' => $fare
+                ];
+                error_log("Trip form errors, stored in session: " . print_r($_SESSION['form_data']['trip'], true));
+            } else {
+                // Insert trip
                 $sql = "INSERT INTO buses (operator_name, bus_number, bus_type, starting_point, destination, starting_time, arrival_time, fare, seats_available, journey_date) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sssssssdis", $company_name, $bus_number, $bus_type, $starting_point, $destination, $starting_time, $arrival_time, $fare, $seats, $journey_date);
                 if ($stmt->execute()) {
                     $success_message['trip'] = "Trip added successfully!";
+                    // Clear form data from session
+                    $_SESSION['form_data']['trip'] = [];
                     // Refresh upcoming trips
                     $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                             FROM buses 
@@ -175,10 +202,20 @@ try {
                     while ($row = $result->fetch_assoc()) {
                         $upcoming_trips[] = $row;
                     }
-                    // Set active tab in sessionStorage
+                    // Set active tab
                     echo "<script>sessionStorage.setItem('activeTab', 'dashboard');</script>";
                 } else {
                     $errors['general'] = "Error adding trip: " . $conn->error;
+                    $_SESSION['form_data']['trip'] = [
+                        'trip-from' => $starting_point,
+                        'trip-to' => $destination,
+                        'starting-time' => $starting_time,
+                        'arrival-time' => $arrival_time,
+                        'trip-date' => $journey_date,
+                        'bus-type' => $bus_type,
+                        'seat-number' => $seats,
+                        'fare' => $fare
+                    ];
                 }
                 $stmt->close();
             }
@@ -186,6 +223,7 @@ try {
 
         // Handle Add Driver Form
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_driver'])) {
+            error_log("Add Driver form submitted: " . print_r($_POST, true));
             $driver_name = trim($_POST['driver-name'] ?? '');
             $license_number = trim($_POST['driver-license'] ?? '');
             $phone = trim($_POST['driver-number'] ?? '');
@@ -217,14 +255,24 @@ try {
                 $errors['driver-number'] = "Phone number must be 11 digits.";
             }
 
-            // Insert driver if no errors
-            if (empty($errors)) {
+            // Store form data in session if there are errors
+            if (!empty($errors)) {
+                $_SESSION['form_data']['driver'] = [
+                    'driver-name' => $driver_name,
+                    'driver-license' => $license_number,
+                    'driver-number' => $phone
+                ];
+                error_log("Driver form errors, stored in session: " . print_r($_SESSION['form_data']['driver'], true));
+            } else {
+                // Insert driver
                 $sql = "INSERT INTO drivers (company_id, name, license_number, phone) 
                         VALUES ((SELECT id FROM bus_companies WHERE company_name = ?), ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("ssss", $company_name, $driver_name, $license_number, $phone);
                 if ($stmt->execute()) {
                     $success_message['driver'] = "Driver added successfully!";
+                    // Clear form data from session
+                    $_SESSION['form_data']['driver'] = [];
                     // Refresh drivers
                     $sql = "SELECT id, name, license_number, phone FROM drivers WHERE company_id = 
                             (SELECT id FROM bus_companies WHERE company_name = ?)";
@@ -236,10 +284,15 @@ try {
                     while ($row = $result->fetch_assoc()) {
                         $drivers[] = $row;
                     }
-                    // Set active tab in sessionStorage
+                    // Set active tab
                     echo "<script>sessionStorage.setItem('activeTab', 'drivers');</script>";
                 } else {
                     $errors['general'] = "Error adding driver: " . $conn->error;
+                    $_SESSION['form_data']['driver'] = [
+                        'driver-name' => $driver_name,
+                        'driver-license' => $license_number,
+                        'driver-number' => $phone
+                    ];
                 }
                 $stmt->close();
             }
@@ -247,6 +300,7 @@ try {
 
         // Handle Passenger Search (Individual)
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_passenger'])) {
+            error_log("Passenger Search form submitted: " . print_r($_POST, true));
             $nid = trim($_POST['passenger-search-nid'] ?? '');
             $name = trim($_POST['passenger-search-name'] ?? '');
             $date = $_POST['passenger-search-date'] ?? '';
@@ -264,7 +318,17 @@ try {
                 $errors['passenger-search-date'] = "Date is required.";
             }
 
-            if (empty($errors)) {
+            // Store form data in session if there are errors
+            if (!empty($errors)) {
+                $_SESSION['form_data']['passenger_search'] = [
+                    'passenger-search-nid' => $nid,
+                    'passenger-search-name' => $name,
+                    'passenger-search-date' => $date
+                ];
+                error_log("Passenger search form errors, stored in session: " . print_r($_SESSION['form_data']['passenger_search'], true));
+            } else {
+                // Clear form data from session
+                $_SESSION['form_data']['passenger_search'] = [];
                 $sql = "SELECT u.username, u.nid, bk.booking_id, bk.route, bk.date, bk.seat_number 
                         FROM bookings bk 
                         JOIN users u ON bk.user_id = u.id 
@@ -279,7 +343,7 @@ try {
                 while ($row = $result->fetch_assoc()) {
                     $passengers[] = $row;
                 }
-                // Set active tab in sessionStorage
+                // Set active tab
                 echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
                 $stmt->close();
             }
@@ -287,6 +351,7 @@ try {
 
         // Handle Passenger Search (Date)
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_date'])) {
+            error_log("Date Search form submitted: " . print_r($_POST, true));
             $from = trim($_POST['search-from'] ?? '');
             $to = trim($_POST['search-To'] ?? '');
             $date = $_POST['search-date'] ?? '';
@@ -302,7 +367,17 @@ try {
                 $errors['search-date'] = "Date is required.";
             }
 
-            if (empty($errors)) {
+            // Store form data in session if there are errors
+            if (!empty($errors)) {
+                $_SESSION['form_data']['date_search'] = [
+                    'search-from' => $from,
+                    'search-To' => $to,
+                    'search-date' => $date
+                ];
+                error_log("Date search form errors, stored in session: " . print_r($_SESSION['form_data']['date_search'], true));
+            } else {
+                // Clear form data from session
+                $_SESSION['form_data']['date_search'] = [];
                 $sql = "SELECT u.username, u.nid, bk.booking_id, bk.route, bk.date, bk.seat_number 
                         FROM bookings bk 
                         JOIN users u ON bk.user_id = u.id 
@@ -317,7 +392,7 @@ try {
                 while ($row = $result->fetch_assoc()) {
                     $passengers[] = $row;
                 }
-                // Set active tab in sessionStorage
+                // Set active tab
                 echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
                 $stmt->close();
             }
@@ -325,6 +400,7 @@ try {
 
         // Handle Cancel Trip
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_trip'])) {
+            error_log("Cancel Trip form submitted: " . print_r($_POST, true));
             $bus_number = trim($_POST['bus-number'] ?? '');
             $search_date = $_POST['search-date'] ?? '';
             $cancel_reason = $_POST['cancelReason'] ?? '';
@@ -346,7 +422,18 @@ try {
                 $errors['otherReason'] = "Please specify the reason for cancellation.";
             }
 
-            if (empty($errors)) {
+            // Store form data in session if there are errors
+            if (!empty($errors)) {
+                $_SESSION['form_data']['cancel_trip'] = [
+                    'bus-number' => $bus_number,
+                    'search-date' => $search_date,
+                    'cancelReason' => $cancel_reason,
+                    'otherReason' => $other_reason,
+                    'emailNotif' => $email_notif,
+                    'smsNotif' => $sms_notif
+                ];
+                error_log("Cancel trip form errors, stored in session: " . print_r($_SESSION['form_data']['cancel_trip'], true));
+            } else {
                 // Check if the bus exists for the given operator and date
                 $sql = "SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                 $stmt = $conn->prepare($sql);
@@ -355,13 +442,23 @@ try {
                 $result = $stmt->get_result();
                 if ($result->num_rows === 0) {
                     $errors['bus-number'] = "No bus found for the specified number and date.";
+                    $_SESSION['form_data']['cancel_trip'] = [
+                        'bus-number' => $bus_number,
+                        'search-date' => $search_date,
+                        'cancelReason' => $cancel_reason,
+                        'otherReason' => $other_reason,
+                        'emailNotif' => $email_notif,
+                        'smsNotif' => $sms_notif
+                    ];
                 } else {
                     // Update bus status to Cancelled
-                    $sql = "DELETE FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?;";
+                    $sql = "UPDATE buses SET status = 'Cancelled' WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
                     if ($stmt->execute()) {
                         $success_message['cancel'] = "Trip cancelled successfully!";
+                        // Clear form data from session
+                        $_SESSION['form_data']['cancel_trip'] = [];
                         // Update bookings to Cancelled
                         $sql = "UPDATE bookings SET status = 'Cancelled' WHERE bus_id IN 
                                 (SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?)";
@@ -381,9 +478,18 @@ try {
                         while ($row = $result->fetch_assoc()) {
                             $upcoming_trips[] = $row;
                         }
-                        // Set active tab in sessionStorage
+                        // Set active tab
+                        echo "<script>sessionStorage.setItem('activeTab', 'trips');</script>";
                     } else {
                         $errors['general'] = "Error cancelling trip: " . $conn->error;
+                        $_SESSION['form_data']['cancel_trip'] = [
+                            'bus-number' => $bus_number,
+                            'search-date' => $search_date,
+                            'cancelReason' => $cancel_reason,
+                            'otherReason' => $other_reason,
+                            'emailNotif' => $email_notif,
+                            'smsNotif' => $sms_notif
+                        ];
                     }
                 }
                 $stmt->close();
@@ -483,35 +589,35 @@ try {
                     <input type="hidden" name="current_tab" value="dashboard">
                     <div class="form-group">
                         <label for="trip-from">Starting:</label>
-                        <input type="text" id="trip-from" name="trip-from" placeholder="From" value="<?php echo isset($_POST['trip-from']) ? htmlspecialchars($_POST['trip-from']) : ''; ?>">
+                        <input type="text" id="trip-from" name="trip-from" placeholder="From" value="<?php echo isset($_SESSION['form_data']['trip']['trip-from']) ? htmlspecialchars($_SESSION['form_data']['trip']['trip-from']) : ''; ?>">
                         <?php if (isset($errors['trip-from'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['trip-from']); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="starting-time">Starting Time:</label>
-                        <input type="time" id="starting-time" name="starting-time" value="<?php echo isset($_POST['starting-time']) ? htmlspecialchars($_POST['starting-time']) : ''; ?>">
+                        <input type="time" id="starting-time" name="starting-time" value="<?php echo isset($_SESSION['form_data']['trip']['starting-time']) ? htmlspecialchars($_SESSION['form_data']['trip']['starting-time']) : ''; ?>">
                         <?php if (isset($errors['starting-time'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['starting-time']); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="trip-to">Arrival:</label>
-                        <input type="text" id="trip-to" name="trip-to" placeholder="To" value="<?php echo isset($_POST['trip-to']) ? htmlspecialchars($_POST['trip-to']) : ''; ?>">
+                        <input type="text" id="trip-to" name="trip-to" placeholder="To" value="<?php echo isset($_SESSION['form_data']['trip']['trip-to']) ? htmlspecialchars($_SESSION['form_data']['trip']['trip-to']) : ''; ?>">
                         <?php if (isset($errors['trip-to'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['trip-to']); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="arrival-time">Arrival Time:</label>
-                        <input type="time" id="arrival-time" name="arrival-time" value="<?php echo isset($_POST['arrival-time']) ? htmlspecialchars($_POST['arrival-time']) : ''; ?>">
+                        <input type="time" id="arrival-time" name="arrival-time" value="<?php echo isset($_SESSION['form_data']['trip']['arrival-time']) ? htmlspecialchars($_SESSION['form_data']['trip']['arrival-time']) : ''; ?>">
                         <?php if (isset($errors['arrival-time'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['arrival-time']); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="trip-date">Date:</label>
-                        <input type="date" id="trip-date" name="trip-date" value="<?php echo isset($_POST['trip-date']) ? htmlspecialchars($_POST['trip-date']) : ''; ?>">
+                        <input type="date" id="trip-date" name="trip-date" value="<?php echo isset($_SESSION['form_data']['trip']['trip-date']) ? htmlspecialchars($_SESSION['form_data']['trip']['trip-date']) : ''; ?>">
                         <?php if (isset($errors['trip-date'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['trip-date']); ?></div>
                         <?php endif; ?>
@@ -519,8 +625,8 @@ try {
                     <div class="form-group">
                         <label for="bus-type">Bus Type:</label>
                         <div class="bus-options">
-                            <input type="radio" id="ac" name="bus-type" value="AC" <?php echo (isset($_POST['bus-type']) && $_POST['bus-type'] === 'AC') ? 'checked' : ''; ?>><label for="ac">AC</label>
-                            <input type="radio" id="non-ac" name="bus-type" value="Non AC" <?php echo (isset($_POST['bus-type']) && $_POST['bus-type'] === 'Non AC') ? 'checked' : ''; ?>><label for="non-ac">Non AC</label>
+                            <input type="radio" id="ac" name="bus-type" value="AC" <?php echo (isset($_SESSION['form_data']['trip']['bus-type']) && $_SESSION['form_data']['trip']['bus-type'] === 'AC') ? 'checked' : ''; ?>><label for="ac">AC</label>
+                            <input type="radio" id="non-ac" name="bus-type" value="Non AC" <?php echo (isset($_SESSION['form_data']['trip']['bus-type']) && $_SESSION['form_data']['trip']['bus-type'] === 'Non AC') ? 'checked' : ''; ?>><label for="non-ac">Non AC</label>
                         </div>
                         <?php if (isset($errors['bus-type'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['bus-type']); ?></div>
@@ -528,14 +634,14 @@ try {
                     </div>
                     <div class="form-group">
                         <label for="seat-number">Number of Seats:</label>
-                        <input type="text" id="seat-number" name="seat-number" placeholder="Enter Number of Seats" value="<?php echo isset($_POST['seat-number']) ? htmlspecialchars($_POST['seat-number']) : ''; ?>">
+                        <input type="text" id="seat-number" name="seat-number" placeholder="Enter Number of Seats" value="<?php echo isset($_SESSION['form_data']['trip']['seat-number']) ? htmlspecialchars($_SESSION['form_data']['trip']['seat-number']) : ''; ?>">
                         <?php if (isset($errors['seat-number'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['seat-number']); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="fare">Fare (Tk):</label>
-                        <input type="text" id="fare" name="fare" placeholder="Enter Fare" value="<?php echo isset($_POST['fare']) ? htmlspecialchars($_POST['fare']) : ''; ?>">
+                        <input type="text" id="fare" name="fare" placeholder="Enter Fare" value="<?php echo isset($_SESSION['form_data']['trip']['fare']) ? htmlspecialchars($_SESSION['form_data']['trip']['fare']) : ''; ?>">
                         <?php if (isset($errors['fare'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['fare']); ?></div>
                         <?php endif; ?>
@@ -576,15 +682,15 @@ try {
                         <input type="hidden" name="search_passenger" value="1">
                         <input type="hidden" name="current_tab" value="passengers">
                         <div class="form-group">
-                            <input type="text" id="passenger-search-nid" name="passenger-search-nid" placeholder="Passenger NID Number" value="<?php echo isset($_POST['passenger-search-nid']) ? htmlspecialchars($_POST['passenger-search-nid']) : ''; ?>">
+                            <input type="text" id="passenger-search-nid" name="passenger-search-nid" placeholder="Passenger NID Number" value="<?php echo isset($_SESSION['form_data']['passenger_search']['passenger-search-nid']) ? htmlspecialchars($_SESSION['form_data']['passenger_search']['passenger-search-nid']) : ''; ?>">
                             <?php if (isset($errors['passenger-search-nid'])): ?>
                                 <div style="color: red;"><?php echo htmlspecialchars($errors['passenger-search-nid']); ?></div>
                             <?php endif; ?>
-                            <input type="text" id="passenger-search-name" name="passenger-search-name" placeholder="Passenger Name" value="<?php echo isset($_POST['passenger-search-name']) ? htmlspecialchars($_POST['passenger-search-name']) : ''; ?>">
+                            <input type="text" id="passenger-search-name" name="passenger-search-name" placeholder="Passenger Name" value="<?php echo isset($_SESSION['form_data']['passenger_search']['passenger-search-name']) ? htmlspecialchars($_SESSION['form_data']['passenger_search']['passenger-search-name']) : ''; ?>">
                             <?php if (isset($errors['passenger-search-name'])): ?>
                                 <div style="color: red;"><?php echo htmlspecialchars($errors['passenger-search-name']); ?></div>
                             <?php endif; ?>
-                            <input type="date" id="passenger-search-date" name="passenger-search-date" value="<?php echo isset($_POST['passenger-search-date']) ? htmlspecialchars($_POST['passenger-search-date']) : ''; ?>">
+                            <input type="date" id="passenger-search-date" name="passenger-search-date" value="<?php echo isset($_SESSION['form_data']['passenger_search']['passenger-search-date']) ? htmlspecialchars($_SESSION['form_data']['passenger_search']['passenger-search-date']) : ''; ?>">
                             <?php if (isset($errors['passenger-search-date'])): ?>
                                 <div style="color: red;"><?php echo htmlspecialchars($errors['passenger-search-date']); ?></div>
                             <?php endif; ?>
@@ -613,15 +719,15 @@ try {
                         <input type="hidden" name="search_date" value="1">
                         <input type="hidden" name="current_tab" value="passengers">
                         <div class="form-group">
-                            <input type="text" id="search-from" name="search-from" placeholder="From" value="<?php echo isset($_POST['search-from']) ? htmlspecialchars($_POST['search-from']) : ''; ?>">
+                            <input type="text" id="search-from" name="search-from" placeholder="From" value="<?php echo isset($_SESSION['form_data']['date_search']['search-from']) ? htmlspecialchars($_SESSION['form_data']['date_search']['search-from']) : ''; ?>">
                             <?php if (isset($errors['search-from'])): ?>
                                 <div style="color: red;"><?php echo htmlspecialchars($errors['search-from']); ?></div>
                             <?php endif; ?>
-                            <input type="text" id="search-To" name="search-To" placeholder="To" value="<?php echo isset($_POST['search-To']) ? htmlspecialchars($_POST['search-To']) : ''; ?>">
+                            <input type="text" id="search-To" name="search-To" placeholder="To" value="<?php echo isset($_SESSION['form_data']['date_search']['search-To']) ? htmlspecialchars($_SESSION['form_data']['date_search']['search-To']) : ''; ?>">
                             <?php if (isset($errors['search-To'])): ?>
                                 <div style="color: red;"><?php echo htmlspecialchars($errors['search-To']); ?></div>
                             <?php endif; ?>
-                            <input type="date" id="search-date" name="search-date" value="<?php echo isset($_POST['search-date']) ? htmlspecialchars($_POST['search-date']) : ''; ?>">
+                            <input type="date" id="search-date" name="search-date" value="<?php echo isset($_SESSION['form_data']['date_search']['search-date']) ? htmlspecialchars($_SESSION['form_data']['date_search']['search-date']) : ''; ?>">
                             <?php if (isset($errors['search-date'])): ?>
                                 <div style="color: red;"><?php echo htmlspecialchars($errors['search-date']); ?></div>
                             <?php endif; ?>
@@ -652,15 +758,15 @@ try {
                 <form id="driverForm" method="POST" action="">
                     <input type="hidden" name="add_driver" value="1">
                     <input type="hidden" name="current_tab" value="drivers">
-                    <input type="text" id="driver-name" name="driver-name" placeholder="Driver Full Name" value="<?php echo isset($_POST['driver-name']) ? htmlspecialchars($_POST['driver-name']) : ''; ?>">
+                    <input type="text" id="driver-name" name="driver-name" placeholder="Driver Full Name" value="<?php echo isset($_SESSION['form_data']['driver']['driver-name']) ? htmlspecialchars($_SESSION['form_data']['driver']['driver-name']) : ''; ?>">
                     <?php if (isset($errors['driver-name'])): ?>
                         <div style="color: red;"><?php echo htmlspecialchars($errors['driver-name']); ?></div>
                     <?php endif; ?>
-                    <input type="text" id="driver-license" name="driver-license" placeholder="License Number" value="<?php echo isset($_POST['driver-license']) ? htmlspecialchars($_POST['driver-license']) : ''; ?>">
+                    <input type="text" id="driver-license" name="driver-license" placeholder="License Number" value="<?php echo isset($_SESSION['form_data']['driver']['driver-license']) ? htmlspecialchars($_SESSION['form_data']['driver']['driver-license']) : ''; ?>">
                     <?php if (isset($errors['driver-license'])): ?>
                         <div style="color: red;"><?php echo htmlspecialchars($errors['driver-license']); ?></div>
                     <?php endif; ?>
-                    <input type="number" id="driver-number" name="driver-number" placeholder="Phone Number" value="<?php echo isset($_POST['driver-number']) ? htmlspecialchars($_POST['driver-number']) : ''; ?>">
+                    <input type="number" id="driver-number" name="driver-number" placeholder="Phone Number" value="<?php echo isset($_SESSION['form_data']['driver']['driver-number']) ? htmlspecialchars($_SESSION['form_data']['driver']['driver-number']) : ''; ?>">
                     <?php if (isset($errors['driver-number'])): ?>
                         <div style="color: red;"><?php echo htmlspecialchars($errors['driver-number']); ?></div>
                     <?php endif; ?>
@@ -698,14 +804,14 @@ try {
                     <input type="hidden" name="current_tab" value="trips">
                     <div class="form-group">
                         <label for="bus-number">Bus Number:</label>
-                        <input type="text" id="bus-number" name="bus-number" placeholder="Enter Bus Number" value="<?php echo isset($_POST['bus-number']) ? htmlspecialchars($_POST['bus-number']) : ''; ?>">
+                        <input type="text" id="bus-number" name="bus-number" placeholder="Enter Bus Number" value="<?php echo isset($_SESSION['form_data']['cancel_trip']['bus-number']) ? htmlspecialchars($_SESSION['form_data']['cancel_trip']['bus-number']) : ''; ?>">
                         <?php if (isset($errors['bus-number'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['bus-number']); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="search-date">Date:</label>
-                        <input type="date" id="search-date" name="search-date" value="<?php echo isset($_POST['search-date']) ? htmlspecialchars($_POST['search-date']) : ''; ?>">
+                        <input type="date" id="search-date" name="search-date" value="<?php echo isset($_SESSION['form_data']['cancel_trip']['search-date']) ? htmlspecialchars($_SESSION['form_data']['cancel_trip']['search-date']) : ''; ?>">
                         <?php if (isset($errors['search-date'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['search-date']); ?></div>
                         <?php endif; ?>
@@ -713,19 +819,19 @@ try {
                     <div class="form-group">
                         <label for="cancelReason">Reason for cancellation</label>
                         <select id="cancelReason" name="cancelReason">
-                            <option value="" disabled selected>Select a reason</option>
-                            <option value="Mechanical issues" <?php echo (isset($_POST['cancelReason']) && $_POST['cancelReason'] === 'Mechanical issues') ? 'selected' : ''; ?>>Mechanical issues</option>
-                            <option value="Driver unavailable" <?php echo (isset($_POST['cancelReason']) && $_POST['cancelReason'] === 'Driver unavailable') ? 'selected' : ''; ?>>Driver unavailable</option>
-                            <option value="Weather conditions" <?php echo (isset($_POST['cancelReason']) && $_POST['cancelReason'] === 'Weather conditions') ? 'selected' : ''; ?>>Weather conditions</option>
-                            <option value="Other" <?php echo (isset($_POST['cancelReason']) && $_POST['cancelReason'] === 'Other') ? 'selected' : ''; ?>>Other</option>
+                            <option value="" disabled <?php echo !isset($_SESSION['form_data']['cancel_trip']['cancelReason']) ? 'selected' : ''; ?>>Select a reason</option>
+                            <option value="Mechanical issues" <?php echo (isset($_SESSION['form_data']['cancel_trip']['cancelReason']) && $_SESSION['form_data']['cancel_trip']['cancelReason'] === 'Mechanical issues') ? 'selected' : ''; ?>>Mechanical issues</option>
+                            <option value="Driver unavailable" <?php echo (isset($_SESSION['form_data']['cancel_trip']['cancelReason']) && $_SESSION['form_data']['cancel_trip']['cancelReason'] === 'Driver unavailable') ? 'selected' : ''; ?>>Driver unavailable</option>
+                            <option value="Weather conditions" <?php echo (isset($_SESSION['form_data']['cancel_trip']['cancelReason']) && $_SESSION['form_data']['cancel_trip']['cancelReason'] === 'Weather conditions') ? 'selected' : ''; ?>>Weather conditions</option>
+                            <option value="Other" <?php echo (isset($_SESSION['form_data']['cancel_trip']['cancelReason']) && $_SESSION['form_data']['cancel_trip']['cancelReason'] === 'Other') ? 'selected' : ''; ?>>Other</option>
                         </select>
                         <?php if (isset($errors['cancelReason'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['cancelReason']); ?></div>
                         <?php endif; ?>
                     </div>
-                    <div class="form-group" id="otherReasonDiv" style="display:<?php echo (isset($_POST['cancelReason']) && $_POST['cancelReason'] === 'Other') ? 'block' : 'none'; ?>;">
+                    <div class="form-group" id="otherReasonDiv" style="display:<?php echo (isset($_SESSION['form_data']['cancel_trip']['cancelReason']) && $_SESSION['form_data']['cancel_trip']['cancelReason'] === 'Other') ? 'block' : 'none'; ?>;">
                         <label for="otherReason">Please specify</label>
-                        <textarea id="otherReason" name="otherReason" rows="3" placeholder="Enter your reason"><?php echo isset($_POST['otherReason']) ? htmlspecialchars($_POST['otherReason']) : ''; ?></textarea>
+                        <textarea id="otherReason" name="otherReason" rows="3" placeholder="Enter your reason"><?php echo isset($_SESSION['form_data']['cancel_trip']['otherReason']) ? htmlspecialchars($_SESSION['form_data']['cancel_trip']['otherReason']) : ''; ?></textarea>
                         <?php if (isset($errors['otherReason'])): ?>
                             <div style="color: red;"><?php echo htmlspecialchars($errors['otherReason']); ?></div>
                         <?php endif; ?>
@@ -733,8 +839,8 @@ try {
                     <div class="form-group">
                         <label>Notify passengers via</label>
                         <div>
-                            <input type="checkbox" id="emailNotif" name="emailNotif" <?php echo (isset($_POST['emailNotif']) && $_POST['emailNotif']) ? 'checked' : ''; ?>> <label for="emailNotif">Email</label>
-                            <input type="checkbox" id="smsNotif" name="smsNotif" <?php echo (isset($_POST['smsNotif']) && $_POST['smsNotif']) ? 'checked' : ''; ?>> <label for="smsNotif">SMS</label>
+                            <input type="checkbox" id="emailNotif" name="emailNotif" <?php echo (isset($_SESSION['form_data']['cancel_trip']['emailNotif']) && $_SESSION['form_data']['cancel_trip']['emailNotif']) ? 'checked' : ''; ?>> <label for="emailNotif">Email</label>
+                            <input type="checkbox" id="smsNotif" name="smsNotif" <?php echo (isset($_SESSION['form_data']['cancel_trip']['smsNotif']) && $_SESSION['form_data']['cancel_trip']['smsNotif']) ? 'checked' : ''; ?>> <label for="smsNotif">SMS</label>
                         </div>
                     </div>
                     <button type="submit" class="cancel-btn">Cancel Trip</button>
@@ -764,34 +870,37 @@ try {
     <script>
         // Tab navigation
         document.addEventListener('DOMContentLoaded', () => {
-            const activeTab = sessionStorage.getItem('activeTab');
-            if (activeTab && document.getElementById(activeTab)) {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                document.querySelectorAll('.content-tabs').forEach(tab => tab.classList.remove('active'));
-                document.getElementById(activeTab).classList.add('active');
-                document.querySelector(`.nav-item[data-tab="${activeTab}"]`).classList.add('active');
-            } else {
-                sessionStorage.setItem('activeTab', 'dashboard');
-                document.getElementById('dashboard').classList.add('active');
-                document.querySelector('.nav-item[data-tab="dashboard"]').classList.add('active');
-            }
+            const activeTab = sessionStorage.getItem('activeTab') || 'dashboard';
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.content-tabs').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(activeTab).classList.add('active');
+            document.querySelector(`.nav-item[data-tab="${activeTab}"]`).classList.add('active');
 
-            // Logout confirmation on clicking user profile
-            const userProfile = document.getElementById('userProfile');
-            userProfile.addEventListener('click', (event) => {
-                // Prevent opening the dropdown if clicking to logout
-                event.stopPropagation();
-                if (confirm('Are you sure you want to log out?')) {
-                    window.location.href = 'logout.php';
-                }
+            // Log form submissions
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    console.log(`Form ${form.id} submitted with values:`, new FormData(form));
+                });
             });
 
-            // Toggle password form visibility on clicking profile dropdown
+            // Handle tab switching
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const tab = item.getAttribute('data-tab');
+                    document.querySelectorAll('.content-tabs').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    document.getElementById(tab).classList.add('active');
+                    item.classList.add('active');
+                    sessionStorage.setItem('activeTab', tab);
+                });
+            });
+
+            // Toggle password form visibility
+            const userProfile = document.getElementById('userProfile');
             const profileDropdown = document.getElementById('profileDropdown');
-            const changePasswordForm = document.getElementById('changePasswordForm');
             userProfile.addEventListener('click', (event) => {
+                event.stopPropagation();
                 profileDropdown.classList.toggle('show');
-                event.stopPropagation(); // Prevent document click from immediately closing
             });
 
             // Close dropdown when clicking outside
@@ -800,11 +909,29 @@ try {
                     profileDropdown.classList.remove('show');
                 }
             });
+
+            // Logout confirmation
+            userProfile.addEventListener('click', (event) => {
+                if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'BUTTON' && event.target.tagName !== 'FORM') {
+                    if (confirm('Are you sure you want to log out?')) {
+                        window.location.href = 'logout.php';
+                    }
+                }
+            });
+
+            // Show/hide other reason field
+            const cancelReason = document.getElementById('cancelReason');
+            const otherReasonDiv = document.getElementById('otherReasonDiv');
+            if (cancelReason) {
+                cancelReason.addEventListener('change', () => {
+                    otherReasonDiv.style.display = cancelReason.value === 'Other' ? 'block' : 'none';
+                });
+            }
         });
 
         // Revenue Chart Initialization
         const revenueData = <?php echo json_encode($revenue_data); ?>;
-        const maxRows = 10000; // Maximum row count for bookings table
+        const maxRows = 10000;
         const initialRowCount = <?php echo $row_count; ?>;
         let revenueChart;
 
@@ -866,12 +993,11 @@ try {
                 revenueChart.data.labels = data.revenue_data.map(item => item.date);
                 revenueChart.data.datasets[0].data = data.revenue_data.map(item => item.revenue);
                 revenueChart.update();
-                // Continue polling if row count is below max
-                setTimeout(fetchRevenueData, 5000); // Poll every 5 seconds
+                setTimeout(fetchRevenueData, 5000);
             })
             .catch(error => {
                 console.error('Error fetching revenue data:', error);
-                setTimeout(fetchRevenueData, 5000); // Retry on error
+                setTimeout(fetchRevenueData, 5000);
             });
         }
 
@@ -883,7 +1009,7 @@ try {
             }
         }
 
-        // Update chart instantly after new booking (triggered by form submission elsewhere)
+        // Update chart instantly after new booking
         document.addEventListener('bookingUpdated', () => {
             fetchRevenueData();
         });
@@ -891,4 +1017,3 @@ try {
     <script src="../js/script11.js"></script>
 </body>
 </html>
-
