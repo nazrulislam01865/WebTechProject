@@ -1364,6 +1364,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                 <label>PHONE NUMBER*</label>
                                 <input type="text" name="phone_number" placeholder="Enter phone number" pattern="\+?[0-9]{10,14}" required>
                             </div>
+                            <div class="promo-number">
+                                <label>Promo Code</label>
+                                <input type="text" name="promo_code" placeholder="Enter promo code">
+                            </div>
                             <button type="submit" name="submit_booking" class="submit-btn">Proceed to Payment</button>
                         </form>
                         <p>I have already have an account. <a href="login.php">Login with password</a>.</p>

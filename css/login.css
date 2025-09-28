@@ -213,37 +213,36 @@ body{
     transition: 0.3s;
 }
 
-
-
-
-
 .login-btn:hover {
     background: #291c97;
 }
 
 .login-type-radio {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    gap:5px;
     margin-bottom: 20px;
 }
 
-.radio-label {
+.login-type-radio .radio-label {
     font-size: 14px;
     color: #333;
     cursor: pointer;
-    padding: 8px 15px;
+    font-weight: bold;
+    padding: 8px 8px;
     flex: 1;
-    margin: 0 5px;
+    margin:0;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-.radio-label input[type="radio"] {
+.login-type-radio .radio-label input[type="radio"] {
     margin-right: 5px;
     vertical-align: middle;
+    font-weight: bold;
 }
 
 .radio-label input[type="radio"]:checked + .radio-label {
-    background-color: #007bff; /* Match login-btn color */
+    background-color: #007bff;
     color: white;
 }
 
