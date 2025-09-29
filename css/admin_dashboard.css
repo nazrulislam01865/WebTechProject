@@ -320,14 +320,14 @@ footer {
 }
 
 .footerSection a {
-    color: #ffd700;
+    color: #fff;
     text-decoration: none;
     display: block;
     margin-bottom: 10px;
 }
 
 .footerSection a:hover {
-    text-decoration: underline;
+    color: #007bff;
 }
 
 .footerBottom {
@@ -338,7 +338,7 @@ footer {
 }
 
 .footerBottom .designer {
-    color: #ffd700;
+    color: #000;
 }
 
 /* Responsive Table */

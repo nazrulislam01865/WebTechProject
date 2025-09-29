@@ -177,14 +177,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
             </div>
             <div class="footerSection">
                 <h3>About GoBUS</h3>
-                <a href="../index.html">Home</a>
-                <a href="../html/about_us.html">About Us</a>
-                <a href="../html/contact.html">Contact Us</a>
+                <a href="../index.php">Home</a>
+                <a href="./aboutUs.php">About Us</a>
+                <a href="./contact.php">Contact Us</a>
             </div>
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="../html/terms.html">Terms and Condition</a>
-                <a href="../html/privacy.html">Privacy Policy</a>
+                <a href="./terms.php">Terms and Condition</a>
+                <a href="./privacy.php">Privacy Policy</a>
             </div>
         </div>
         <div class="footerBottom">

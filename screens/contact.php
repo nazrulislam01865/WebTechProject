@@ -112,7 +112,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - GoBus</title>
     <link rel="stylesheet" href="../css/contact.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .error-text { color: red; font-size: 0.9em; display: block; margin-top: 5px; }
         .success { color: green; font-size: 0.9em; margin-bottom: 10px; font-weight: bold; text-align: center; }
@@ -234,15 +233,16 @@ try {
 
             <div class="footerSection">
                 <h3>About GoBUS</h3>
-                <a href="../html/aboutus.php">About Us</a>
-                <a href="contact.php">Contact Us</a>
-                <a href="../html/cancelTicket.php">Cancel Ticket</a>
+                <a href="../index.php">Home</a>
+                <a href="./aboutus.php">About Us</a>
+                
+                <a href="./cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">
                 <h3>Company Info</h3>
-                <a href="../html/terms.php">Terms and Condition</a>
-                <a href="../html/privacy.php">Privacy Policy</a>
+                <a href="./terms.php">Terms and Condition</a>
+                <a href="./privacy.php">Privacy Policy</a>
             </div>
         </div>
 

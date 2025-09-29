@@ -19,12 +19,12 @@ error_reporting(E_ALL);
 function send_password_reset($get_username, $get_email, $token) {
     $mail = new PHPMailer(true);
     try {
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Enable debug output
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER; 
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'saruarmunna17@gmail.com';
-        $mail->Password = 'rxro qyva fnvf tyrk'; // Provided App Password
+        $mail->Password = 'rxro qyva fnvf tyrk'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
 
@@ -55,7 +55,7 @@ try {
 
     if (isset($_POST['password_reset_link'])) {
         $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $token = bin2hex(random_bytes(32)); // Secure token generation
+        $token = bin2hex(random_bytes(32)); 
 
         $check_email = "SELECT username, email FROM users WHERE email='$email' LIMIT 1";
         $check_email_run = mysqli_query($conn, $check_email);
