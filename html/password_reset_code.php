@@ -9,130 +9,139 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-//Load Composer's autoloader (created by composer, not included with PHPMailer)
 require 'vendor/autoload.php';
 
-function send_password_reset($name, $email, $token){
-    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
-    $mail = new PHPMailer(true);                                //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'digiwebnex@gmail.com';                     //SMTP username
-    $mail->Password   = '***';                               //SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    //Recipients
-    $mail->setFrom('digiwebnex@gmail.com', $name);
-    $mail->addAddress($email);     //Add a recipient
+function send_password_reset($get_username, $get_email, $token) {
+    $mail = new PHPMailer(true);
+    try {
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Enable debug output
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'saruarmunna17@gmail.com';
+        $mail->Password = 'rxro qyva fnvf tyrk'; // Provided App Password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = 465;
 
+        $mail->setFrom('saruarmunna17@gmail.com', $get_username);
+        $mail->addAddress($get_email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Reset Password Notification';
+        $mail->Body = '<h2>Hello ' . htmlspecialchars($get_username) . '</h2>
+                       <p>Click the link below to reset your password.</p>
+                       <a href="http://localhost/webtech/WebTechProject/html/reset_password.php?token=' . urlencode($token) . '&email=' . urlencode($get_email) . '">Reset Password</a>';
 
-    //Content
-    $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = 'Reset Password Notification';
-    $mail->Body    = '<h2>Hello '.$name.'</h2>
-                        <p>Click the link below to reset your password.
-                        </p><a href="http://localhost/gobus/html/reset_password.php?token='.$token.'&email='.$email.'">Reset Password</a>';
-
-    $mail->send();
-    echo 'Message has been sent';
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("PHPMailer Error: " . $mail->ErrorInfo);
+        return false;
+    }
 }
+
 try {
     $conn = new mysqli($servername, $username, $password_db, $dbname);
 
     if ($conn->connect_error) {
-        $error = "Database connection failed: " . $conn->connect_error;
-    }else{
-        if(isset($_POST['password_reset_link'])) {
-            $email = mysqli_real_escape_string($conn, $_POST['email']);
-            $token = md5(rand());
+        $_SESSION['error'] = "Database connection failed: " . $conn->connect_error;
+        header("Location: forgetReset.php");
+        exit(0);
+    }
 
-            $check_email = "SELECT email FROM users WHERE email='$email' LIMIT 1";
-            $check_email_run = mysqli_query($conn, $check_email);
+    if (isset($_POST['password_reset_link'])) {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $token = bin2hex(random_bytes(32)); // Secure token generation
 
-            if(mysqli_num_rows($check_email_run) > 0){
-                $row = mysqli_fetch_array($check_email_run);
-                $get_name=$row['name'];
-                $get_email=$row['email'];
+        $check_email = "SELECT username, email FROM users WHERE email='$email' LIMIT 1";
+        $check_email_run = mysqli_query($conn, $check_email);
 
-                $update_token = "UPDATE users SET verify_token='$token' WHERE email='$get_email' LIMIT 1";
-                $update_token_run = mysqli_query($conn, $update_token);
+        if (mysqli_num_rows($check_email_run) > 0) {
+            $row = mysqli_fetch_array($check_email_run);
+            $get_username = $row['username'];
+            $get_email = $row['email'];
 
-                if($update_token_run){
-                    send_password_reset($get_name, $get_email, $token);
+            $update_token = "UPDATE users SET verify_token='$token' WHERE email='$get_email' LIMIT 1";
+            $update_token_run = mysqli_query($conn, $update_token);
+
+            if ($update_token_run) {
+                if (send_password_reset($get_username, $get_email, $token)) {
                     $_SESSION['error'] = "We emailed you a password reset link.";
                     header("Location: forgetReset.php");
                     exit(0);
-
-                }else{
-                    $_SESSION['error'] = "Something went wrong. #1";
+                } else {
+                    $_SESSION['error'] = "Failed to send reset email. Check SMTP settings.";
                     header("Location: forgetReset.php");
                     exit(0);
-
                 }
-
-            }else{
-                $_SESSION['error'] = "Email does not exist";
+            } else {
+                $_SESSION['error'] = "Failed to update token: " . mysqli_error($conn);
                 header("Location: forgetReset.php");
                 exit(0);
             }
-            
+        } else {
+            $_SESSION['error'] = "Email does not exist.";
+            header("Location: forgetReset.php");
+            exit(0);
         }
+    } elseif (isset($_POST['reset_password'])) {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $token = mysqli_real_escape_string($conn, $_POST['password_token']);
+        $new_password = mysqli_real_escape_string($conn, $_POST['new_password']);
+        $confirm_password = mysqli_real_escape_string($conn, $_POST['confirm_password']);
 
-        if(isset($_POST['reset_password'])) {
-            $email = mysqli_real_escape_string($conn, $_POST['email']);
-            $token = mysqli_real_escape_string($conn, $_POST['password_token']);
-            $new_password = mysqli_real_escape_string($conn, $_POST['new_password']);
-            $confirm_password = mysqli_real_escape_string($conn, $_POST['confirm_password']);
+        if (!empty($token)) {
+            if (!empty($email) && !empty($new_password) && !empty($confirm_password)) {
+                $check_token = "SELECT verify_token FROM users WHERE verify_token='$token' AND email='$email' LIMIT 1";
+                $check_token_run = mysqli_query($conn, $check_token);
 
-            if(!empty($token)){
-                if(!empty($email) && !empty($new_password) && !empty($confirm_password)){
-                    $check_token = "SELECT verify_token FROM users WHERE verify_token='$token' LIMIT 1";
-                    $check_token_run = mysqli_query($conn, $check_token);
+                if (mysqli_num_rows($check_token_run) > 0) {
+                    if ($new_password === $confirm_password) {
+                        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                        $update_password = "UPDATE users SET password='$hashed_password', verify_token='' WHERE email='$email' LIMIT 1";
+                        $update_password_run = mysqli_query($conn, $update_password);
 
-                    if(mysqli_num_rows($check_token_run) > 0){
-                        if($new_password == $confirm_password){
-                            $update_password = "UPDATE users SET password='$new_password', verify_token='' WHERE email='$email' LIMIT 1";
-                            $update_password_run = mysqli_query($conn, $update_password);
-
-                            if($update_password_run){
-                                $_SESSION['success'] = "Password reset successfully.";
-                                header("Location: login.php");
-                                exit(0);
-                            }else{
-                                $_SESSION['error'] = "Something went wrong. #2";
-                                header("Location: reset_password.php?token=$token&email=$email");
-                                exit(0);
-                            }
-
-                        }else{
-                            $_SESSION['error'] = "Passwords does not match.";
+                        if ($update_password_run) {
+                            $_SESSION['success'] = "Password reset successfully.";
+                            header("Location: login.php");
+                            exit(0);
+                        } else {
+                            $_SESSION['error'] = "Failed to reset password: " . mysqli_error($conn);
                             header("Location: reset_password.php?token=$token&email=$email");
                             exit(0);
-
                         }
-                    }else{
-                        $_SESSION['error'] = "Invalid token.";
+                    } else {
+                        $_SESSION['error'] = "Passwords do not match.";
                         header("Location: reset_password.php?token=$token&email=$email");
                         exit(0);
                     }
-                }else{
-                    $_SESSION['error'] = "All fields are required.";
+                } else {
+                    $_SESSION['error'] = "Invalid token or email.";
                     header("Location: reset_password.php?token=$token&email=$email");
                     exit(0);
                 }
-
-            }else{
-                $_SESSION['error'] = "No token found";
-                header("Location: reset_password.php");
+            } else {
+                $_SESSION['error'] = "All fields are required.";
+                header("Location: reset_password.php?token=$token&email=$email");
                 exit(0);
-
             }
+        } else {
+            $_SESSION['error'] = "No token provided.";
+            header("Location: reset_password.php");
+            exit(0);
         }
-
+    } else {
+        $_SESSION['error'] = "Invalid request.";
+        header("Location: forgetReset.php");
+        exit(0);
     }
 } catch (mysqli_sql_exception $e) {
-    $error = "Database error: " . $e->getMessage();
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    header("Location: forgetReset.php");
+    exit(0);
 }
 ?>
