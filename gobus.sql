@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 25, 2025 at 05:45 PM
+-- Generation Time: Sep 29, 2025 at 05:53 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -43,30 +43,35 @@ CREATE TABLE `bookings` (
   `transaction_id` varchar(50) DEFAULT NULL,
   `payment_method` varchar(20) DEFAULT NULL,
   `fare` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `operator_name` varchar(255) NOT NULL
+  `operator_name` varchar(255) NOT NULL,
+  `promo_code` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `user_id`, `bus_id`, `seat_number`, `phone_number`, `boarding_point`, `dropping_point`, `booking_id`, `route`, `date`, `status`, `returnDate`, `transaction_id`, `payment_method`, `fare`, `operator_name`) VALUES
-(1, 2, 1, 'A1', '01738251690', 'Dhaka To Rajshahi', 'Dhaka To Rajshahi', 'BK12345', 'Dhaka To Rajshahi', '2025-08-15', 'Completed', NULL, NULL, NULL, 0.00, ''),
-(2, 2, 1, 'A1', '01738251690', 'Dhaka To Barisal', 'Dhaka To Barisal', 'BK12346', 'Dhaka To Barisal', '2025-08-20', 'Cancelled', NULL, NULL, NULL, 0.00, ''),
-(3, 2, 1, 'A1', '01738251690', 'Dhaka To Cox\'s Bazar', 'Dhaka To Cox\'s Bazar', 'BK12347', 'Dhaka To Cox\'s Bazar', '2025-07-10', 'Completed', NULL, NULL, NULL, 0.00, ''),
-(4, 2, 1, 'A2', '01738251690', 'Saydabad Terminal -1', 'Barisal Terminal', 'BK54321', 'Dhaka To Barisal', '2025-08-29', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(5, 2, 1, 'A3', '01738251690', 'Saydabad Terminal -1', 'Barisal Terminal', 'BK54322', 'Dhaka To Barisal', '2025-08-29', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(6, 2, 3, 'B1', '01738251690', 'Dhaka', 'Rajshahi', 'BK54323', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(7, 2, 4, 'C1', '01738251690', 'Dhaka', 'Cox\'s Bazar', 'BK54324', 'Dhaka To Cox\'s Bazar', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(8, 2, 3, 'A3', '01738251690', 'Dhaka', 'Rajshahi', 'BK61375', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(9, 2, 6, 'A3', '01738251690', 'Dhaka', 'Khulna', 'BK96553', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(10, 2, 6, 'B3', '01738251690', 'Dhaka', 'Khulna', 'BK81099', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, ''),
-(11, 2, 6, '', '01738251690', 'Dhaka', 'Khulna', 'BK37991', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', NULL, 0.00, ''),
-(12, 2, 3, 'B3', '01738251690', 'Dhaka', 'Rajshahi', 'BK61556', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDSS', 'mobile_banking', 1200.00, ''),
-(13, 2, 6, 'C1', '01738251690', 'Dhaka', 'Khulna', 'BK52394', 'Dhaka To Khulna', '2025-09-30', 'Cancelled', NULL, 'XYZTKSYJFDSS', 'mobile_banking', 1000.00, ''),
-(14, 2, 3, 'B4', '01738251690', 'Dhaka', 'Rajshahi', 'BK92745', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1200.00, 'Green Line Paribahan'),
-(15, 2, 17, 'A3', '01738251690', 'Dhaka', 'Khulna', 'BK92180', 'Dhaka To Khulna', '2025-09-25', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1250.00, 'Desh Travels'),
-(16, 2, 17, 'A4', '01738251690', 'Dhaka', 'Khulna', 'BK71117', 'Dhaka To Khulna', '2025-09-25', 'Upcoming', NULL, 'XYZTKSYJFDSS', 'mobile_banking', 1250.00, 'Desh Travels');
+INSERT INTO `bookings` (`id`, `user_id`, `bus_id`, `seat_number`, `phone_number`, `boarding_point`, `dropping_point`, `booking_id`, `route`, `date`, `status`, `returnDate`, `transaction_id`, `payment_method`, `fare`, `operator_name`, `promo_code`) VALUES
+(1, 2, 1, 'A1', '01738251690', 'Dhaka To Rajshahi', 'Dhaka To Rajshahi', 'BK12345', 'Dhaka To Rajshahi', '2025-08-15', 'Completed', NULL, NULL, NULL, 0.00, '', NULL),
+(2, 2, 1, 'A1', '01738251690', 'Dhaka To Barisal', 'Dhaka To Barisal', 'BK12346', 'Dhaka To Barisal', '2025-08-20', 'Cancelled', NULL, NULL, NULL, 0.00, '', NULL),
+(3, 2, 1, 'A1', '01738251690', 'Dhaka To Cox\'s Bazar', 'Dhaka To Cox\'s Bazar', 'BK12347', 'Dhaka To Cox\'s Bazar', '2025-07-10', 'Completed', NULL, NULL, NULL, 0.00, '', NULL),
+(4, 2, 1, 'A2', '01738251690', 'Saydabad Terminal -1', 'Barisal Terminal', 'BK54321', 'Dhaka To Barisal', '2025-08-29', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(5, 2, 1, 'A3', '01738251690', 'Saydabad Terminal -1', 'Barisal Terminal', 'BK54322', 'Dhaka To Barisal', '2025-08-29', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(6, 2, 3, 'B1', '01738251690', 'Dhaka', 'Rajshahi', 'BK54323', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(7, 2, 4, 'C1', '01738251690', 'Dhaka', 'Cox\'s Bazar', 'BK54324', 'Dhaka To Cox\'s Bazar', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(8, 2, 3, 'A3', '01738251690', 'Dhaka', 'Rajshahi', 'BK61375', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(9, 2, 6, 'A3', '01738251690', 'Dhaka', 'Khulna', 'BK96553', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(10, 2, 6, 'B3', '01738251690', 'Dhaka', 'Khulna', 'BK81099', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, NULL, NULL, 0.00, '', NULL),
+(11, 2, 6, '', '01738251690', 'Dhaka', 'Khulna', 'BK37991', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', NULL, 0.00, '', NULL),
+(12, 2, 3, 'B3', '01738251690', 'Dhaka', 'Rajshahi', 'BK61556', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDSS', 'mobile_banking', 1200.00, '', NULL),
+(13, 2, 6, 'C1', '01738251690', 'Dhaka', 'Khulna', 'BK52394', 'Dhaka To Khulna', '2025-09-30', 'Cancelled', NULL, 'XYZTKSYJFDSS', 'mobile_banking', 1000.00, '', NULL),
+(14, 2, 3, 'B4', '01738251690', 'Dhaka', 'Rajshahi', 'BK92745', 'Dhaka To Rajshahi', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1200.00, 'Green Line Paribahan', NULL),
+(15, 2, 17, 'A3', '01738251690', 'Dhaka', 'Khulna', 'BK92180', 'Dhaka To Khulna', '2025-09-25', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1250.00, 'Desh Travels', NULL),
+(16, 2, 17, 'A4', '01738251690', 'Dhaka', 'Khulna', 'BK71117', 'Dhaka To Khulna', '2025-09-25', 'Upcoming', NULL, 'XYZTKSYJFDSS', 'mobile_banking', 1250.00, 'Desh Travels', NULL),
+(17, 3, 5, 'A1', '01956351202', 'Dhaka', 'Sylhet', 'BK71008', 'Dhaka To Sylhet', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1100.00, 'Ena Transport', NULL),
+(18, 2, 5, '', '01738251690', 'Dhaka', 'Sylhet', 'BK79620', 'Dhaka To Sylhet', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJDG', 'mobile_banking', 1090.00, 'Ena Transport', 'ss'),
+(19, 2, 6, 'A4', '01738251690', 'Dhaka', 'Khulna', 'BK27040', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1000.00, 'Desh Travels', NULL),
+(20, 2, 6, 'B1', '01738251690', 'Dhaka', 'Khulna', 'BK51426', 'Dhaka To Khulna', '2025-09-30', 'Cancelled', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1000.00, 'Desh Travels', NULL);
 
 -- --------------------------------------------------------
 
@@ -97,8 +102,8 @@ INSERT INTO `buses` (`id`, `operator_name`, `bus_number`, `bus_type`, `starting_
 (2, 'Shyamoli NR Travels', '6301-Barisal', 'Non AC', 'Rainkhola Counter', 'Barisal Terminal', '06:00:00', '11:00:00', 450.00, 25, '2025-08-29'),
 (3, 'Green Line Paribahan', 'GL-201-DHK-RAJ', 'AC', 'Dhaka', 'Rajshahi', '08:00:00', '13:30:00', 1200.00, 36, '2025-09-30'),
 (4, 'Hanif Enterprise', 'HF-301-DHK-COX', 'Non AC', 'Dhaka', 'Cox\'s Bazar', '22:00:00', '07:00:00', 900.00, 34, '2025-09-30'),
-(5, 'Ena Transport', 'ENA-105-DHK-SYL', 'AC', 'Dhaka', 'Sylhet', '07:30:00', '14:00:00', 1100.00, 28, '2025-09-30'),
-(6, 'Desh Travels', 'DT-502-DHK-KHU', 'AC', 'Dhaka', 'Khulna', '06:30:00', '13:00:00', 1000.00, 18, '2025-09-30'),
+(5, 'Ena Transport', 'ENA-105-DHK-SYL', 'AC', 'Dhaka', 'Sylhet', '07:30:00', '14:00:00', 1100.00, 26, '2025-09-30'),
+(6, 'Desh Travels', 'DT-502-DHK-KHU', 'AC', 'Dhaka', 'Khulna', '06:30:00', '13:00:00', 1000.00, 16, '2025-09-30'),
 (7, 'National Travels', 'NT-601-DHK-MYM', 'Non AC', 'Dhaka', 'Mymensingh', '10:00:00', '12:30:00', 300.00, 40, '2025-09-30'),
 (8, 'Sakura Paribahan', '102-BSL-DHK', 'Non AC', 'Barisal', 'Dhaka', '08:00:00', '10:30:00', 550.00, 30, '2025-10-01'),
 (9, 'Shyamoli NR Travels', '6302-BAR-DHK', 'Non AC', 'Barisal', 'Dhaka', '09:00:00', '14:00:00', 450.00, 25, '2025-10-01'),
@@ -108,7 +113,11 @@ INSERT INTO `buses` (`id`, `operator_name`, `bus_number`, `bus_type`, `starting_
 (13, 'Saint Martin Paribahan', 'SM-401-CHT-BAN', 'Non AC', 'Chittagong', 'Bandarban', '09:00:00', '11:30:00', 400.00, 15, '2025-09-30'),
 (14, 'Desh Travels', 'DT-503-KHU-BAR', 'Non AC', 'Khulna', 'Barisal', '07:00:00', '11:00:00', 600.00, 28, '2025-09-30'),
 (15, 'National Travels', 'NT-602-MYM-SYL', 'Non AC', 'Mymensingh', 'Sylhet', '08:30:00', '13:30:00', 700.00, 30, '2025-09-30'),
-(17, 'Desh Travels', 'BUS-16960F', 'Non AC', 'Dhaka', 'Khulna', '05:00:00', '12:00:00', 1250.00, 38, '2025-09-25');
+(17, 'Desh Travels', 'BUS-16960F', 'Non AC', 'Dhaka', 'Khulna', '05:00:00', '12:00:00', 1250.00, 38, '2025-09-26'),
+(19, 'Ena Transport', 'BUS-60C2B7', 'Non AC', 'Dhaka', 'Khulna', '22:00:00', '06:00:00', 1200.00, 40, '2025-09-26'),
+(21, 'Ena Transport', 'BUS-1A59B6', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29'),
+(23, 'Ena Transport', 'BUS-D1A02B', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29'),
+(24, 'Ena Transport', 'BUS-F860AE', 'Non AC', 'Dhaka', 'Sylhet', '10:00:00', '17:00:00', 1250.00, 40, '2025-09-30');
 
 -- --------------------------------------------------------
 
@@ -129,7 +138,9 @@ CREATE TABLE `bus_companies` (
 
 INSERT INTO `bus_companies` (`id`, `company_name`, `phone`, `password`) VALUES
 (1, 'Sakura Paribahan', '98765432101', '12345678'),
-(2, 'Desh Travels', '01738251690', '$2y$10$deA8zWmrLRaqnKyCtF7A9OONwtZXIfDiygszP95Bk0ns6VduURtim');
+(2, 'Desh Travels', '01738251690', '$2y$10$deA8zWmrLRaqnKyCtF7A9OONwtZXIfDiygszP95Bk0ns6VduURtim'),
+(3, 'xyz', '12345678901', '$2y$10$75rIXyu/t.23LJ28.tO3Rui46YFPyUrpIs5G6OfJ/mfeJ7EtsnJRq'),
+(4, 'Ena Transport', '01738251691', '$2y$10$..U.zgIBOkkPWsdsxEG1p./8QeTWedPHuIUCwlisy6yV5WxGCCx66');
 
 -- --------------------------------------------------------
 
@@ -154,7 +165,8 @@ CREATE TABLE `complaints` (
 INSERT INTO `complaints` (`id`, `user_id`, `booking_id`, `complaint_type`, `description`, `created_at`, `status`) VALUES
 (1, 2, 'BK52394', 'Service', 'hgjgjhjh', '2025-09-24 15:41:30', 'Resolved'),
 (2, 2, 'BK54323', 'Service', 'baje services', '2025-09-24 16:01:34', 'Pending'),
-(4, 2, 'BK81099', 'Driver', 'zvczcx', '2025-09-24 16:48:13', 'Pending');
+(4, 2, 'BK81099', 'Driver', 'zvczcx', '2025-09-24 16:48:13', 'Resolved'),
+(5, 2, 'BK71117', 'Vehicle', 'Baje bus', '2025-09-26 05:30:24', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -227,7 +239,9 @@ CREATE TABLE `feedback` (
 INSERT INTO `feedback` (`id`, `user_id`, `booking_id`, `rating`, `comments`, `created_at`) VALUES
 (1, 2, 'BK12347', 2, 'hgvgh', '2025-09-13 11:45:16'),
 (2, 2, 'BK12345', 2, 'hghgfghfg', '2025-09-18 16:58:16'),
-(3, 2, 'BK12346', 1, 'jgj', '2025-09-19 18:07:24');
+(3, 2, 'BK12346', 1, 'jgj', '2025-09-19 18:07:24'),
+(4, 2, 'BK92180', 5, '5* dilam for check', '2025-09-26 05:30:03'),
+(5, 2, 'BK12345', 1, 'hh', '2025-09-29 15:50:20');
 
 -- --------------------------------------------------------
 
@@ -300,7 +314,8 @@ CREATE TABLE `promotions` (
 INSERT INTO `promotions` (`id`, `promo_code`, `discount_type`, `discount_value`, `route`) VALUES
 (1, 'SUMMER10', 'Percentage', 10.00, 'Dhaka routes'),
 (2, 'FALL20', 'Fixed Amount', 20.00, 'Chittagong routes'),
-(3, 'TC', 'Percentage', 10.00, 'Dhaka-Sylhet');
+(3, 'TC', 'Percentage', 10.00, 'Dhaka-Sylhet'),
+(4, 'ss', 'Fixed Amount', 10.00, 'Dhaka-Sylhet');
 
 -- --------------------------------------------------------
 
@@ -324,7 +339,8 @@ INSERT INTO `responses` (`id`, `item_id`, `response_text`, `created_at`, `item_t
 (1, 2, 'kjhsdf', '2025-09-19 17:19:47', 'Feedback'),
 (2, 2, 'kjhsdf', '2025-09-19 17:19:47', 'Feedback'),
 (3, 2, 'kjhsdf', '2025-09-19 17:19:47', 'Feedback'),
-(4, 1, 'hi ahs', '2025-09-24 15:57:23', 'Complaint');
+(4, 1, 'hi ahs', '2025-09-24 15:57:23', 'Complaint'),
+(5, 4, 'dfg', '2025-09-26 05:24:58', 'Complaint');
 
 -- --------------------------------------------------------
 
@@ -361,16 +377,18 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `phone` varchar(11) NOT NULL,
   `nid` varchar(10) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `verify_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `phone`, `nid`, `password`) VALUES
-(1, 'nazrul3', 'nazrul01865@gmail.com', '1738251690', '9174589284', '$2y$10$8FbRTYee/0/3mrKkJqvs7emWY4zN5Z92KF8Pr2Wh0/PEz0PkktX5i'),
-(2, 'nazrul', 'nazrul.islam.01865@gmail.com', '01738251690', '9174589283', '$2y$10$7ZRr3aBPb1o.G0rg3NcSvO0cGrFpdaKUyO2vAClQnDQxGjN7tCe2C');
+INSERT INTO `users` (`id`, `username`, `email`, `phone`, `nid`, `password`, `verify_token`) VALUES
+(1, 'nazrul3', 'nazrul01865@gmail.com', '1738251690', '9174589284', '$2y$10$8FbRTYee/0/3mrKkJqvs7emWY4zN5Z92KF8Pr2Wh0/PEz0PkktX5i', NULL),
+(2, 'nazrul', 'nazrul.islam.01865@gmail.com', '01738251690', '9174589283', '$2y$10$jkC2CGJlrvCssLXUTwwWEulAsFgJ61A3YX7CxeFXrRZ2m3Jy84sNK', ''),
+(3, 'Nayeem', 'saruarmunna17@gmail.com', '01956351202', '9174589286', '$2y$10$0EbBq.kdmiW2FbFArdowfO3DmHjQLSgmO.S12yEm1QQdDQqaaI1jW', '54e743459e3af84ca3f48b4d44d50f01');
 
 --
 -- Indexes for dumped tables
@@ -487,25 +505,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `buses`
 --
 ALTER TABLE `buses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `bus_companies`
 --
 ALTER TABLE `bus_companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `contact_submissions`
@@ -523,7 +541,7 @@ ALTER TABLE `drivers`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `feedbackadmin`
@@ -547,13 +565,13 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT for table `promotions`
 --
 ALTER TABLE `promotions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `responses`
 --
 ALTER TABLE `responses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `routes`
@@ -565,7 +583,7 @@ ALTER TABLE `routes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
