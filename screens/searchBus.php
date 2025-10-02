@@ -573,7 +573,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 console.log('Apply promo button found on page load');
                 applyPromoBtn.addEventListener('click', function() {
                     console.log('Apply promo button clicked');
-                    const promoCode = document.getElementById('promo_code').value.trim();
+                    const promoCodeInput = document.getElementById('promo_code');
+                    const promoCode = promoCodeInput.value.trim();
                     const seatFareP = document.getElementById('seatFare');
                     const discountInfo = document.getElementById('discountInfo');
                     const discountAmount = document.getElementById('discountAmount');
@@ -614,6 +615,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                             discountInfo.style.display = 'block';
                         } else {
                             alert(data.message || 'Invalid promo code or route.');
+                            promoCodeInput.value = ''; // Clear the promo code input on invalid
                             seatFareP.textContent = originalFare.toFixed(2) + ' Tk';
                             console.log('Reverting to original fare:', originalFare.toFixed(2));
                             discountInfo.style.display = 'none';
@@ -622,6 +624,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     .catch(error => {
                         console.error('Error validating promo code:', error);
                         alert('Failed to validate promo code.');
+                        promoCodeInput.value = ''; // Clear the promo code input on error
                         seatFareP.textContent = originalFare.toFixed(2) + ' Tk';
                         console.log('Reverting to original fare on error:', originalFare.toFixed(2));
                         discountInfo.style.display = 'none';
@@ -633,3 +636,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         </script>
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
