@@ -21,11 +21,11 @@ GoBus is a web-based bus ticket booking system that allows users to search for a
 
 ## Installation
 1. **Clone the repository:**  
-   - Using HTTPS:  
+   Using HTTPS:  
      ```sh
      git clone https://github.com/nazrulislam01865/WebTechProject.git
      ```  
-   -OR Using SSH :  
+   -Using SSH (optional) :  
      ```sh
      git clone git@github.com:nazrulislam01865/WebTechProject.git
      ```
@@ -44,7 +44,7 @@ GoBus is a web-based bus ticket booking system that allows users to search for a
      ```
    **Click Import, and upload the file:**
      ```sh
-   gobus.sql
+    gobus.sql
      ```
    Click **Go** to import the tables and data successfully.
 
