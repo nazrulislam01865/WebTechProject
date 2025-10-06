@@ -40,11 +40,11 @@ GoBus is a web-based bus ticket booking system that allows users to search for a
      ```
    - Create a new database:
      ```sh
-    gobus
+     gobus
      ```
    - Click Import, and upload the file:
      ```sh
-    gobus.sql
+     gobus.sql
      ```
    - Click **Go** to import the tables and data successfully.
 
