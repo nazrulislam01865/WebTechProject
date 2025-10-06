@@ -38,15 +38,15 @@ GoBus is a web-based bus ticket booking system that allows users to search for a
      ```sh
     http://localhost/phpmyadmin
      ```
-  **Create a new database:**
+- **Create a new database:**
      ```sh
     gobus
      ```
-   **Click Import, and upload the file:**
+- **Click Import, and upload the file:**
      ```sh
     gobus.sql
      ```
-   Click **Go** to import the tables and data successfully.
+- Click **Go** to import the tables and data successfully.
 
 4. **Start a local server (e.g., XAMPP ) and access the project via browser:**
    ```
