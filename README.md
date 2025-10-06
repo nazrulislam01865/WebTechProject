@@ -1,5 +1,4 @@
-# WebTechProject
-GoBus
+#  GoBus
 GoBus is a web-based bus ticket booking system that allows users to search for available buses, book tickets, and manage reservations online. It is built using HTML, CSS, JavaScript, and PHP, with MySQL as the database.
 
 ## Technologies Used
@@ -10,13 +9,13 @@ GoBus is a web-based bus ticket booking system that allows users to search for a
 ---
 
 ## Main Features
-- * Three user types: Customer, Admin, and Bus Company
-- * Authentication: Login, logout, user registration
-- * Account Management: Change or reset password, manage profile information (view, edit, delete)
-- * Dashboard: Access a personalized dashboard after login
-- * Customer Features: Buy ticket, cancel ticket, make payment, give feedback about experience
-- * Admin Features: Revenue tracking per route, manage discounts and promotions, generate reports, handle feedback and complaints
-- * Bus Company Features: Monitor passenger list, view revenue report per bus, assign drivers, cancel trips
+-  Three user types: Customer, Admin, and Bus Company
+-  Authentication: Login, logout, user registration
+-  Account Management: Change or reset password, manage profile information (view, edit, delete)
+-  Dashboard: Access a personalized dashboard after login
+-  Customer Features: Buy ticket, cancel ticket, make payment, give feedback about experience
+-  Admin Features: Revenue tracking per route, manage discounts and promotions, generate reports, handle feedback and complaints
+-  Bus Company Features: Monitor passenger list, view revenue report per bus, assign drivers, cancel trips
 
 ---
 
@@ -67,11 +66,11 @@ GoBus is a web-based bus ticket booking system that allows users to search for a
 ---
 
 ## Authors
-- **Nazrul Islam*
+- *Nazrul Islam*
 https://github.com/nazrulislam01865
-- **Samia Sharmin*
+- *Samia Sharmin*
 https://github.com/SamiaSharmin
-- **Merin Taj*
+- *Merin Taj*
 https://github.com/Merin23508651
 
 ---
