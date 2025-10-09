@@ -1,5 +1,5 @@
 #  GoBus
-GoBus is a complete web-based bus ticket booking system designed to make bus travel easier and more organized for passengers, administrators, and transport companies. Users can search for available buses, purchase tickets online, make payments, and manage their bookings comfortably from home, no more waiting in long lines at the counter!
+GoBus is a complete web-based bus ticket booking system designed to make bus travel easier and more organized for passengers, administrators, and transport companies. Users can search for available buses, purchase tickets online, make payments, and manage their bookings comfortably from home, no more waiting in long lines at the counter
 
 The system supports three types of users **Customer**, **Admin**, and **Bus Company** .Each with their own dashboards and dedicated functionalities. From managing routes, tracking revenue, assigning drivers, and handling feedback to simple ticket booking,This project provides an all-in-one digital solution for bus ticket booking system.
 
@@ -10,17 +10,17 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
 - **Frontend:** HTML, CSS, JavaScript  
 - **Backend:** PHP  
 - **Database:** MySQL  
-- **Server:** XAMPP / Apache 
+- **Server:** XAMPP
 ---
 
 ## Main Features
--  Three user types: Customer, Admin, and Bus Company
--  Authentication: Login, logout, user registration
--  Account Management: Change or reset password, manage profile information (view, edit, delete)
--  Dashboard: Access a personalized dashboard after login
--  Customer Features: Buy ticket, cancel ticket, make payment, give feedback about experience
--  Admin Features: Revenue tracking per route, manage discounts and promotions, generate reports, handle feedback and complaints
--  Bus Company Features: Monitor passenger list, view revenue report per bus, assign drivers, cancel trips
+-  **Three user types:** Customer, Admin, and Bus Company
+-  **Authentication:** Login, logout, user registration
+-  **Account Management:** Change or reset password, manage profile information (view, edit, delete)
+-  **Dashboard:** Access a personalized dashboard after login
+-  **Customer Features:** Buy ticket, cancel ticket, make payment, give feedback about experience
+-  **Admin Features:** Revenue tracking per route, manage discounts and promotions, generate reports, handle feedback and complaints
+-  **Bus Company Features:** Monitor passenger list, view revenue report per bus, assign drivers, cancel trips
 
 ---
 
@@ -30,7 +30,7 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
      ```sh
      git clone https://github.com/nazrulislam01865/WebTechProject.git
      ```  
-   -Using SSH (optional) :  
+   Using SSH (optional) :  
      ```sh
      git clone git@github.com:nazrulislam01865/WebTechProject.git
      ```
@@ -38,24 +38,29 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
    ```sh
    cd WebTechProject
    ```
-3. **Set Up the Database:**
+3. **To Start the Local Server:**
+
+   Before running the project, the user must open the XAMPP Control Panel and start the required modules **Apache** and **MySQL** by clicking the “Start” button under the      Actions column.
+   
+4. **Set Up the Database:**
     - Open your browser and go to:
      ```sh
     http://localhost/phpmyadmin
      ```
    - Create a new database:
-     ```sh
+    ```sh
      gobus
-     ```
+      ```
    - Click Import, and upload the file:
-     ```sh
+    ```sh
      gobus.sql
      ```
    - Click **Go** to import the tables and data successfully.
 
-4. **Start a local server (e.g., XAMPP ) and access the project via browser:**
+5. **Start a local server (e.g., XAMPP ) and access the project via browser:**
+   (Must Be
    ```
-   http://localhost/WebTechProject/
+   http://localhost/WebTechProject/index.php
    ```
 ---
 ##  Admin Panel Credentials
