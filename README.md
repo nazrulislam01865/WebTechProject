@@ -34,13 +34,13 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
      ```sh
      git clone git@github.com:nazrulislam01865/WebTechProject.git
      ```
-2. **Going to the project folder:**  
+2. **Going to the project folder:** (for Pull)
    ```sh
    cd WebTechProject
    ```
 3. **To Start the Local Server:**
 
-   Before running the project, the user must open the ***XAMPP*** Control Panel and start the required modules **Apache** and **MySQL** by clicking the “Start” button under the      Actions column.
+   Before running the project, the user must open the ***XAMPP*** Control Panel and start the required modules **Apache** and **MySQL** by clicking the “Start” button under    the Actions column.
    
 4. **Set Up the Database:**
     - Open your browser and go to:
@@ -58,7 +58,8 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
    - Click **Go** to import the tables and data successfully.
 
 5. **Start a local server (e.g., XAMPP ) and access the project via browser:**
-   (Must Be
+   
+    (Make Sure the folder location must be in **main drive**>**xampp**<**htdocs**<**WebTechProject** to Start the project)
    ```
    http://localhost/WebTechProject/index.php
    ```
