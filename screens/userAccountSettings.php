@@ -1,3 +1,123 @@
+<?php
+session_start();
+
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$username = htmlspecialchars($_SESSION['username']);
+$errors = [];
+$success = "";
+$form_data = [
+    'name' => $_POST['name'] ?? $username,
+    'current_password' => $_POST['current_password'] ?? '',
+    'new_password' => $_POST['new_password'] ?? '',
+    'confirm_password' => $_POST['confirm_password'] ?? ''
+];
+
+//Model
+$servername = "localhost";
+$db_username = "root";
+$db_password = "";
+$dbname = "gobus";
+
+try {
+    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
+
+    if ($conn->connect_error) {
+        $errors['general'] = "Database connection failed: " . $conn->connect_error;
+    } else {
+        //Controller
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (!preg_match("/^[a-zA-Z0-9_]{3,20}$/", $form_data['name'])) {
+                $errors['name'] = "Username must be 3-20 characters, alphanumeric with underscores.";
+            } else {
+                $sql = "SELECT username FROM users WHERE username = ? AND id != ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("si", $form_data['name'], $_SESSION['user_id']);
+                $stmt->execute();
+                if ($stmt->get_result()->num_rows > 0) {
+                    $errors['name'] = "Username already exists.";
+                }
+                $stmt->close();
+            }
+
+            if (!empty($form_data['current_password'])) {
+                $sql = "SELECT password FROM users WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $_SESSION['user_id']);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $user = $result->fetch_assoc();
+                if (!password_verify($form_data['current_password'], $user['password'])) {
+                    $errors['current_password'] = "Current password is incorrect.";
+                }
+                $stmt->close();
+
+                if (!empty($form_data['new_password'])) {
+                    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $form_data['new_password'])) {
+                        $errors['new_password'] = "New password must be at least 8 characters, with one uppercase, one lowercase, one number, and one special character.";
+                    }
+                    if ($form_data['new_password'] !== $form_data['confirm_password']) {
+                        $errors['confirm_password'] = "New passwords do not match.";
+                    }
+                } else {
+                    $errors['new_password'] = "New password is required when changing password.";
+                }
+            }
+
+            if (empty($errors)) {
+                $sql = "";
+                $params = [];
+                $types = "";
+                $update_fields = [];
+
+                if ($form_data['name'] !== $username) {
+                    $update_fields[] = "username = ?";
+                    $params[] = $form_data['name'];
+                    $types .= "s";
+                }
+
+                if (!empty($form_data['new_password']) && !empty($form_data['current_password'])) {
+                    $hashed_password = password_hash($form_data['new_password'], PASSWORD_DEFAULT);
+                    $update_fields[] = "password = ?";
+                    $params[] = $hashed_password;
+                    $types .= "s";
+                }
+
+                if (!empty($update_fields)) {
+                    $sql = "UPDATE users SET " . implode(", ", $update_fields) . " WHERE id = ?";
+                    $params[] = $_SESSION['user_id'];
+                    $types .= "i";
+
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param($types, ...$params);
+                    if ($stmt->execute()) {
+                        $success = "Account updated successfully!";
+                        if ($form_data['name'] !== $username) {
+                            $_SESSION['username'] = $form_data['name'];
+                            $username = htmlspecialchars($form_data['name']);
+                        }
+                    } else {
+                        $errors['general'] = "Error updating account: " . $stmt->error;
+                    }
+                    $stmt->close();
+                } else {
+                    $success = "No changes made.";
+                }
+            }
+        }
+        $conn->close();
+    }
+} catch (mysqli_sql_exception $e) {
+    $errors['general'] = "Database error: " . $e->getMessage();
+}
+?>
+
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,132 +127,7 @@
     <link rel="stylesheet" type="text/css" href="../css/userAccountSettings.css">
 </head>
 <body>
-    <?php
-    // Start session
-    session_start();
-
-    // Enable strict MySQLi error reporting
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-    // Check if user is logged in
-    if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
-        header("Location: login.php");
-        exit();
-    }
-
-    $username = htmlspecialchars($_SESSION['username']);
-    $errors = [];
-    $success = "";
-    $form_data = [
-        'name' => $_POST['name'] ?? $username,
-        'current_password' => $_POST['current_password'] ?? '',
-        'new_password' => $_POST['new_password'] ?? '',
-        'confirm_password' => $_POST['confirm_password'] ?? ''
-    ];
-
-    // Database connection
-    $servername = "localhost";
-    $db_username = "root";
-    $db_password = "";
-    $dbname = "gobus";
-
-    try {
-        $conn = new mysqli($servername, $db_username, $db_password, $dbname);
-
-        if ($conn->connect_error) {
-            $errors['general'] = "Database connection failed: " . $conn->connect_error;
-        } else {
-            // Handle form submission
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                // Server-side validation
-                if (!preg_match("/^[a-zA-Z0-9_]{3,20}$/", $form_data['name'])) {
-                    $errors['name'] = "Username must be 3-20 characters, alphanumeric with underscores.";
-                } else {
-                    // Check if username is taken (exclude current user)
-                    $sql = "SELECT username FROM users WHERE username = ? AND id != ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("si", $form_data['name'], $_SESSION['user_id']);
-                    $stmt->execute();
-                    if ($stmt->get_result()->num_rows > 0) {
-                        $errors['name'] = "Username already exists.";
-                    }
-                    $stmt->close();
-                }
-
-                if (!empty($form_data['current_password'])) {
-                    // Verify current password
-                    $sql = "SELECT password FROM users WHERE id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $_SESSION['user_id']);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $user = $result->fetch_assoc();
-                    if (!password_verify($form_data['current_password'], $user['password'])) {
-                        $errors['current_password'] = "Current password is incorrect.";
-                    }
-                    $stmt->close();
-
-                    // Validate new password if provided
-                    if (!empty($form_data['new_password'])) {
-                        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $form_data['new_password'])) {
-                            $errors['new_password'] = "New password must be at least 8 characters, with one uppercase, one lowercase, one number, and one special character.";
-                        }
-                        if ($form_data['new_password'] !== $form_data['confirm_password']) {
-                            $errors['confirm_password'] = "New passwords do not match.";
-                        }
-                    } else {
-                        $errors['new_password'] = "New password is required when changing password.";
-                    }
-                }
-
-                // Update user data if no errors
-                if (empty($errors)) {
-                    $sql = "";
-                    $params = [];
-                    $types = "";
-                    $update_fields = [];
-
-                    if ($form_data['name'] !== $username) {
-                        $update_fields[] = "username = ?";
-                        $params[] = $form_data['name'];
-                        $types .= "s";
-                    }
-
-                    if (!empty($form_data['new_password']) && !empty($form_data['current_password'])) {
-                        $hashed_password = password_hash($form_data['new_password'], PASSWORD_DEFAULT);
-                        $update_fields[] = "password = ?";
-                        $params[] = $hashed_password;
-                        $types .= "s";
-                    }
-
-                    if (!empty($update_fields)) {
-                        $sql = "UPDATE users SET " . implode(", ", $update_fields) . " WHERE id = ?";
-                        $params[] = $_SESSION['user_id'];
-                        $types .= "i";
-
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param($types, ...$params);
-                        if ($stmt->execute()) {
-                            $success = "Account updated successfully!";
-                            if ($form_data['name'] !== $username) {
-                                $_SESSION['username'] = $form_data['name'];
-                                $username = htmlspecialchars($form_data['name']);
-                            }
-                        } else {
-                            $errors['general'] = "Error updating account: " . $stmt->error;
-                        }
-                        $stmt->close();
-                    } else {
-                        $success = "No changes made.";
-                    }
-                }
-            }
-            $conn->close();
-        }
-    } catch (mysqli_sql_exception $e) {
-        $errors['general'] = "Database error: " . $e->getMessage();
-    }
-    ?>
+    
 
     <header>
         <div class="logo">Go<span id="logo">Bus</span></div>
@@ -192,6 +187,7 @@
                 <?php endif; ?>
 
                 <button type="submit">Save Changes</button>
+                <button type="delete" id="delete-account">Delete Account</button>
             </form>
         </section>
     </main>

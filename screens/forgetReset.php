@@ -17,11 +17,13 @@
             <h2>Forgot Password</h2>
             <?php
             session_start();
+            //Controller
             if (isset($_SESSION['error'])) {
                 echo '<div style="color: red;">' . htmlspecialchars($_SESSION['error']) . '</div>';
                 unset($_SESSION['error']);
             }
             ?>
+            <!-- VIEW -->
             <form id="forgotPasswordForm" action="password_reset_code.php" method="POST">
                 <div class="input-box"> 
                     <input type="email" placeholder="Email" id="email" name="email" value="" style="width: 250px; max-width: 250px;">

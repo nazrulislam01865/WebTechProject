@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -9,6 +8,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 echo "<!-- DEBUG: Session - user_id: " . ($_SESSION['user_id'] ?? 'not set') . ", username: " . ($_SESSION['username'] ?? 'not set') . " -->";
 
+//Controller
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
@@ -18,6 +18,7 @@ $username = htmlspecialchars($_SESSION['username']);
 $errors = [];
 $bookings = [];
 
+//Model
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -45,6 +46,7 @@ try {
 }
 ?>
 
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

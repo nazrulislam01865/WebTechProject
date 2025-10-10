@@ -19,7 +19,6 @@ $upcoming_trips = [];
 $passengers = [];
 $drivers = [];
 
-// Initialize form data session if not set
 if (!isset($_SESSION['form_data'])) {
     $_SESSION['form_data'] = [
         'trip' => [],
@@ -30,6 +29,7 @@ if (!isset($_SESSION['form_data'])) {
     ];
 }
 
+//Model
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -41,7 +41,6 @@ try {
     if ($conn->connect_error) {
         $errors['general'] = "Database connection failed: " . $conn->connect_error;
     } else {
-        // Fetch today's trips
         $sql = "SELECT COUNT(DISTINCT b.id) as trip_count 
                 FROM buses b 
                 WHERE b.operator_name = ? AND DATE(b.journey_date) = CURDATE()";
@@ -54,7 +53,6 @@ try {
         }
         $stmt->close();
 
-        // Fetch total revenue from bookings table
         $sql = "SELECT COALESCE(SUM(fare), 0) as total_fare 
                 FROM bookings 
                 WHERE operator_name = ? AND status IN ('Upcoming', 'Completed')";
@@ -67,7 +65,6 @@ try {
         }
         $stmt->close();
 
-        // Fetch revenue data for graph (daily revenue)
         $revenue_data = [];
         $sql = "SELECT DATE(date) as booking_date, COALESCE(SUM(fare), 0) as daily_revenue 
                 FROM bookings 
@@ -86,12 +83,10 @@ try {
         }
         $stmt->close();
 
-        // Check bookings table row count
         $sql = "SELECT COUNT(*) as row_count FROM bookings";
         $result = $conn->query($sql);
         $row_count = $result->fetch_assoc()['row_count'];
 
-        // Fetch upcoming trips
         $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                 FROM buses 
                 WHERE operator_name = ? AND journey_date >= CURDATE() 
@@ -105,7 +100,6 @@ try {
         }
         $stmt->close();
 
-        // Fetch drivers
         $sql = "SELECT id, name, license_number, phone FROM drivers WHERE company_id = 
                 (SELECT id FROM bus_companies WHERE company_name = ?)";
         $stmt = $conn->prepare($sql);
@@ -117,7 +111,7 @@ try {
         }
         $stmt->close();
 
-        // Handle Add Trip Form
+        //Controller
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_trip'])) {
             error_log("Add Trip form submitted: " . print_r($_POST, true));
             $starting_point = trim($_POST['trip-from'] ?? '');
@@ -166,7 +160,6 @@ try {
                 $errors['fare'] = "Fare must be a positive number.";
             }
 
-            // Store form data in session if there are errors
             if (!empty($errors)) {
                 $_SESSION['form_data']['trip'] = [
                     'trip-from' => $starting_point,
@@ -180,16 +173,13 @@ try {
                 ];
                 error_log("Trip form errors, stored in session: " . print_r($_SESSION['form_data']['trip'], true));
             } else {
-                // Insert trip
                 $sql = "INSERT INTO buses (operator_name, bus_number, bus_type, starting_point, destination, starting_time, arrival_time, fare, seats_available, journey_date) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sssssssdis", $company_name, $bus_number, $bus_type, $starting_point, $destination, $starting_time, $arrival_time, $fare, $seats, $journey_date);
                 if ($stmt->execute()) {
                     $success_message['trip'] = "Trip added successfully!";
-                    // Clear form data from session
                     $_SESSION['form_data']['trip'] = [];
-                    // Refresh upcoming trips
                     $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                             FROM buses 
                             WHERE operator_name = ? AND journey_date >= CURDATE() 
@@ -202,7 +192,6 @@ try {
                     while ($row = $result->fetch_assoc()) {
                         $upcoming_trips[] = $row;
                     }
-                    // Set active tab
                     echo "<script>sessionStorage.setItem('activeTab', 'dashboard');</script>";
                 } else {
                     $errors['general'] = "Error adding trip: " . $conn->error;
@@ -239,7 +228,6 @@ try {
             } elseif (strlen($license_number) > 50) {
                 $errors['driver-license'] = "License number must be 50 characters or less.";
             } else {
-                // Check for unique license number
                 $sql = "SELECT id FROM drivers WHERE license_number = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("s", $license_number);
@@ -255,7 +243,6 @@ try {
                 $errors['driver-number'] = "Phone number must be 11 digits.";
             }
 
-            // Store form data in session if there are errors
             if (!empty($errors)) {
                 $_SESSION['form_data']['driver'] = [
                     'driver-name' => $driver_name,
@@ -264,16 +251,14 @@ try {
                 ];
                 error_log("Driver form errors, stored in session: " . print_r($_SESSION['form_data']['driver'], true));
             } else {
-                // Insert driver
+                // Add driver
                 $sql = "INSERT INTO drivers (company_id, name, license_number, phone) 
                         VALUES ((SELECT id FROM bus_companies WHERE company_name = ?), ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("ssss", $company_name, $driver_name, $license_number, $phone);
                 if ($stmt->execute()) {
                     $success_message['driver'] = "Driver added successfully!";
-                    // Clear form data from session
                     $_SESSION['form_data']['driver'] = [];
-                    // Refresh drivers
                     $sql = "SELECT id, name, license_number, phone FROM drivers WHERE company_id = 
                             (SELECT id FROM bus_companies WHERE company_name = ?)";
                     $stmt = $conn->prepare($sql);
@@ -284,7 +269,6 @@ try {
                     while ($row = $result->fetch_assoc()) {
                         $drivers[] = $row;
                     }
-                    // Set active tab
                     echo "<script>sessionStorage.setItem('activeTab', 'drivers');</script>";
                 } else {
                     $errors['general'] = "Error adding driver: " . $conn->error;
@@ -318,7 +302,6 @@ try {
                 $errors['passenger-search-date'] = "Date is required.";
             }
 
-            // Store form data in session if there are errors
             if (!empty($errors)) {
                 $_SESSION['form_data']['passenger_search'] = [
                     'passenger-search-nid' => $nid,
@@ -327,7 +310,6 @@ try {
                 ];
                 error_log("Passenger search form errors, stored in session: " . print_r($_SESSION['form_data']['passenger_search'], true));
             } else {
-                // Clear form data from session
                 $_SESSION['form_data']['passenger_search'] = [];
                 $sql = "SELECT u.username, u.nid, bk.booking_id, bk.route, bk.date, bk.seat_number 
                         FROM bookings bk 
@@ -343,7 +325,7 @@ try {
                 while ($row = $result->fetch_assoc()) {
                     $passengers[] = $row;
                 }
-                // Set active tab
+
                 echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
                 $stmt->close();
             }
@@ -367,7 +349,6 @@ try {
                 $errors['search-date'] = "Date is required.";
             }
 
-            // Store form data in session if there are errors
             if (!empty($errors)) {
                 $_SESSION['form_data']['date_search'] = [
                     'search-from' => $from,
@@ -376,7 +357,7 @@ try {
                 ];
                 error_log("Date search form errors, stored in session: " . print_r($_SESSION['form_data']['date_search'], true));
             } else {
-                // Clear form data from session
+
                 $_SESSION['form_data']['date_search'] = [];
                 $sql = "SELECT u.username, u.nid, bk.booking_id, bk.route, bk.date, bk.seat_number 
                         FROM bookings bk 
@@ -392,7 +373,7 @@ try {
                 while ($row = $result->fetch_assoc()) {
                     $passengers[] = $row;
                 }
-                // Set active tab
+
                 echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
                 $stmt->close();
             }
@@ -422,7 +403,6 @@ try {
                 $errors['otherReason'] = "Please specify the reason for cancellation.";
             }
 
-            // Store form data in session if there are errors
             if (!empty($errors)) {
                 $_SESSION['form_data']['cancel_trip'] = [
                     'bus-number' => $bus_number,
@@ -434,7 +414,6 @@ try {
                 ];
                 error_log("Cancel trip form errors, stored in session: " . print_r($_SESSION['form_data']['cancel_trip'], true));
             } else {
-                // Check if the bus exists for the given operator and date
                 $sql = "SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
@@ -457,15 +436,12 @@ try {
                     $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
                     if ($stmt->execute()) {
                         $success_message['cancel'] = "Trip cancelled successfully!";
-                        // Clear form data from session
                         $_SESSION['form_data']['cancel_trip'] = [];
-                        // Update bookings to Cancelled
                         $sql = "UPDATE bookings SET status = 'Cancelled' WHERE bus_id IN 
                                 (SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?)";
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
                         $stmt->execute();
-                        // Refresh upcoming trips
                         $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                                 FROM buses 
                                 WHERE operator_name = ? AND journey_date >= CURDATE() 
@@ -478,7 +454,6 @@ try {
                         while ($row = $result->fetch_assoc()) {
                             $upcoming_trips[] = $row;
                         }
-                        // Set active tab
                         echo "<script>sessionStorage.setItem('activeTab', 'trips');</script>";
                     } else {
                         $errors['general'] = "Error cancelling trip: " . $conn->error;
@@ -503,6 +478,7 @@ try {
 }
 ?>
 
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -883,7 +859,6 @@ try {
                 });
             });
 
-            // Handle tab switching
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const tab = item.getAttribute('data-tab');
@@ -895,7 +870,6 @@ try {
                 });
             });
 
-            // Toggle password form visibility
             const userProfile = document.getElementById('userProfile');
             const profileDropdown = document.getElementById('profileDropdown');
             userProfile.addEventListener('click', (event) => {
@@ -903,14 +877,12 @@ try {
                 profileDropdown.classList.toggle('show');
             });
 
-            // Close dropdown when clicking outside
             document.addEventListener('click', (event) => {
                 if (!userProfile.contains(event.target)) {
                     profileDropdown.classList.remove('show');
                 }
             });
 
-            // Logout confirmation
             userProfile.addEventListener('click', (event) => {
                 if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'BUTTON' && event.target.tagName !== 'FORM') {
                     if (confirm('Are you sure you want to log out?')) {
@@ -919,7 +891,6 @@ try {
                 }
             });
 
-            // Show/hide other reason field
             const cancelReason = document.getElementById('cancelReason');
             const otherReasonDiv = document.getElementById('otherReasonDiv');
             if (cancelReason) {
@@ -929,7 +900,6 @@ try {
             }
         });
 
-        // Revenue Chart Initialization
         const revenueData = <?php echo json_encode($revenue_data); ?>;
         const maxRows = 10000;
         const initialRowCount = <?php echo $row_count; ?>;
@@ -971,7 +941,6 @@ try {
             });
         }
 
-        // Fetch updated revenue data via AJAX
         function fetchRevenueData() {
             fetch('fetch_revenue.php', {
                 method: 'POST',
@@ -1001,7 +970,6 @@ try {
             });
         }
 
-        // Initialize chart and start polling if row count is below max
         if (document.getElementById('revenueChart')) {
             initializeChart(revenueData);
             if (initialRowCount < maxRows) {
@@ -1009,7 +977,7 @@ try {
             }
         }
 
-        // Update chart instantly after new booking
+
         document.addEventListener('bookingUpdated', () => {
             fetchRevenueData();
         });

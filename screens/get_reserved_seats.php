@@ -1,11 +1,13 @@
 <?php
 header('Content-Type: application/json');
 
+//Model
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "gobus";
 
+//Model
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
@@ -13,6 +15,7 @@ if ($conn->connect_error) {
     exit;
 }
 
+//Controller
 $bus_id = isset($_GET['bus_id']) ? $conn->real_escape_string($_GET['bus_id']) : '';
 $journey_date = isset($_GET['journey_date']) ? $conn->real_escape_string($_GET['journey_date']) : '';
 
@@ -21,6 +24,7 @@ if (!$bus_id || !$journey_date) {
     exit;
 }
 
+//Model
 $sql = "SELECT seat_number FROM bookings WHERE bus_id = '$bus_id' AND date = '$journey_date' AND status = 'Upcoming'";
 $result = $conn->query($sql);
 
@@ -29,6 +33,7 @@ if (!$result) {
     exit;
 }
 
+//Controller
 $reserved_seats = [];
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {

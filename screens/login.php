@@ -1,16 +1,17 @@
 <?php
 session_start();
-ob_start(); // Start output buffering to prevent headers already sent errors
+ob_start();
 
 $error = "";
 $phone = $_POST['phone'] ?? '';
 $login_type = $_POST['login_type'] ?? 'user';
 
+//Model
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = trim($_POST['phone']);
     $password = $_POST['password'];
 
-    // Validate phone and password
+    //Controller
     if (!preg_match("/^\d{11}$/", $phone)) {
         $error = "Phone number must be 11 digits.";
     } elseif (empty($password)) {
@@ -19,18 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Admin login
         if ($login_type === 'admin') {
             $admin_phone = '12345678901';
-            $admin_password = 'admin123'; // In production, hash this
+            $admin_password = 'admin123';
             if ($phone === $admin_phone && $password === $admin_password) {
                 $_SESSION['admin_id'] = 1;
                 $_SESSION['admin_name'] = 'Admin';
                 header("Location: ./admin_dashboard.php");
-                ob_end_flush(); // Flush output buffer
+                ob_end_flush();
                 exit();
             } else {
                 $error = "Invalid admin credentials.";
             }
         } else {
-            // Database connection
             $servername = "localhost";
             $username = "root";
             $password_db = "";
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     $_SESSION['user_id'] = $user['id'];
                                     $_SESSION['username'] = $user['username'];
                                     header("Location: userDashboard.php");
-                                    ob_end_flush(); // Flush output buffer
+                                    ob_end_flush();
                                     exit();
                                 } else {
                                     $error = "Invalid phone number or password.";
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     $_SESSION['company_id'] = $company['id'];
                                     $_SESSION['company_name'] = $company['company_name'];
                                     header("Location: ./ownerBus.php");
-                                    ob_end_flush(); // Flush output buffer
+                                    ob_end_flush();
                                     exit();
                                 } else {
                                     $error = "Invalid phone number or password.";
@@ -105,9 +105,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-ob_end_flush(); // Flush output buffer at the end
+ob_end_flush();
 ?>
 
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

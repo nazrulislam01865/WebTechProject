@@ -19,6 +19,7 @@ $success_message = "";
 $bookings = [];
 $complaints = [];
 
+//Model
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -30,7 +31,7 @@ try {
     if ($conn->connect_error) {
         $errors['general'] = "Database connection failed: " . $conn->connect_error;
     } else {
-        // Fetch bookings for the user (Completed or Upcoming)
+
         $sql = "SELECT booking_id, route, date, status FROM bookings WHERE user_id = ? AND status IN ('Completed', 'Upcoming')";
         $stmt_bookings = $conn->prepare($sql);
         $stmt_bookings->bind_param("i", $_SESSION['user_id']);
@@ -41,7 +42,7 @@ try {
         }
         $stmt_bookings->close();
 
-        // Function to fetch complaints
+
         function fetchComplaints($conn, $user_id) {
             $sql = "SELECT c.id, c.booking_id, b.route, c.complaint_type, c.description, c.status, c.created_at, 
                            r.response_text, r.created_at AS response_date
@@ -62,20 +63,17 @@ try {
             return $complaints;
         }
 
-        // Initial fetch of complaints
-        $complaints = fetchComplaints($conn, $_SESSION['user_id']);
 
-        // Handle complaint form submission
+        $complaints = fetchComplaints($conn, $_SESSION['user_id']);
+        //Controller
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_complaint'])) {
             $booking_id = $_POST['booking_id'] ?? '';
             $complaint_type = $_POST['complaint_type'] ?? '';
             $description = trim($_POST['description'] ?? '');
 
-            // Validations
             if (empty($booking_id)) {
                 $errors['booking_id'] = "Please select a booking.";
             } else {
-                // Verify booking_id belongs to the user
                 $sql = "SELECT booking_id FROM bookings WHERE booking_id = ? AND user_id = ?";
                 $stmt_validate = $conn->prepare($sql);
                 $stmt_validate->bind_param("si", $booking_id, $_SESSION['user_id']);
@@ -97,14 +95,12 @@ try {
                 $errors['description'] = "Description must be 500 characters or less.";
             }
 
-            // If no errors, insert complaint into database
             if (empty($errors)) {
                 $sql = "INSERT INTO complaints (user_id, booking_id, complaint_type, description) VALUES (?, ?, ?, ?)";
                 $stmt_insert = $conn->prepare($sql);
                 $stmt_insert->bind_param("isss", $_SESSION['user_id'], $booking_id, $complaint_type, $description);
                 if ($stmt_insert->execute()) {
                     $success_message = "Complaint submitted successfully!";
-                    // Refresh complaints list
                     $complaints = fetchComplaints($conn, $_SESSION['user_id']);
                 } else {
                     $errors['general'] = "Error submitting complaint: " . $conn->error;
@@ -120,6 +116,7 @@ try {
 }
 ?>
 
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

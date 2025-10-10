@@ -1,4 +1,5 @@
 <?php
+//Model
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -6,14 +7,12 @@ $dbname = "gobus";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     error_log("Database connection failed: " . $conn->connect_error);
     echo json_encode(['success' => false, 'message' => 'Database connection failed']);
     exit;
 }
-
-// Get promo code and route from POST request
+//Controller
 $promo_code = isset($_POST['promo_code']) ? $conn->real_escape_string($_POST['promo_code']) : '';
 $route = isset($_POST['route']) ? $conn->real_escape_string($_POST['route']) : '';
 
@@ -29,11 +28,11 @@ if (empty($route)) {
     exit;
 }
 
-// Normalize route for comparison
+
 $normalized_route = str_replace(' To ', '-', $route);
 error_log("Validating promo code: $promo_code, route: $route, normalized_route: $normalized_route");
 
-// Check promo code in database
+//Model
 $sql = "SELECT discount_type, discount_value, route FROM promotions WHERE promo_code = '$promo_code'";
 error_log("Promo validation query: $sql");
 $result = $conn->query($sql);
@@ -43,9 +42,9 @@ if ($result && $result->num_rows > 0) {
     $promo_route = $promo_data['route'];
     error_log("Promo data: " . print_r($promo_data, true));
     
-    // Check if the route matches
+    //Controller
     if (strpos($promo_route, 'routes') !== false) {
-        // Handle routes like 'Dhaka routes'
+        
         $route_base = str_replace(' routes', '', $promo_route);
         if (strpos($route, $route_base) !== false || strpos($normalized_route, $route_base) !== false) {
             echo json_encode([

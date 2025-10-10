@@ -1,21 +1,18 @@
 <?php
-// Start session at the very top
 session_start();
 
-// Enable error reporting and logging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', '/Applications/XAMPP/xamppfiles/logs/php_error.log');
 
-// Check if admin is logged in
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Database connection
+//Model
 $host = "localhost";
 $username = "root";
 $password = "";
@@ -27,14 +24,12 @@ if (!$conn) {
     die("Database connection failed: " . mysqli_connect_error());
 }
 
-// Debug: Confirm connected database
 $result = mysqli_query($conn, "SELECT DATABASE()");
 $row = mysqli_fetch_array($result);
 if ($row[0] !== 'gobus') {
     die("Error: Connected to wrong database: " . htmlspecialchars($row[0]) . ". Expected 'gobus'.");
 }
 
-// Check if required tables exist
 $required_tables = ['bookings', 'buses', 'promotions', 'feedback', 'feedbackadmin', 'responses', 'bus_companies', 'complaints', 'users'];
 $missing_tables = [];
 foreach ($required_tables as $table) {
@@ -47,7 +42,6 @@ if (!empty($missing_tables)) {
     die("Error: The following database tables are missing: " . implode(", ", $missing_tables) . ". Please create them using the provided SQL.");
 }
 
-// Verify required columns in bookings table
 $required_columns = ['id', 'user_id', 'bus_id', 'seat_number', 'phone_number', 'boarding_point', 'dropping_point', 'booking_id', 'route', 'date', 'status', 'fare'];
 $column_check = mysqli_query($conn, "SHOW COLUMNS FROM bookings");
 $existing_columns = [];
@@ -59,7 +53,7 @@ if (!empty($missing_columns)) {
     die("Error: Missing columns in bookings table: " . implode(", ", $missing_columns) . ". Please update the database schema.");
 }
 
-// Verify feedbackadmin table schema
+
 $required_feedbackadmin_columns = ['id', 'user_name', 'feedback_text', 'feedback_type', 'created_at'];
 $column_check = mysqli_query($conn, "SHOW COLUMNS FROM feedbackadmin");
 $existing_feedbackadmin_columns = [];
@@ -71,7 +65,7 @@ if (!empty($missing_feedbackadmin_columns)) {
     die("Error: Missing columns in feedbackadmin table: " . implode(", ", $missing_feedbackadmin_columns) . ". Please update the database schema.");
 }
 
-// Verify feedback table schema
+
 $required_feedback_columns = ['id', 'user_id', 'booking_id', 'rating', 'comments', 'created_at'];
 $column_check = mysqli_query($conn, "SHOW COLUMNS FROM feedback");
 $existing_feedback_columns = [];
@@ -83,7 +77,7 @@ if (!empty($missing_feedback_columns)) {
     die("Error: Missing columns in feedback table: " . implode(", ", $missing_feedback_columns) . ". Please update the database schema.");
 }
 
-// Verify complaints table schema
+
 $required_complaints_columns = ['id', 'user_id', 'booking_id', 'complaint_type', 'description', 'status', 'created_at'];
 $column_check = mysqli_query($conn, "SHOW COLUMNS FROM complaints");
 $existing_complaints_columns = [];
@@ -95,7 +89,7 @@ if (!empty($missing_complaints_columns)) {
     die("Error: Missing columns in complaints table: " . implode(", ", $missing_complaints_columns) . ". Please update the database schema.");
 }
 
-// Verify bus_companies table schema
+
 $required_company_columns = ['id', 'company_name', 'phone', 'password'];
 $column_check = mysqli_query($conn, "SHOW COLUMNS FROM bus_companies");
 $existing_company_columns = [];
@@ -107,8 +101,7 @@ if (!empty($missing_company_columns)) {
     die("Error: Missing columns in bus_companies table: " . implode(", ", $missing_company_columns) . ". Please update the database schema.");
 }
 
-// Determine active section
-$active_section = 'revenue'; // Default
+$active_section = 'revenue';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
     $active_section = 'reports';
 } elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_promo'])) {
@@ -119,11 +112,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
     $active_section = 'bus_companies';
 }
 
-// Initialize variables for bus companies
+
 $company_errors = [];
 $company_success = "";
 
-// Handle bus company form submission
+// Controller
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_company'])) {
     $company_name = trim($_POST['company_name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
@@ -153,7 +146,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_company'])) {
         $company_errors[] = "Passwords do not match.";
     }
 
-    // Check if company name or phone already exists
     $check_company = mysqli_query($conn, "SELECT * FROM bus_companies WHERE company_name = '" . mysqli_real_escape_string($conn, $company_name) . "' OR phone = '" . mysqli_real_escape_string($conn, $phone) . "'");
     if (!$check_company) {
         $company_errors[] = "Error checking company details: " . mysqli_error($conn);
@@ -161,9 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_company'])) {
         $company_errors[] = "Company name or phone number already exists.";
     }
 
-    // If no errors, insert into database
     if (empty($company_errors)) {
-        // Hash the password
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("INSERT INTO bus_companies (company_name, phone, password) VALUES (?, ?, ?)");
         if (!$stmt) {
@@ -180,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_company'])) {
     }
 }
 
-// Handle promotion form submission
+// Handle promotion
 $promo_errors = [];
 $success_message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_promo'])) {
@@ -204,7 +194,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_promo'])) {
         $promo_errors[] = "Route is required.";
     }
 
-    // Check if promo code already exists
     $check_promo = mysqli_query($conn, "SELECT * FROM promotions WHERE promo_code = '" . mysqli_real_escape_string($conn, $promo_code) . "'");
     if (!$check_promo) {
         $promo_errors[] = "Error checking promo code: " . mysqli_error($conn);
@@ -212,7 +201,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_promo'])) {
         $promo_errors[] = "Promo code already exists.";
     }
 
-    // If no errors, insert into database
     if (empty($promo_errors)) {
         $stmt = $conn->prepare("INSERT INTO promotions (promo_code, discount_type, discount_value, route) VALUES (?, ?, ?, ?)");
         if (!$stmt) {
@@ -229,7 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_promo'])) {
     }
 }
 
-// Handle response form submission (for feedback and complaints)
+// Handle response form
 $response_errors = [];
 $response_success = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_response'])) {
@@ -242,7 +230,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_response'])) {
     if ($item_id <= 0) {
         $response_errors[] = "Invalid item ID.";
     } else {
-        // Verify item_id exists
         if ($item_type === 'Feedback') {
             $check_item = mysqli_query($conn, "SELECT id FROM feedback WHERE id = $item_id UNION SELECT id FROM feedbackadmin WHERE id = $item_id");
         } elseif ($item_type === 'Complaint') {
@@ -269,9 +256,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_response'])) {
         $response_errors[] = "Invalid complaint status.";
     }
 
-    // If no errors, insert response and update complaint status (if applicable)
     if (empty($response_errors)) {
-        // Insert response
+
         $stmt = $conn->prepare("INSERT INTO responses (item_id, item_type, response_text) VALUES (?, ?, ?)");
         if (!$stmt) {
             $response_errors[] = "Prepare failed: " . mysqli_error($conn);
@@ -279,7 +265,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_response'])) {
             $stmt->bind_param("iss", $item_id, $item_type, $response_text);
             if ($stmt->execute()) {
                 $response_success = "Response submitted successfully!";
-                // Update complaint status if provided
                 if ($item_type === 'Complaint' && $complaint_status) {
                     $stmt_status = $conn->prepare("UPDATE complaints SET status = ? WHERE id = ?");
                     if (!$stmt_status) {
@@ -300,7 +285,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_response'])) {
     }
 }
 
-// Handle report form submission
+// Handle report
 $report_errors = [];
 $report_data = [];
 $report_type = "";
@@ -330,10 +315,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
         }
     }
 
-    // Build date filter
     $date_filter = "";
     if (empty($report_errors)) {
-        // Verify status column for Revenue and Sales Reports
         if ($report_type === 'Revenue Report' || $report_type === 'Sales Report') {
             $column_check = mysqli_query($conn, "SHOW COLUMNS FROM bookings LIKE 'status'");
             if (mysqli_num_rows($column_check) == 0) {
@@ -343,7 +326,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
 
         if (empty($report_errors)) {
             if ($report_type === 'User Feedback Report') {
-                // Date filter for feedbackadmin (no status column)
                 if ($date_range === 'Last 7 Days') {
                     $date_filter = "WHERE created_at >= CURDATE() - INTERVAL 7 DAY";
                 } elseif ($date_range === 'Last 30 Days') {
@@ -354,7 +336,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
                     $date_filter = "";
                 }
             } else {
-                // Date filter for Revenue and Sales Reports (uses bookings table)
                 if ($date_range === 'Last 7 Days') {
                     $date_filter = "WHERE b.date >= CURDATE() - INTERVAL 7 DAY AND b.status IN ('Completed', 'Upcoming')";
                 } elseif ($date_range === 'Last 30 Days') {
@@ -443,7 +424,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
     }
 }
 
-// Fetch revenue data for Revenue Tracking section
+// Fetch revenue data for Revenue Tracking
 $revenue_query = "SELECT b.route AS route_name, 
                          (b.fare * COUNT(*)) AS revenue, 
                          COUNT(*) AS tickets_sold, 
@@ -469,7 +450,7 @@ if (!$promos_result) {
     die("Error fetching promotions: " . mysqli_error($conn));
 }
 
-// Fetch feedback and complaints for Feedback Handling section
+// Fetch feedback and complaints
 $feedback_query = "
     (SELECT c.id, 'Complaint' AS item_type, u.username AS user_name, c.booking_id, b.route, 
             c.complaint_type AS feedback_type, c.description AS feedback_text, c.created_at, 
@@ -518,7 +499,7 @@ if (!$companies_result) {
 }
 
 ?>
-
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -872,7 +853,6 @@ if (!$companies_result) {
             const customDates = document.getElementById('custom-dates');
             customDates.style.display = select.value === 'Custom' ? 'block' : 'none';
         }
-        // Pass active section to JavaScript
         window.activeSection = '<?php echo $active_section; ?>';
     </script>
     <script src="../data/admin_dashboard.js"></script>

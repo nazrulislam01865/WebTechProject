@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+//Model
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -12,7 +13,7 @@ try {
         echo json_encode(['error' => 'Database connection failed']);
         exit();
     }
-
+    //Controller
     $data = json_decode(file_get_contents('php://input'), true);
     $company_name = $data['company_name'] ?? '';
 
@@ -21,7 +22,7 @@ try {
         exit();
     }
 
-    // Fetch revenue data
+    //Model
     $revenue_data = [];
     $sql = "SELECT DATE(date) as booking_date, COALESCE(SUM(fare), 0) as daily_revenue 
             FROM bookings 
@@ -40,13 +41,13 @@ try {
     }
     $stmt->close();
 
-    // Check row count
     $sql = "SELECT COUNT(*) as row_count FROM bookings";
     $result = $conn->query($sql);
     $row_count = $result->fetch_assoc()['row_count'];
 
     $conn->close();
 
+    //Controller
     echo json_encode([
         'revenue_data' => $revenue_data,
         'row_count' => $row_count

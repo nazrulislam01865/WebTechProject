@@ -27,6 +27,7 @@
                     'confirm_password' => $_POST['confirm_password'] ?? ''
                 ];
 
+                //Model
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $servername = "localhost";
                     $username = "root";
@@ -38,7 +39,7 @@
                     if ($conn->connect_error) {
                         $errors['general'] = "Database connection failed: " . $conn->connect_error;
                     } else {
-
+                        //Controller
                         if (!preg_match("/^[a-zA-Z0-9_]{3,20}$/", $form_data['username'])) {
                             $errors['username'] = "Username must be 3-20 characters, alphanumeric with underscores.";
                         }
@@ -103,6 +104,7 @@
                     </div>
                 <?php endif; ?>
 
+                <!--VIEW -->
                 <form action="signup.php" method="POST">
                     <div class="input-box">
                         <input type="text" placeholder="Username" name="username" style="width: 250px; max-width: 250px;" value="<?php echo htmlspecialchars($form_data['username']); ?>"> <br>
