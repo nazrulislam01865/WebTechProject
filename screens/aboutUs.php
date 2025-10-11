@@ -41,8 +41,9 @@ try {
     <header>
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
-            <a href="tel:+8809611123456" class="call-btn">Call +880</a>
-            <a href="login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+            <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
+            <a href="./html/login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
+           
         </div>
     </header>
     
@@ -66,24 +67,24 @@ try {
             <h3>Why Choose GoBus?</h3>
             <div class="features-grid">
                 <div class="feature-item">
-                    <i class="fas fa-shield-alt"></i>
+                    <div class="icon"><img src="../picture/seq.png" alt="SEQ Icon" style="width: 40px; height: 40px; vertical-align: middle;"></div>
                     <h4>Safety First</h4>
                     <p>Our buses are regularly maintained and our drivers are highly trained professionals with
                         excellent safety records.</p>
                 </div>
                 <div class="feature-item">
-                    <i class="fas fa-clock"></i>
+                    <div class="icon"><img src="../picture/time.png" alt="Time Icon" style="width: 40px; height: 40px; vertical-align: middle;"></div>
                     <h4>Punctuality</h4>
                     <p>We understand the value of your time. Our buses depart and arrive on schedule, every time.</p>
                 </div>
                 <div class="feature-item">
-                    <i class="fas fa-tags"></i>
+                    <div class="icon"><img src="../picture/tag.jpg" alt="tag Icon" style="width: 40px; height: 40px; vertical-align: middle;"></div>
                     <h4>Affordable Prices</h4>
                     <p>Enjoy comfortable travel at prices that won't break your budget. We offer competitive rates
                         for all routes.</p>
                 </div>
                 <div class="feature-item">
-                    <i class="fas fa-concierge-bell"></i>
+                      <div class="icon"><img src="../picture/cook.png" alt="cook Icon" style="width: 45px; height: 45px; vertical-align: middle;"></div>
                     <h4>Quality Service</h4>
                     <p>From online booking to onboard experience, we strive to provide exceptional service at every
                         touchpoint.</p>

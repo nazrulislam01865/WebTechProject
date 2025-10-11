@@ -122,8 +122,9 @@ try {
     <header>
         <div class="logo">Go<span id="logo">Bus</span></div>
         <div class="header-right">
-            <a href="tel:+8809611123456" class="call-btn">Call +8809611123456</a>
-            <a href="login.php" class="login-btn"><i class="fa-solid fa-user-circle"></i> Login</a>
+            <a href="tel:+8801234567890" class="call-btn">Call +8801234567890</a>
+            <a href="./html/login.php" class="login-btn"><img src="../picture/user_logo.png" alt="User Icon" style="width: 18px; height: 18px; vertical-align: middle;"> Login</a>
+           
         </div>
     </header>
     
@@ -198,21 +199,21 @@ try {
 
             <section class="contact-info">
                 <div class="info-card">
-                    <i class="fas fa-phone"></i>
+                    <div class="icon"><img src="../picture/call.png" alt="call Icon" style="width: 45px; height: 45px; vertical-align: middle;"></div>
                     <h3>Call Us</h3>
                     <p>+880 9611-123456</p>
                     <p>+880 9611-123457</p>
                 </div>
 
                 <div class="info-card">
-                    <i class="fas fa-envelope"></i>
+                    <div class="icon"><img src="../picture/email.png" alt="call Icon" style="width: 45px; height: 45px; vertical-align: middle;"></div>
                     <h3>Email Us</h3>
                     <p>info@gobus.com</p>
                     <p>support@gobus.com</p>
                 </div>
 
                 <div class="info-card">
-                    <i class="fas fa-map-marker-alt"></i>
+                   <div class="icon"><img src="../picture/location.png" alt="location Icon" style="width: 40px; height: 40px; vertical-align: middle;"></div>
                     <h3>Visit Us</h3>
                     <p>American International University, Bangladesh</p>
                     <p>Kuril, Dhaka, Bangladesh</p>
