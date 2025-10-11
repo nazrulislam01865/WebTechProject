@@ -66,22 +66,84 @@ try {
         $stmt->close();
 
         $revenue_data = [];
-        $sql = "SELECT DATE(date) as booking_date, COALESCE(SUM(fare), 0) as daily_revenue 
-                FROM bookings 
-                WHERE operator_name = ? AND status IN ('Upcoming', 'Completed')
-                GROUP BY DATE(date) 
-                ORDER BY booking_date ASC";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $company_name);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $revenue_data[] = [
-                'date' => $row['booking_date'],
-                'revenue' => $row['daily_revenue']
-            ];
+        $filtered_revenue = $total_revenue;
+        $current_filter_type = $_POST['filter_type'] ?? '';
+        $is_bus_filter = $current_filter_type === 'bus_number';
+        $filter_type = $current_filter_type ?: 'date';
+        $x_title = 'Date';
+        $dataset_label = 'Daily Revenue (Tk)';
+
+        if ($is_bus_filter) {
+            $x_title = 'Bus Number';
+            $dataset_label = 'Revenue per Bus (Tk)';
+            $sql = "SELECT bus_number, (40 - seats_available) * fare as revenue 
+                    FROM buses 
+                    WHERE operator_name = ? 
+                    ORDER BY bus_number ASC";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $company_name);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $revenue_data[] = [
+                    'date' => $row['bus_number'],
+                    'revenue' => (float)$row['revenue']
+                ];
+            }
+            $stmt->close();
+        } else {
+            $where_conditions = "WHERE operator_name = ? AND status IN ('Upcoming', 'Completed')";
+            $params = [$company_name];
+            $types = "s";
+            $select_fields = "";
+            $group_by = "";
+            $order_by = "";
+
+            if ($filter_type === 'date') {
+                $select_fields = "DATE(date) as label";
+                $group_by = "GROUP BY DATE(date)";
+                $order_by = "ORDER BY label ASC";
+                $x_title = 'Date';
+                $dataset_label = 'Daily Revenue (Tk)';
+            } elseif ($filter_type === 'month') {
+                $select_fields = "CONCAT(YEAR(date), '-', LPAD(MONTH(date), 2, '0')) as label";
+                $group_by = "GROUP BY YEAR(date), MONTH(date)";
+                $order_by = "ORDER BY YEAR(date) ASC, MONTH(date) ASC";
+                $x_title = 'Month';
+                $dataset_label = 'Monthly Revenue (Tk)';
+            } elseif ($filter_type === 'year') {
+                $select_fields = "YEAR(date) as label";
+                $group_by = "GROUP BY YEAR(date)";
+                $order_by = "ORDER BY label ASC";
+                $x_title = 'Year';
+                $dataset_label = 'Yearly Revenue (Tk)';
+            }
+
+            $sql = "SELECT $select_fields, COALESCE(SUM(fare), 0) as revenue 
+                    FROM bookings 
+                    $where_conditions
+                    $group_by
+                    $order_by";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $revenue_data[] = [
+                    'date' => $row['label'],
+                    'revenue' => (float)$row['revenue']
+                ];
+            }
+            $stmt->close();
         }
-        $stmt->close();
+        $filtered_revenue = array_sum(array_column($revenue_data, 'revenue'));
+
+        $chart_data = [
+            'revenue_data' => $revenue_data,
+            'x_title' => $x_title,
+            'chart_type' => $is_bus_filter ? 'bar' : 'line',
+            'dataset_label' => $dataset_label
+        ];
 
         $sql = "SELECT COUNT(*) as row_count FROM bookings";
         $result = $conn->query($sql);
@@ -380,14 +442,12 @@ try {
         }
 
         // Handle Cancel Trip
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_trip'])) {
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_trip'])) {
             error_log("Cancel Trip form submitted: " . print_r($_POST, true));
             $bus_number = trim($_POST['bus-number'] ?? '');
             $search_date = $_POST['search-date'] ?? '';
             $cancel_reason = $_POST['cancelReason'] ?? '';
             $other_reason = trim($_POST['otherReason'] ?? '');
-            $email_notif = isset($_POST['emailNotif']) ? 1 : 0;
-            $sms_notif = isset($_POST['smsNotif']) ? 1 : 0;
 
             // Validations
             if (empty($bus_number)) {
@@ -403,17 +463,18 @@ try {
                 $errors['otherReason'] = "Please specify the reason for cancellation.";
             }
 
+            // Store form data in session if there are errors
             if (!empty($errors)) {
                 $_SESSION['form_data']['cancel_trip'] = [
                     'bus-number' => $bus_number,
                     'search-date' => $search_date,
                     'cancelReason' => $cancel_reason,
                     'otherReason' => $other_reason,
-                    'emailNotif' => $email_notif,
-                    'smsNotif' => $sms_notif
+
                 ];
                 error_log("Cancel trip form errors, stored in session: " . print_r($_SESSION['form_data']['cancel_trip'], true));
             } else {
+                // Check if the bus exists for the given operator and date
                 $sql = "SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
@@ -426,22 +487,26 @@ try {
                         'search-date' => $search_date,
                         'cancelReason' => $cancel_reason,
                         'otherReason' => $other_reason,
-                        'emailNotif' => $email_notif,
-                        'smsNotif' => $sms_notif
+
                     ];
                 } else {
-                    // Update bus status to Cancelled
-                    $sql = "UPDATE buses SET status = 'Cancelled' WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
+                    // Delete associated bookings first to avoid foreign key constraint
+                    $sql = "DELETE FROM bookings WHERE bus_id IN 
+                            (SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
+                    $stmt->execute();
+                    $stmt->close();
+                    
+                    // Now delete the bus
+                    $sql = "DELETE FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
                     if ($stmt->execute()) {
                         $success_message['cancel'] = "Trip cancelled successfully!";
+                        // Clear form data from session
                         $_SESSION['form_data']['cancel_trip'] = [];
-                        $sql = "UPDATE bookings SET status = 'Cancelled' WHERE bus_id IN 
-                                (SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?)";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
-                        $stmt->execute();
+                        // Refresh upcoming trips
                         $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                                 FROM buses 
                                 WHERE operator_name = ? AND journey_date >= CURDATE() 
@@ -454,6 +519,7 @@ try {
                         while ($row = $result->fetch_assoc()) {
                             $upcoming_trips[] = $row;
                         }
+                        // Set active tab
                         echo "<script>sessionStorage.setItem('activeTab', 'trips');</script>";
                     } else {
                         $errors['general'] = "Error cancelling trip: " . $conn->error;
@@ -487,7 +553,8 @@ try {
     <title>GoBus - Bus Company Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles11.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+     <script src="../js/chart.js"></script>
 </head>
 <body>
     <div class="sidebar">
@@ -717,6 +784,27 @@ try {
         <div class="content-tabs" id="revenue">
             <div class="card">
                 <h3 class="section-title">Revenue Report</h3>
+                <div class="dashboard-cards">
+                    <div class="card stat-card">
+                        <div class="label">Filtered Revenue</div>
+                        <div class="value"><?php echo htmlspecialchars(number_format($filtered_revenue, 2)); ?> Tk</div>
+                        <div class="icon"><img src="../picture/taka.png" alt="Money Icon" style="width: 24px; height: 24px; vertical-align: middle;"></div>
+                    </div>
+                </div>
+                <form method="POST" action="" id="revenueFilterForm">
+                    <input type="hidden" name="filter_revenue" value="1">
+                    <div class="form-group">
+                        <label for="filter_type">Filter Type:</label>
+                        <select id="filter_type" name="filter_type">
+                            <option value="" <?php echo empty($current_filter_type) ? 'selected' : ''; ?>>All Time</option>
+                            <option value="date" <?php echo $current_filter_type == 'date' ? 'selected' : ''; ?>>By Date</option>
+                            <option value="month" <?php echo $current_filter_type == 'month' ? 'selected' : ''; ?>>By Month</option>
+                            <option value="year" <?php echo $current_filter_type == 'year' ? 'selected' : ''; ?>>By Year</option>
+                            <option value="bus_number" <?php echo $current_filter_type == 'bus_number' ? 'selected' : ''; ?>>By Bus Number</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="filter_value" id="filter_value" value="">
+                </form>
                 <div class="chart-container">
                     <canvas id="revenueChart"></canvas>
                 </div>
@@ -813,11 +901,8 @@ try {
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
-                        <label>Notify passengers via</label>
-                        <div>
-                            <input type="checkbox" id="emailNotif" name="emailNotif" <?php echo (isset($_SESSION['form_data']['cancel_trip']['emailNotif']) && $_SESSION['form_data']['cancel_trip']['emailNotif']) ? 'checked' : ''; ?>> <label for="emailNotif">Email</label>
-                            <input type="checkbox" id="smsNotif" name="smsNotif" <?php echo (isset($_SESSION['form_data']['cancel_trip']['smsNotif']) && $_SESSION['form_data']['cancel_trip']['smsNotif']) ? 'checked' : ''; ?>> <label for="smsNotif">SMS</label>
-                        </div>
+                        <label><span style="color: red; font-size: 20px;">*</span>Usesr will get update from thier Dashboard.</label>
+                        
                     </div>
                     <button type="submit" class="cancel-btn">Cancel Trip</button>
                 </form>
@@ -898,26 +983,41 @@ try {
                     otherReasonDiv.style.display = cancelReason.value === 'Other' ? 'block' : 'none';
                 });
             }
+
+            // Revenue filter automatic update
+            const filterTypeSelect = document.getElementById('filter_type');
+            const filterValueHidden = document.getElementById('filter_value');
+            const revenueForm = document.getElementById('revenueFilterForm');
+            if (filterTypeSelect && filterValueHidden && revenueForm) {
+                function updateAndSubmit() {
+                    filterValueHidden.value = '';
+                    revenueForm.submit();
+                }
+                filterTypeSelect.addEventListener('change', updateAndSubmit);
+            }
         });
 
-        const revenueData = <?php echo json_encode($revenue_data); ?>;
+        const chartData = <?php echo json_encode($chart_data); ?>;
         const maxRows = 10000;
         const initialRowCount = <?php echo $row_count; ?>;
         let revenueChart;
 
         function initializeChart(data) {
             const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChart) {
+                revenueChart.destroy();
+            }
             revenueChart = new Chart(ctx, {
-                type: 'line',
+                type: data.chart_type,
                 data: {
-                    labels: data.map(item => item.date),
+                    labels: data.revenue_data.map(item => item.date),
                     datasets: [{
-                        label: 'Daily Revenue (Tk)',
-                        data: data.map(item => item.revenue),
+                        label: data.dataset_label,
+                        data: data.revenue_data.map(item => item.revenue),
                         borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                        tension: 0.4
+                        backgroundColor: data.chart_type === 'bar' ? 'rgba(75, 192, 192, 0.6)' : 'rgba(75, 192, 192, 0.2)',
+                        fill: data.chart_type !== 'bar',
+                        tension: data.chart_type !== 'bar' ? 0.4 : 0
                     }]
                 },
                 options: {
@@ -926,7 +1026,7 @@ try {
                         x: {
                             title: {
                                 display: true,
-                                text: 'Date'
+                                text: data.x_title
                             }
                         },
                         y: {
@@ -941,46 +1041,9 @@ try {
             });
         }
 
-        function fetchRevenueData() {
-            fetch('fetch_revenue.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ company_name: '<?php echo $company_name; ?>' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error('Error fetching revenue data:', data.error);
-                    return;
-                }
-                if (data.row_count >= maxRows) {
-                    console.log('Maximum row count reached, stopping polling.');
-                    return;
-                }
-                revenueChart.data.labels = data.revenue_data.map(item => item.date);
-                revenueChart.data.datasets[0].data = data.revenue_data.map(item => item.revenue);
-                revenueChart.update();
-                setTimeout(fetchRevenueData, 5000);
-            })
-            .catch(error => {
-                console.error('Error fetching revenue data:', error);
-                setTimeout(fetchRevenueData, 5000);
-            });
-        }
-
         if (document.getElementById('revenueChart')) {
-            initializeChart(revenueData);
-            if (initialRowCount < maxRows) {
-                setTimeout(fetchRevenueData, 5000);
-            }
+            initializeChart(chartData);
         }
-
-
-        document.addEventListener('bookingUpdated', () => {
-            fetchRevenueData();
-        });
     </script>
     <script src="../js/script11.js"></script>
 </body>

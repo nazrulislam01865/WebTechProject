@@ -6,6 +6,78 @@ $error = "";
 $phone = $_POST['phone'] ?? '';
 $login_type = $_POST['login_type'] ?? 'user';
 
+// Check for remember me cookies and auto-login if valid
+$conn = null;
+if (isset($_COOKIE['remember_user']) || isset($_COOKIE['remember_company'])) {
+    $servername = "localhost";
+    $username = "root";
+    $password_db = "";
+    $dbname = "gobus";
+
+    $conn = new mysqli($servername, $username, $password_db, $dbname);
+    if (!$conn->connect_error) {
+        // Check user remember cookie
+        if (isset($_COOKIE['remember_user'])) {
+            $cookie_parts = explode(':', $_COOKIE['remember_user'], 2);
+            if (count($cookie_parts) === 2) {
+                $id = (int)$cookie_parts[0];
+                $token = $cookie_parts[1];
+                $sql = "SELECT id, username, remember_token FROM users WHERE id = ? AND remember_token = ?";
+                $stmt = $conn->prepare($sql);
+                if ($stmt) {
+                    $stmt->bind_param("is", $id, $token);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    if ($result->num_rows > 0) {
+                        $user = $result->fetch_assoc();
+                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['username'] = $user['username'];
+                        header("Location: userDashboard.php");
+                        ob_end_flush();
+                        exit();
+                    }
+                    $stmt->close();
+                }
+            }
+        }
+        // Check company remember cookie
+        if (isset($_COOKIE['remember_company'])) {
+            $cookie_parts = explode(':', $_COOKIE['remember_company'], 2);
+            if (count($cookie_parts) === 2) {
+                $id = (int)$cookie_parts[0];
+                $token = $cookie_parts[1];
+                $sql = "SELECT id, company_name, remember_token FROM bus_companies WHERE id = ? AND remember_token = ?";
+                $stmt = $conn->prepare($sql);
+                if ($stmt) {
+                    $stmt->bind_param("is", $id, $token);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    if ($result->num_rows > 0) {
+                        $company = $result->fetch_assoc();
+                        $_SESSION['company_id'] = $company['id'];
+                        $_SESSION['company_name'] = $company['company_name'];
+                        header("Location: ./ownerBus.php");
+                        ob_end_flush();
+                        exit();
+                    }
+                    $stmt->close();
+                }
+            }
+        }
+        $conn->close();
+    }
+    $conn = null;
+}
+
+// Check for admin remember cookie
+if (isset($_COOKIE['remember_admin']) && $_COOKIE['remember_admin'] === 'admin_remember_token') {
+    $_SESSION['admin_id'] = 1;
+    $_SESSION['admin_name'] = 'Admin';
+    header("Location: ./admin_dashboard.php");
+    ob_end_flush();
+    exit();
+}
+
 //Model
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = trim($_POST['phone']);
@@ -24,6 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($phone === $admin_phone && $password === $admin_password) {
                 $_SESSION['admin_id'] = 1;
                 $_SESSION['admin_name'] = 'Admin';
+                if (isset($_POST['rememberMe'])) {
+                    setcookie('remember_admin', 'admin_remember_token', time() + (2 * 24 * 3600), '/', '', true, true);
+                }
                 header("Location: ./admin_dashboard.php");
                 ob_end_flush();
                 exit();
@@ -57,6 +132,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if (password_verify($password, $user['password'])) {
                                     $_SESSION['user_id'] = $user['id'];
                                     $_SESSION['username'] = $user['username'];
+                                    if (isset($_POST['rememberMe'])) {
+                                        $token = bin2hex(random_bytes(64));
+                                        $update_sql = "UPDATE users SET remember_token = ? WHERE id = ?";
+                                        $update_stmt = $conn->prepare($update_sql);
+                                        if ($update_stmt) {
+                                            $update_stmt->bind_param("si", $token, $user['id']);
+                                            $update_stmt->execute();
+                                            $update_stmt->close();
+                                            setcookie('remember_user', $user['id'] . ':' . $token, time() + (2 * 24 * 3600), '/', '', true, true);
+                                        }
+                                    }
                                     header("Location: userDashboard.php");
                                     ob_end_flush();
                                     exit();
@@ -85,6 +171,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if (password_verify($password, $company['password'])) {
                                     $_SESSION['company_id'] = $company['id'];
                                     $_SESSION['company_name'] = $company['company_name'];
+                                    if (isset($_POST['rememberMe'])) {
+                                        $token = bin2hex(random_bytes(64));
+                                        $update_sql = "UPDATE bus_companies SET remember_token = ? WHERE id = ?";
+                                        $update_stmt = $conn->prepare($update_sql);
+                                        if ($update_stmt) {
+                                            $update_stmt->bind_param("si", $token, $company['id']);
+                                            $update_stmt->execute();
+                                            $update_stmt->close();
+                                            setcookie('remember_company', $company['id'] . ':' . $token, time() + (2 * 24 * 3600), '/', '', true, true);
+                                        }
+                                    }
                                     header("Location: ./ownerBus.php");
                                     ob_end_flush();
                                     exit();

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 29, 2025 at 05:53 PM
+-- Generation Time: Oct 11, 2025 at 08:19 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -117,7 +117,7 @@ INSERT INTO `buses` (`id`, `operator_name`, `bus_number`, `bus_type`, `starting_
 (19, 'Ena Transport', 'BUS-60C2B7', 'Non AC', 'Dhaka', 'Khulna', '22:00:00', '06:00:00', 1200.00, 40, '2025-09-26'),
 (21, 'Ena Transport', 'BUS-1A59B6', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29'),
 (23, 'Ena Transport', 'BUS-D1A02B', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29'),
-(24, 'Ena Transport', 'BUS-F860AE', 'Non AC', 'Dhaka', 'Sylhet', '10:00:00', '17:00:00', 1250.00, 40, '2025-09-30');
+(24, 'Ena Transport', 'BUS-F860AE', 'Non AC', 'Dhaka', 'Sylhet', '10:00:00', '17:00:00', 1250.00, 40, '2025-10-03');
 
 -- --------------------------------------------------------
 
@@ -129,18 +129,19 @@ CREATE TABLE `bus_companies` (
   `id` int(11) NOT NULL,
   `company_name` varchar(255) NOT NULL,
   `phone` varchar(11) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `remember_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bus_companies`
 --
 
-INSERT INTO `bus_companies` (`id`, `company_name`, `phone`, `password`) VALUES
-(1, 'Sakura Paribahan', '98765432101', '12345678'),
-(2, 'Desh Travels', '01738251690', '$2y$10$deA8zWmrLRaqnKyCtF7A9OONwtZXIfDiygszP95Bk0ns6VduURtim'),
-(3, 'xyz', '12345678901', '$2y$10$75rIXyu/t.23LJ28.tO3Rui46YFPyUrpIs5G6OfJ/mfeJ7EtsnJRq'),
-(4, 'Ena Transport', '01738251691', '$2y$10$..U.zgIBOkkPWsdsxEG1p./8QeTWedPHuIUCwlisy6yV5WxGCCx66');
+INSERT INTO `bus_companies` (`id`, `company_name`, `phone`, `password`, `remember_token`) VALUES
+(1, 'Sakura Paribahan', '98765432101', '12345678', NULL),
+(2, 'Desh Travels', '01738251690', '$2y$10$deA8zWmrLRaqnKyCtF7A9OONwtZXIfDiygszP95Bk0ns6VduURtim', NULL),
+(3, 'xyz', '12345678901', '$2y$10$75rIXyu/t.23LJ28.tO3Rui46YFPyUrpIs5G6OfJ/mfeJ7EtsnJRq', NULL),
+(4, 'Ena Transport', '01738251691', '$2y$10$..U.zgIBOkkPWsdsxEG1p./8QeTWedPHuIUCwlisy6yV5WxGCCx66', NULL);
 
 -- --------------------------------------------------------
 
@@ -378,17 +379,18 @@ CREATE TABLE `users` (
   `phone` varchar(11) NOT NULL,
   `nid` varchar(10) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `verify_token` varchar(255) DEFAULT NULL
+  `verify_token` varchar(255) DEFAULT NULL,
+  `remember_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `phone`, `nid`, `password`, `verify_token`) VALUES
-(1, 'nazrul3', 'nazrul01865@gmail.com', '1738251690', '9174589284', '$2y$10$8FbRTYee/0/3mrKkJqvs7emWY4zN5Z92KF8Pr2Wh0/PEz0PkktX5i', NULL),
-(2, 'nazrul', 'nazrul.islam.01865@gmail.com', '01738251690', '9174589283', '$2y$10$jkC2CGJlrvCssLXUTwwWEulAsFgJ61A3YX7CxeFXrRZ2m3Jy84sNK', ''),
-(3, 'Nayeem', 'saruarmunna17@gmail.com', '01956351202', '9174589286', '$2y$10$0EbBq.kdmiW2FbFArdowfO3DmHjQLSgmO.S12yEm1QQdDQqaaI1jW', '54e743459e3af84ca3f48b4d44d50f01');
+INSERT INTO `users` (`id`, `username`, `email`, `phone`, `nid`, `password`, `verify_token`, `remember_token`) VALUES
+(1, 'nazrul3', 'nazrul01865@gmail.com', '1738251690', '9174589284', '$2y$10$8FbRTYee/0/3mrKkJqvs7emWY4zN5Z92KF8Pr2Wh0/PEz0PkktX5i', NULL, NULL),
+(2, 'nazrul', 'nazrul.islam.01865@gmail.com', '01738251690', '9174589283', '$2y$10$jkC2CGJlrvCssLXUTwwWEulAsFgJ61A3YX7CxeFXrRZ2m3Jy84sNK', '', NULL),
+(3, 'Nayeem', 'saruarmunna17@gmail.com', '01956351202', '9174589286', '$2y$10$0EbBq.kdmiW2FbFArdowfO3DmHjQLSgmO.S12yEm1QQdDQqaaI1jW', '54e743459e3af84ca3f48b4d44d50f01', NULL);
 
 --
 -- Indexes for dumped tables
@@ -505,13 +507,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `buses`
 --
 ALTER TABLE `buses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `bus_companies`

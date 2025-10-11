@@ -73,8 +73,14 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
 
 ##  Bus Company Panel Credentials
 
-- **Phone:** `01723232323`  
-- **Password:** `Xyz@1234`  
+- **Phone:** `01738251690`  
+- **Password:** `12345678`  
+---
+
+##  User Dashboard Credentials
+
+- **Phone:** `01738251690`  
+- **Password:** `Nazrul009`  
 ---
 
 ## Ticket Booking Process

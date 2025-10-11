@@ -855,7 +855,7 @@ if (!$companies_result) {
         }
         window.activeSection = '<?php echo $active_section; ?>';
     </script>
-    <script src="../data/admin_dashboard.js"></script>
+    <script src="../js/admin_dashboard.js"></script>
 </body>
 </html>
 
