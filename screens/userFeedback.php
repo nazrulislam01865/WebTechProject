@@ -1,14 +1,4 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoBus|User Feedback</title>
-    <link rel="stylesheet" type="text/css" href="../css/userFeedback.css">
-</head>
-<body>
-    <?php
+ <?php
     session_start();
 
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -27,7 +17,7 @@
         'comments' => $_POST['comments'] ?? ''
     ];
     $bookings = [];
-
+    //Model
     $servername = "localhost";
     $db_username = "root";
     $db_password = "";
@@ -49,6 +39,7 @@
             }
             $stmt->close();
 
+            //Controller
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (empty($form_data['booking_id']) || $form_data['booking_id'] === 'Select Booking') {
                     $errors['booking_id'] = "Please select a valid booking.";
@@ -90,6 +81,17 @@
         $errors['general'] = "Database error: " . $e->getMessage();
     }
     ?>
+
+<!-- View -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoBus|User Feedback</title>
+    <link rel="stylesheet" type="text/css" href="../css/userFeedback.css">
+</head>
+<body>
 
     <header>
         <div class="logo">Go<span id="logo">Bus</span></div>

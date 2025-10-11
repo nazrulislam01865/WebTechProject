@@ -1,12 +1,10 @@
 <?php
 session_start();
-
-// Enable error reporting for debugging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Database connection
+//Model
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -14,20 +12,17 @@ $dbname = "gobus";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     error_log("Connection failed: " . $conn->connect_error);
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Retrieve and sanitize query parameters
 $from = isset($_GET['from']) ? $conn->real_escape_string($_GET['from']) : 'Dhaka';
 $to = isset($_GET['to']) ? $conn->real_escape_string($_GET['to']) : 'Barisal';
 $journey_date = isset($_GET['journey_date']) ? $conn->real_escape_string($_GET['journey_date']) : date('Y-m-d');
 $travel_type = isset($_GET['travel_type']) ? $conn->real_escape_string($_GET['travel_type']) : 'One Way';
 $return_date = isset($_GET['return_date']) ? $conn->real_escape_string($_GET['return_date']) : '';
 
-// Store search data in session
 $_SESSION['search_data'] = [
     'from' => $from,
     'to' => $to,
@@ -36,14 +31,11 @@ $_SESSION['search_data'] = [
     'return_date' => $return_date
 ];
 
-// Format journey date for display
 $formatted_journey_date = date('d M Y', strtotime($journey_date));
 
-// Fetch buses from database
 $sql = "SELECT * FROM buses WHERE starting_point = '$from' AND destination = '$to' AND journey_date = '$journey_date'";
 $result = $conn->query($sql);
 
-// Check if query executed successfully
 if (!$result) {
     error_log("Query failed: " . $conn->error);
     die("Query failed: " . $conn->error);
@@ -56,10 +48,10 @@ if ($total_buses > 0) {
     while ($row = $result->fetch_assoc()) {
         $total_seats += (int)$row['seats_available'];
     }
-    $result->data_seek(0); // Reset result pointer
+    $result->data_seek(0);
 }
 
-// Handle booking submission
+//Controller
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
     error_log("Booking form submitted with POST data: " . print_r($_POST, true));
 
@@ -69,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         exit;
     }
 
-    // Validate required fields
     if (!isset($_POST['bus_id']) || !isset($_POST['seat_number']) || !isset($_POST['phone_number']) || !isset($_POST['boarding_point']) || !isset($_POST['dropping_point'])) {
         error_log("Missing required form fields: " . print_r($_POST, true));
         echo "<script>alert('Please fill in all required fields.'); window.location.href='searchBus.php';</script>";
@@ -84,14 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
     $promo_code = isset($_POST['promo_code']) ? $conn->real_escape_string($_POST['promo_code']) : '';
     $route = "$from To $to";
 
-    // Validate phone number format
     if (!preg_match('/^\+?[0-9]{10,14}$/', $phone_number)) {
         error_log("Invalid phone number format: $phone_number");
         echo "<script>alert('Invalid phone number format.'); window.location.href='searchBus.php';</script>";
         exit;
     }
 
-    // Check if seat is already booked
     $check_seat = "SELECT * FROM bookings WHERE bus_id = '$bus_id' AND date = '$journey_date' AND seat_number = '$seat_number' AND status = 'Upcoming'";
     $seat_result = $conn->query($check_seat);
     if (!$seat_result) {
@@ -105,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         exit;
     }
 
-    // Fetch bus details including operator_name
+
     $check_seats = "SELECT seats_available, fare, operator_name FROM buses WHERE id = '$bus_id' AND journey_date = '$journey_date'";
     $seats_result = $conn->query($check_seats);
     if ($seats_result && $seats_result->num_rows > 0) {
@@ -115,10 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
             $discount_value = 0;
             $discount_type = '';
 
-            // Debug: Log initial fare
             error_log("Initial fare for bus_id $bus_id: $fare");
 
-            // Check promo code
             if (!empty($promo_code)) {
                 $promo_sql = "SELECT discount_type, discount_value, route FROM promotions WHERE promo_code = '$promo_code'";
                 error_log("Promo code query: $promo_sql");
@@ -126,9 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 if ($promo_result && $promo_result->num_rows > 0) {
                     $promo_data = $promo_result->fetch_assoc();
                     $promo_route = $promo_data['route'];
-                    // Normalize route for comparison
+
                     $normalized_route = str_replace(' To ', '-', $route);
-                    // Handle routes like 'Dhaka routes'
+
                     if (strpos($promo_route, 'routes') !== false) {
                         $route_base = str_replace(' routes', '', $promo_route);
                         if (strpos($route, $route_base) === false && strpos($normalized_route, $route_base) === false) {
@@ -149,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     } else if ($discount_type === 'Fixed Amount') {
                         $fare = $fare - $discount_value;
                     }
-                    if ($fare < 0) $fare = 0; // Ensure fare doesn't go negative
+                    if ($fare < 0) $fare = 0;
                     error_log("Applied promo code '$promo_code': discount_type=$discount_type, discount_value=$discount_value, final_fare=$fare");
                 } else {
                     error_log("Invalid promo code: $promo_code");
@@ -158,7 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 }
             }
 
-            // Store booking details in session
             $_SESSION['booking_data'] = [
                 'user_id' => $_SESSION['user_id'],
                 'bus_id' => $bus_id,
@@ -176,10 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 'operator_name' => $bus_data['operator_name'] ?? 'Unknown Operator'
             ];
 
-            // Debug: Log session data
             error_log("Booking data stored in session: " . print_r($_SESSION['booking_data'], true));
 
-            // Redirect to payment page (use header as fallback)
             header('Location: payment.php');
             echo "<script>window.location.href='payment.php';</script>";
             exit;
@@ -196,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
 }
 ?>
 
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -204,7 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         <title>GoBUS | Search Bus</title>
         <link rel="stylesheet" type="text/css" href="../css/searchBus.css">
         <style>
-            /* Ensure promo code section and apply button are visible */
             .promo-number {
                 display: flex;
                 align-items: center;
@@ -293,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
             if ($total_buses > 0) {
                 while ($row = $result->fetch_assoc()) {
                     $bus_id = $row['id'];
-                    $fare = (float)$row['fare']; // Ensure fare is a float
+                    $fare = (float)$row['fare'];
                     error_log("Bus ID $bus_id fare: $fare");
             ?>
             <div class="bus-details" data-bus-id="<?php echo $bus_id; ?>" data-fare="<?php echo $fare; ?>">
@@ -357,7 +341,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 </div>
                 <div class="seat-selection-content">
                     <ul class="seat-layout">
-                        <!-- Seat layout will be dynamically generated here -->
                     </ul>
                     <div class="selection-details">
                         <form id="bookingForm" method="POST" action="">
@@ -368,7 +351,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                     <label>BOARDING POINT*</label>
                                     <select name="boarding_point" required>
                                         <?php
-                                        // Reopen connection to fetch boarding points
                                         $conn = new mysqli($servername, $username, $password, $dbname);
                                         if ($conn->connect_error) {
                                             die("Connection failed: " . $conn->connect_error);
@@ -448,7 +430,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         <script>
             let originalFare = 0;
 
-            // Log form submission
             document.getElementById('bookingForm').addEventListener('submit', function(e) {
                 console.log('Booking form submitted with values:', new FormData(this));
             });
@@ -464,7 +445,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     console.log('Seat selection container visibility:', seatContainer.style.display);
 
                     if (!isVisible) {
-                        // Use data-fare attribute to get the correct fare
                         const busDetails = this.closest('.bus-details');
                         const selectedPrice = parseFloat(busDetails.getAttribute('data-fare'));
                         console.log('Fetched fare from data-fare:', selectedPrice);
@@ -490,12 +470,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                     return;
                                 }
                                 const reservedSeats = data.reserved_seats || [];
-
-                                // Clear existing seat layout
                                 const seatLayout = document.querySelector('.seat-layout');
                                 seatLayout.innerHTML = '';
-
-                                // Generate seat layout (10 rows x 4 columns with gap)
                                 for (let i = 0; i < 40; i++) {
                                     const row = Math.floor(i / 4);
                                     const col = i % 4;
@@ -521,7 +497,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                     seatLayout.appendChild(seat);
                                 }
 
-                                // Add click event listeners to seats
                                 const allSeats = seatLayout.querySelectorAll('.seat');
                                 allSeats.forEach(seat => {
                                     seat.addEventListener('click', function() {
@@ -543,15 +518,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                                                 seatFareP.textContent = originalFare.toFixed(2) + ' Tk';
                                                 console.log('Displaying fare in seatFare:', originalFare.toFixed(2));
                                                 document.getElementById('seat_number').value = this.dataset.seatNumber;
-                                                // Reset promo code
                                                 document.getElementById('promo_code').value = '';
                                                 document.getElementById('discountInfo').style.display = 'none';
                                             }
                                         }
                                     });
                                 });
-
-                                // Ensure promo button is visible
                                 const applyPromoBtn = document.getElementById('applyPromoBtn');
                                 console.log('Apply promo button exists:', !!applyPromoBtn);
                                 if (applyPromoBtn) {
@@ -567,7 +539,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                 });
             });
 
-            // Handle promo code application
             const applyPromoBtn = document.getElementById('applyPromoBtn');
             if (applyPromoBtn) {
                 console.log('Apply promo button found on page load');
@@ -615,7 +586,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                             discountInfo.style.display = 'block';
                         } else {
                             alert(data.message || 'Invalid promo code or route.');
-                            promoCodeInput.value = ''; // Clear the promo code input on invalid
+                            promoCodeInput.value = '';
                             seatFareP.textContent = originalFare.toFixed(2) + ' Tk';
                             console.log('Reverting to original fare:', originalFare.toFixed(2));
                             discountInfo.style.display = 'none';
@@ -624,7 +595,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                     .catch(error => {
                         console.error('Error validating promo code:', error);
                         alert('Failed to validate promo code.');
-                        promoCodeInput.value = ''; // Clear the promo code input on error
+                        promoCodeInput.value = '';
                         seatFareP.textContent = originalFare.toFixed(2) + ' Tk';
                         console.log('Reverting to original fare on error:', originalFare.toFixed(2));
                         discountInfo.style.display = 'none';

@@ -14,13 +14,13 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
 ---
 
 ## Main Features
--  **Three user types:** Customer, Admin, and Bus Company
--  **Authentication:** Login, logout, user registration
--  **Account Management:** Change or reset password, manage profile information (view, edit, delete)
--  **Dashboard:** Access a personalized dashboard after login
--  **Customer Features:** Buy ticket, cancel ticket, make payment, give feedback about experience
--  **Admin Features:** Revenue tracking per route, manage discounts and promotions, generate reports, handle feedback and complaints
--  **Bus Company Features:** Monitor passenger list, view revenue report per bus, assign drivers, cancel trips
+-  **Three user types:**  Customer, Admin, and Bus Company
+-  **Authentication:**  Login, logout, user registration
+-  **Account Management:**  Change or reset password, manage profile information (view, edit, delete)
+-  **Dashboard:**  Access a personalized dashboard after login
+-  **Customer Features:**  Buy ticket, cancel ticket, make payment, give feedback about experience
+-  **Admin Features:**  Revenue tracking per route, manage discounts and promotions, generate reports, handle feedback and complaints
+-  **Bus Company Features:**  Monitor passenger list, view revenue report per bus, assign drivers, cancel trips
 
 ---
 
@@ -34,31 +34,33 @@ In the future, we plan to enhance GoBus with features such as real-time bus trac
      ```sh
      git clone git@github.com:nazrulislam01865/WebTechProject.git
      ```
-2. **Going to the project folder:**  
+2. **Going to the project folder:** (for Pull)
    ```sh
    cd WebTechProject
    ```
 3. **To Start the Local Server:**
 
-   Before running the project, the user must open the XAMPP Control Panel and start the required modules **Apache** and **MySQL** by clicking the “Start” button under the      Actions column.
+   Before running the project, the user must open the ***XAMPP*** Control Panel and start the required modules **Apache** and **MySQL** by clicking the “Start” button under    the Actions column.
    
 4. **Set Up the Database:**
-    - Open your browser and go to:
+   
+     Open your browser and go to:
      ```sh
     http://localhost/phpmyadmin
      ```
-   - Create a new database:
+    Create a new database:
     ```sh
      gobus
       ```
-   - Click Import, and upload the file:
+     Click Import, and upload the file:
     ```sh
      gobus.sql
      ```
-   - Click **Go** to import the tables and data successfully.
+     Click **Go** to import the tables and data successfully.
 
-5. **Start a local server (e.g., XAMPP ) and access the project via browser:**
-   (Must Be
+6. **Start a local server (e.g., XAMPP ) and access the project via browser:**
+   
+    (Make Sure the folder location must be in **main drive**>**xampp**>**htdocs**>**WebTechProject** to Start the project)
    ```
    http://localhost/WebTechProject/index.php
    ```

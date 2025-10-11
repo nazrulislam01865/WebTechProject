@@ -1,20 +1,17 @@
 
 <?php
-// Start session at the very top
 session_start();
 
-// Enable error reporting
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Database connection
+//Model
 $host = "localhost";
 $username = "root";
 $password = "";
@@ -26,7 +23,6 @@ if (!$conn) {
     die("Database connection failed: " . mysqli_connect_error());
 }
 
-// Check if required tables exist
 $required_tables = ['bookings', 'users'];
 $missing_tables = [];
 foreach ($required_tables as $table) {
@@ -39,7 +35,7 @@ if (!empty($missing_tables)) {
     die("Error: The following database tables are missing: " . implode(", ", $missing_tables) . ". Please verify the 'bookings' and 'users' tables using the provided SQL.");
 }
 
-// Handle form submission (Cancel Booking)
+//Controller
 $errors = [];
 $booking_id = $_GET['booking_id'] ?? ($_POST['booking_id'] ?? '');
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
@@ -51,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
     if (empty($booking_id)) {
         $errors[] = "Booking ID is required.";
     } else {
-        // Check if booking exists, is Upcoming, and belongs to the logged-in user
         $stmt = $conn->prepare("SELECT b.user_id, b.status, u.phone
                                 FROM bookings b 
                                 JOIN users u ON b.user_id = u.id 
@@ -86,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
         $errors[] = "Phone number does not match your account.";
     }
 
-    // Cancel booking if no errors
     if (empty($errors)) {
         $stmt = $conn->prepare("UPDATE bookings SET status = 'Cancelled' WHERE booking_id = ? AND status = 'Upcoming'");
         if (!$stmt) {
@@ -94,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
         } else {
             $stmt->bind_param("s", $booking_id);
             if ($stmt->execute()) {
-                // Output JavaScript for alert and redirect
                 echo "<script>
                         alert('Booking cancelled successfully!');
                         setTimeout(function() {
@@ -111,6 +104,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
 }
 
 ?>
+
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -188,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_booking'])) {
             </div>
         </div>
         <div class="footerBottom">
-            Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group</span>
+            Copyright &copy;2025 | All Rights Reserved Designed by <span class="designer">Group 1</span>
         </div>
     </footer>
 </body>

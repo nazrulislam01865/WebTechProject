@@ -1,22 +1,19 @@
 <?php
 session_start();
 
-// Enable error reporting for debugging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Debug: Log session booking data
 error_log("Session booking data on payment.php: " . print_r($_SESSION['booking_data'], true));
 
-// Check if user is logged in and booking data exists
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['booking_data'])) {
     error_log("Invalid access: user_id or booking_data missing");
     echo "<script>alert('Invalid access. Please select a seat first.'); window.location.href='searchBus.php';</script>";
     exit;
 }
 
-// Database connection
+//Model
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -29,7 +26,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Function to generate unique booking ID
 function generateBookingId($conn) {
     do {
         $prefix = 'BK';
@@ -41,7 +37,7 @@ function generateBookingId($conn) {
     return $booking_id;
 }
 
-// Handle payment submission
+//Controller
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
     $booking_data = $_SESSION['booking_data'];
     $user_id = $booking_data['user_id'];
@@ -56,36 +52,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
     $promo_code = $conn->real_escape_string($booking_data['promo_code'] ?? '');
     $operator_name = isset($booking_data['operator_name']) && $booking_data['operator_name'] !== null 
         ? $conn->real_escape_string($booking_data['operator_name']) 
-        : 'Unknown Operator'; // Fallback if operator_name is missing
+        : 'Unknown Operator'; 
 
     $payment_method = $conn->real_escape_string($_POST['payment_method']);
     $transaction_id = $payment_method === 'mobile_banking' ? $conn->real_escape_string($_POST['transaction_id']) : NULL;
 
-    // Debug: Log payment details
     error_log("Payment submission: user_id=$user_id, bus_id=$bus_id, fare=$fare, promo_code=$promo_code, operator_name=$operator_name, payment_method=$payment_method, transaction_id=" . ($transaction_id ?? 'None'));
 
-    // Validate payment method
     if (!in_array($payment_method, ['credit_card', 'mobile_banking'])) {
         error_log("Invalid payment method: $payment_method");
         echo "<script>alert('Invalid payment method.');</script>";
         exit;
     }
 
-    // Validate transaction ID for mobile banking
     if ($payment_method === 'mobile_banking' && empty($transaction_id)) {
         error_log("Missing transaction ID for mobile banking");
         echo "<script>alert('Transaction ID is required for mobile banking.');</script>";
         exit;
     }
 
-    // Validate fare
     if (!is_numeric($fare) || $fare < 0) {
         error_log("Invalid fare amount: $fare");
         echo "<script>alert('Invalid fare amount.');</script>";
         exit;
     }
 
-    // Validate operator_name
     if ($operator_name === 'Unknown Operator') {
         error_log("Warning: Operator name is missing or invalid for bus_id: $bus_id");
         echo "<script>alert('Operator name is missing. Please try again.'); window.location.href='searchBus.php';</script>";
@@ -93,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
         exit;
     }
 
-    // Check if seat is still available
     $check_seat = "SELECT * FROM bookings WHERE bus_id = '$bus_id' AND date = '$journey_date' AND seat_number = '$seat_number' AND status = 'Upcoming'";
     $seat_result = $conn->query($check_seat);
     if (!$seat_result) {
@@ -108,22 +98,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
         exit;
     }
 
-    // Check if seats are available
     $check_seats = "SELECT seats_available FROM buses WHERE id = '$bus_id' AND journey_date = '$journey_date'";
     $seats_result = $conn->query($check_seats);
     if ($seats_result && $seats_result->num_rows > 0 && $seats_result->fetch_assoc()['seats_available'] > 0) {
-        // Generate booking ID
         $booking_id = generateBookingId($conn);
 
-        // Insert booking into bookings table
         $insert_booking = "INSERT INTO bookings (user_id, bus_id, booking_id, route, date, status, seat_number, phone_number, boarding_point, dropping_point, fare, payment_method, transaction_id, operator_name, promo_code) 
                            VALUES ('$user_id', '$bus_id', '$booking_id', '$route', '$journey_date', 'Upcoming', '$seat_number', '$phone_number', '$boarding_point', '$dropping_point', '$fare', '$payment_method', " . ($transaction_id ? "'$transaction_id'" : "NULL") . ", '$operator_name', " . ($promo_code ? "'$promo_code'" : "NULL") . ")";
         error_log("Insert booking query: $insert_booking");
         if ($conn->query($insert_booking)) {
-            // Update seats_available in buses table
+
             $update_seats = "UPDATE buses SET seats_available = seats_available - 1 WHERE id = '$bus_id' AND journey_date = '$journey_date'";
             if ($conn->query($update_seats)) {
-                // Clear booking data from session
+
                 unset($_SESSION['booking_data']);
                 echo "<script>alert('Payment successful! Booking confirmed. Booking ID: $booking_id'); window.location.href='userDashboard.php';</script>";
             } else {
@@ -144,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
 }
 ?>
 
+<!-- VIEW -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
