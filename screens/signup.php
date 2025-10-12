@@ -133,7 +133,7 @@
                     <div class="input-box">
                         <input type="password" placeholder="Password" name="password" style="width: 250px; max-width: 250px;"> <br>
                         <?php if (isset($errors['password'])): ?>
-                            <span style="color: red; font-size: 0.8em;"><?php echo htmlspecialchars($errors['password']); ?></span>
+                            <span style="color: red; font-size: 0.8em; text-align: center; width: 250px"><?php echo htmlspecialchars($errors['password']); ?></span>
                         <?php endif; ?>
                     </div>
                     <div class="input-box">
