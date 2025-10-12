@@ -159,26 +159,6 @@ a{
     margin-bottom:20px;
 }
 
-/* .form-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.form-row input {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-.form-row .error{
-    display: block;
-    color: red; 
-    font-size: 0.8em;
-    margin-top: 4px;
-} */
 .form-input {
     padding: 12px;
     border: 1px solid #ccc;

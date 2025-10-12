@@ -23,38 +23,6 @@ body{
     overflow: hidden;
     background: #fff;
 }
-/* 
-.leftSide{
-    flex:1;
-    background: linear-gradient(135deg, #3a2dbf, #4231e0);
-    color:#fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    border-radius: 0 80px 80px 0;
-}
-
-.leftSide .btn{
-    background: transparent;
-    color:#fff;
-    border:1px solid #fff;
-    padding: 10px 30px;
-    margin-top: 25px;
-    border-radius: 25px;
-    font-size: 15px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: 0.3s;
-}
-
-.leftSide .btn:hover{
-    background: #faf9fc;
-    color: #3a2dbf;
-}
-*/
 
 .rightSide{
     flex:1.2;
@@ -78,17 +46,6 @@ body{
     
 }
 
-/* .container {
-    display: flex;
-    width: 900px;
-    height: 450px;
-    border-radius: 15px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    background: #fff;
-    max-width: 900px;
-    min-width: 900px;
-} */
 
 .leftSide {
     flex: 1;
@@ -127,18 +84,6 @@ body{
     color: #3a2dbf;
 }
 
-/* .rightSide {
-    flex: 1.2;
-    width: 360px;
-    max-width: 360px;
-    min-width: 360px; 
-
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    box-sizing: border-box;
-} */
 
 .rightSide h2 {
     margin-bottom: 20px;
@@ -167,7 +112,7 @@ body{
 
 .input-box {
     width: 100%;
-    max-width: 250px; /* Match inline style */
+    max-width: 250px;
     height: 60px;
     position: relative;
     margin-bottom: 10px;
@@ -178,7 +123,7 @@ body{
 
 .input-box input {
     width: 100%;
-    max-width: 250px; /* Enforce fixed width */
+    max-width: 250px;
     height: 40px;
     padding: 12px;
     border-radius: 10px;
@@ -191,7 +136,7 @@ body{
 
 .input-box .error-text {
     width: 100%;
-    max-width: 250px; /* Constrain error message width */
+    max-width: 250px;
     color: red;
     font-size: 0.8em;
     text-align: center;
@@ -206,7 +151,7 @@ body{
     padding: 12px;
     border: none;
     width: 100%;
-    max-width: 250px; /* Match input width */
+    max-width: 250px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
@@ -223,7 +168,7 @@ body{
     text-align: center;
     margin-bottom: 10px;
     width: 100%;
-    max-width: 250px; /* Match input width */
+    max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -231,7 +176,7 @@ body{
 
 .rightSide form {
     width: 100%;
-    max-width: 250px; /* Constrain form width */
+    max-width: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;

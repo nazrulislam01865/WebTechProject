@@ -3,14 +3,6 @@ body{
     font-family: Arial, sans-serif;
 }
 
-/* body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(120deg, #422d71, #8995c9);
-}*/
-
 header {
     display: flex;
     justify-content: space-between;

@@ -1,13 +1,12 @@
 <?php
 session_start(); 
 
-// Database connection settings
+//Model
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "gobus";
 
-// Initialize variables and error messages
 $purpose = $name = $phone = $email = $city = $message = "";
 $purpose_error = $name_error = $phone_error = $email_error = $city_error = $message_error = "";
 $success = "";
@@ -21,13 +20,11 @@ try {
         throw new Exception("Database connection failed: " . $conn->connect_error);
     }
 
-    // Create database if it doesn't exist
     if (!$conn->query("CREATE DATABASE IF NOT EXISTS gobus")) {
         throw new Exception("Error creating database: " . $conn->error);
     }
     $conn->select_db($dbname);
 
-    // Create table if it doesn't exist (no submission_date)
     $createTable = "CREATE TABLE IF NOT EXISTS contact_submissions (
         id INT AUTO_INCREMENT PRIMARY KEY,
         purpose VARCHAR(50) NOT NULL,
@@ -41,9 +38,9 @@ try {
         throw new Exception("Error creating table: " . $conn->error);
     }
 
-    // Form processing
+    //Controller
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Sanitize and validate inputs
+
         $purpose = trim(filter_input(INPUT_POST, 'purpose', FILTER_SANITIZE_STRING));
         $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING));
         $phone = trim(filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING));
@@ -76,7 +73,6 @@ try {
             $message_error = "Message must be 10-500 characters long.";
         }
 
-        // If no errors, insert into database
         if (empty($purpose_error) && empty($name_error) && empty($phone_error) && empty($email_error) && empty($city_error) && empty($message_error)) {
             $stmt = $conn->prepare("INSERT INTO contact_submissions (purpose, name, phone, email, city, message) VALUES (?, ?, ?, ?, ?, ?)");
             if ($stmt === false) {
@@ -86,7 +82,6 @@ try {
             $stmt->bind_param("ssssss", $purpose, $name, $phone, $email, $city, $message);
             if ($stmt->execute()) {
                 $success = "Your message has been successfully sent and stored in our database!";
-                // Clear form fields
                 $purpose = $name = $phone = $email = $city = $message = "";
             } else {
                 throw new Exception("Error saving your message to the database: " . $stmt->error);
@@ -96,7 +91,6 @@ try {
     }
 } catch (Exception $e) {
     $error = $e->getMessage();
-    // Assign general database errors to a visible field for display
     $message_error = $error;
 } finally {
     if (isset($conn) && $conn instanceof mysqli) {
@@ -105,6 +99,7 @@ try {
 }
 ?>
 
+<!-- View -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -235,9 +230,8 @@ try {
             <div class="footerSection">
                 <h3>About GoBUS</h3>
                 <a href="../index.php">Home</a>
-                <a href="./aboutus.php">About Us</a>
+                <a href="./aboutUs.php">About Us</a>
                 
-                <a href="./cancelTicket.php">Cancel Ticket</a>
             </div>
 
             <div class="footerSection">

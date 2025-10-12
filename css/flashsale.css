@@ -79,7 +79,6 @@ header {
     color: #666;
 }
 
-/* Banner Section */
 .banner-section {
     margin-bottom: 40px;
 }
@@ -138,7 +137,6 @@ header {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Discount Offers Section */
 .discount-offers {
     margin-bottom: 50px;
 }
@@ -245,7 +243,6 @@ header {
     background: #1c5bb8;
 }
 
-/* Terms Section */
 .terms-section {
     background: white;
     border-radius: 10px;
@@ -283,7 +280,7 @@ header {
     border-bottom: none;
 }
 
-/* Footer Styles */
+
 footer {
     background: #f2f2f2;
     color: #27272b;

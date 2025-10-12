@@ -149,7 +149,7 @@ header {
     line-height: 1.6;
 }
 
-/* Stats Section */
+
 .stats {
     margin-bottom: 60px;
     background: linear-gradient(135deg, #2c6fd1 0%, #1a4d9e 100%);
@@ -188,7 +188,6 @@ header {
     letter-spacing: 1px;
 }
 
-/* Mission Section */
 .mission {
     background: white;
     padding: 50px;
