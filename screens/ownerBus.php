@@ -26,6 +26,24 @@ if (!isset($_SESSION['form_data'])) {
     ];
 }
 
+// Handle success messages from session
+if (isset($_SESSION['success_trip'])) {
+    $success_message['trip'] = $_SESSION['success_trip'];
+    unset($_SESSION['success_trip']);
+}
+if (isset($_SESSION['success_driver'])) {
+    $success_message['driver'] = $_SESSION['success_driver'];
+    unset($_SESSION['success_driver']);
+}
+if (isset($_SESSION['success_cancel'])) {
+    $success_message['cancel'] = $_SESSION['success_cancel'];
+    unset($_SESSION['success_cancel']);
+}
+if (isset($_SESSION['active_tab'])) {
+    $_SESSION['active_tab_set'] = $_SESSION['active_tab']; // Temp to use in JS
+    unset($_SESSION['active_tab']);
+}
+
 //Model
 $servername = "localhost";
 $db_username = "root";
@@ -244,35 +262,12 @@ try {
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sssssssdis", $company_name, $bus_number, $bus_type, $starting_point, $destination, $starting_time, $arrival_time, $fare, $seats, $journey_date);
                 if ($stmt->execute()) {
-                    $success_message['trip'] = "Trip added successfully!";
+                    $_SESSION['success_trip'] = "Trip added successfully!";
                     $_SESSION['form_data']['trip'] = [];
-                    $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                            FROM buses 
-                            WHERE operator_name = ? AND journey_date >= CURDATE() AND status = 'Upcoming'
-                            ORDER BY journey_date ASC";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("s", $company_name);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $upcoming_trips = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $upcoming_trips[] = $row;
-                    }
+                    $_SESSION['active_tab'] = 'dashboard';
                     $stmt->close();
-                    $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                            FROM buses 
-                            WHERE operator_name = ? AND journey_date >= CURDATE()
-                            ORDER BY journey_date ASC";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("s", $company_name);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $all_trips = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $all_trips[] = $row;
-                    }
-                    $stmt->close();
-                    echo "<script>sessionStorage.setItem('activeTab', 'dashboard');</script>";
+                    header("Location: " . $_SERVER['PHP_SELF']);
+                    exit();
                 } else {
                     $errors['general'] = "Error adding trip: " . $conn->error;
                     $_SESSION['form_data']['trip'] = [
@@ -337,20 +332,12 @@ try {
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("ssss", $company_name, $driver_name, $license_number, $phone);
                 if ($stmt->execute()) {
-                    $success_message['driver'] = "Driver added successfully!";
+                    $_SESSION['success_driver'] = "Driver added successfully!";
                     $_SESSION['form_data']['driver'] = [];
-                    $sql = "SELECT id, name, license_number, phone FROM drivers WHERE company_id = 
-                            (SELECT id FROM bus_companies WHERE company_name = ?)";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("s", $company_name);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $drivers = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $drivers[] = $row;
-                    }
+                    $_SESSION['active_tab'] = 'drivers';
                     $stmt->close();
-                    echo "<script>sessionStorage.setItem('activeTab', 'drivers');</script>";
+                    header("Location: " . $_SERVER['PHP_SELF']);
+                    exit();
                 } else {
                     $errors['general'] = "Error adding driver: " . $conn->error;
                     $_SESSION['form_data']['driver'] = [
@@ -408,7 +395,9 @@ try {
                 }
                 $stmt->close();
 
-                echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
+                $_SESSION['active_tab'] = 'passengers';
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
             }
         }
 
@@ -456,7 +445,9 @@ try {
                 }
                 $stmt->close();
 
-                echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
+                $_SESSION['active_tab'] = 'passengers';
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
             }
         }
 
@@ -525,39 +516,13 @@ try {
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
                     if ($stmt->execute()) {
-                        $success_message['cancel'] = "Trip cancelled successfully!";
+                        $_SESSION['success_cancel'] = "Trip cancelled successfully!";
                         // Clear form data from session
                         $_SESSION['form_data']['cancel_trip'] = [];
-                        // Refresh upcoming trips
-                        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                                FROM buses 
-                                WHERE operator_name = ? AND journey_date >= CURDATE() AND status = 'Upcoming'
-                                ORDER BY journey_date ASC";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("s", $company_name);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $upcoming_trips = [];
-                        while ($row = $result->fetch_assoc()) {
-                            $upcoming_trips[] = $row;
-                        }
+                        $_SESSION['active_tab'] = 'trips';
                         $stmt->close();
-                        // Refresh all trips
-                        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                                FROM buses 
-                                WHERE operator_name = ? AND journey_date >= CURDATE()
-                                ORDER BY journey_date ASC";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("s", $company_name);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $all_trips = [];
-                        while ($row = $result->fetch_assoc()) {
-                            $all_trips[] = $row;
-                        }
-                        $stmt->close();
-                        // Set active tab
-                        echo "<script>sessionStorage.setItem('activeTab', 'trips');</script>";
+                        header("Location: " . $_SERVER['PHP_SELF']);
+                        exit();
                     } else {
                         $errors['general'] = "Error cancelling trip: " . $conn->error;
                         $_SESSION['form_data']['cancel_trip'] = [
@@ -995,7 +960,7 @@ try {
     <script>
         // Tab navigation
         document.addEventListener('DOMContentLoaded', () => {
-            const activeTab = sessionStorage.getItem('activeTab') || 'dashboard';
+            const activeTab = sessionStorage.getItem('activeTab') || '<?php echo $_SESSION['active_tab_set'] ?? 'dashboard'; ?>';
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.querySelectorAll('.content-tabs').forEach(tab => tab.classList.remove('active'));
             document.getElementById(activeTab).classList.add('active');
