@@ -489,7 +489,7 @@ try {
                     ];
                 } else {
                     // Delete associated bookings first to avoid foreign key constraint
-                    $sql = "DELETE FROM bookings WHERE bus_id IN 
+                    $sql = "UPDATE bookings SET status = 'Cancelled' WHERE bus_id IN 
                             (SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?)";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
