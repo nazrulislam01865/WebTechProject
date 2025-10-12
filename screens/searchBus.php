@@ -378,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                             </div>
                             <div class="mobile-number">
                                 <label>PHONE NUMBER*</label>
-                                <input type="text" name="phone_number" placeholder="Enter phone number" pattern="\+?[0-9]{10,14}" required>
+                                <input type="text" name="phone_number" placeholder="Enter phone number" pattern="\+?[0-9]{10,14}">
                             </div>
                             <div class="promo-number">
                                 <label>Promo Code</label>
