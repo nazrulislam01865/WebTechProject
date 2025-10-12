@@ -186,7 +186,7 @@ try {
                 <?php endif; ?>
 
                 <button type="submit">Save Changes</button>
-                <button type="delete" id="delete-account">Delete Account</button>
+                
             </form>
         </section>
     </main>
