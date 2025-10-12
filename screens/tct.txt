@@ -12,7 +12,6 @@ $success_message = [];
 $today_trips = 0;
 $total_revenue = 0;
 $upcoming_trips = [];
-$all_trips = [];
 $passengers = [];
 $drivers = [];
 
@@ -40,7 +39,7 @@ try {
     } else {
         $sql = "SELECT COUNT(DISTINCT b.id) as trip_count 
                 FROM buses b 
-                WHERE b.operator_name = ? AND DATE(b.journey_date) = CURDATE() AND b.status = 'Upcoming'";
+                WHERE b.operator_name = ? AND DATE(b.journey_date) = CURDATE()";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $company_name);
         $stmt->execute();
@@ -50,10 +49,9 @@ try {
         }
         $stmt->close();
 
-        $sql = "SELECT COALESCE(SUM(bk.fare), 0) as total_fare 
-                FROM bookings bk
-                JOIN buses b ON bk.bus_id = b.id
-                WHERE b.operator_name = ? AND bk.status IN ('Upcoming', 'Completed')";
+        $sql = "SELECT COALESCE(SUM(fare), 0) as total_fare 
+                FROM bookings 
+                WHERE operator_name = ? AND status IN ('Upcoming', 'Completed')";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $company_name);
         $stmt->execute();
@@ -74,11 +72,9 @@ try {
         if ($is_bus_filter) {
             $x_title = 'Bus Number';
             $dataset_label = 'Revenue per Bus (Tk)';
-            $sql = "SELECT b.bus_number, COALESCE(SUM(bk.fare), 0) as revenue 
-                    FROM buses b 
-                    LEFT JOIN bookings bk ON b.id = bk.bus_id AND bk.status IN ('Upcoming', 'Completed')
-                    WHERE b.operator_name = ? 
-                    GROUP BY b.bus_number 
+            $sql = "SELECT bus_number, (40 - seats_available) * fare as revenue 
+                    FROM buses 
+                    WHERE operator_name = ? 
                     ORDER BY bus_number ASC";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $company_name);
@@ -92,38 +88,40 @@ try {
             }
             $stmt->close();
         } else {
+            $where_conditions = "WHERE operator_name = ? AND status IN ('Upcoming', 'Completed')";
+            $params = [$company_name];
+            $types = "s";
             $select_fields = "";
             $group_by = "";
             $order_by = "";
 
             if ($filter_type === 'date') {
-                $select_fields = "DATE(bk.date) as label";
-                $group_by = "GROUP BY DATE(bk.date)";
+                $select_fields = "DATE(date) as label";
+                $group_by = "GROUP BY DATE(date)";
                 $order_by = "ORDER BY label ASC";
                 $x_title = 'Date';
                 $dataset_label = 'Daily Revenue (Tk)';
             } elseif ($filter_type === 'month') {
-                $select_fields = "CONCAT(YEAR(bk.date), '-', LPAD(MONTH(bk.date), 2, '0')) as label";
-                $group_by = "GROUP BY YEAR(bk.date), MONTH(bk.date)";
-                $order_by = "ORDER BY YEAR(bk.date) ASC, MONTH(bk.date) ASC";
+                $select_fields = "CONCAT(YEAR(date), '-', LPAD(MONTH(date), 2, '0')) as label";
+                $group_by = "GROUP BY YEAR(date), MONTH(date)";
+                $order_by = "ORDER BY YEAR(date) ASC, MONTH(date) ASC";
                 $x_title = 'Month';
                 $dataset_label = 'Monthly Revenue (Tk)';
             } elseif ($filter_type === 'year') {
-                $select_fields = "YEAR(bk.date) as label";
-                $group_by = "GROUP BY YEAR(bk.date)";
+                $select_fields = "YEAR(date) as label";
+                $group_by = "GROUP BY YEAR(date)";
                 $order_by = "ORDER BY label ASC";
                 $x_title = 'Year';
                 $dataset_label = 'Yearly Revenue (Tk)';
             }
 
-            $sql = "SELECT $select_fields, COALESCE(SUM(bk.fare), 0) as revenue 
-                    FROM bookings bk
-                    JOIN buses b ON bk.bus_id = b.id
-                    WHERE b.operator_name = ? AND bk.status IN ('Upcoming', 'Completed')
+            $sql = "SELECT $select_fields, COALESCE(SUM(fare), 0) as revenue 
+                    FROM bookings 
+                    $where_conditions
                     $group_by
                     $order_by";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $company_name);
+            $stmt->bind_param($types, ...$params);
             $stmt->execute();
             $result = $stmt->get_result();
             while ($row = $result->fetch_assoc()) {
@@ -140,9 +138,9 @@ try {
         $result = $conn->query($sql);
         $row_count = $result->fetch_assoc()['row_count'];
 
-        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
+        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                 FROM buses 
-                WHERE operator_name = ? AND journey_date >= CURDATE() AND status = 'Upcoming'
+                WHERE operator_name = ? AND journey_date >= CURDATE() 
                 ORDER BY journey_date ASC";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $company_name);
@@ -150,19 +148,6 @@ try {
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
             $upcoming_trips[] = $row;
-        }
-        $stmt->close();
-
-        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                FROM buses 
-                WHERE operator_name = ? AND journey_date >= CURDATE()
-                ORDER BY journey_date ASC";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $company_name);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $all_trips[] = $row;
         }
         $stmt->close();
 
@@ -239,16 +224,16 @@ try {
                 ];
                 error_log("Trip form errors, stored in session: " . print_r($_SESSION['form_data']['trip'], true));
             } else {
-                $sql = "INSERT INTO buses (operator_name, bus_number, bus_type, starting_point, destination, starting_time, arrival_time, fare, seats_available, journey_date, status) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Upcoming')";
+                $sql = "INSERT INTO buses (operator_name, bus_number, bus_type, starting_point, destination, starting_time, arrival_time, fare, seats_available, journey_date) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sssssssdis", $company_name, $bus_number, $bus_type, $starting_point, $destination, $starting_time, $arrival_time, $fare, $seats, $journey_date);
                 if ($stmt->execute()) {
                     $success_message['trip'] = "Trip added successfully!";
                     $_SESSION['form_data']['trip'] = [];
-                    $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
+                    $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                             FROM buses 
-                            WHERE operator_name = ? AND journey_date >= CURDATE() AND status = 'Upcoming'
+                            WHERE operator_name = ? AND journey_date >= CURDATE() 
                             ORDER BY journey_date ASC";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("s", $company_name);
@@ -258,20 +243,6 @@ try {
                     while ($row = $result->fetch_assoc()) {
                         $upcoming_trips[] = $row;
                     }
-                    $stmt->close();
-                    $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                            FROM buses 
-                            WHERE operator_name = ? AND journey_date >= CURDATE()
-                            ORDER BY journey_date ASC";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("s", $company_name);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $all_trips = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $all_trips[] = $row;
-                    }
-                    $stmt->close();
                     echo "<script>sessionStorage.setItem('activeTab', 'dashboard');</script>";
                 } else {
                     $errors['general'] = "Error adding trip: " . $conn->error;
@@ -349,7 +320,6 @@ try {
                     while ($row = $result->fetch_assoc()) {
                         $drivers[] = $row;
                     }
-                    $stmt->close();
                     echo "<script>sessionStorage.setItem('activeTab', 'drivers');</script>";
                 } else {
                     $errors['general'] = "Error adding driver: " . $conn->error;
@@ -406,9 +376,9 @@ try {
                 while ($row = $result->fetch_assoc()) {
                     $passengers[] = $row;
                 }
-                $stmt->close();
 
                 echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
+                $stmt->close();
             }
         }
 
@@ -454,14 +424,14 @@ try {
                 while ($row = $result->fetch_assoc()) {
                     $passengers[] = $row;
                 }
-                $stmt->close();
 
                 echo "<script>sessionStorage.setItem('activeTab', 'passengers');</script>";
+                $stmt->close();
             }
         }
 
         // Handle Cancel Trip
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_trip'])) {
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancel_trip'])) {
             error_log("Cancel Trip form submitted: " . print_r($_POST, true));
             $bus_number = trim($_POST['bus-number'] ?? '');
             $search_date = $_POST['search-date'] ?? '';
@@ -488,15 +458,11 @@ try {
                     'bus-number' => $bus_number,
                     'search-date' => $search_date,
                     'cancelReason' => $cancel_reason,
-                    'otherReason' => $other_reason
+                    'otherReason' => $other_reason,
+
                 ];
                 error_log("Cancel trip form errors, stored in session: " . print_r($_SESSION['form_data']['cancel_trip'], true));
             } else {
-                $reason = $cancel_reason;
-                if ($cancel_reason === 'Other') {
-                    $reason = $other_reason;
-                }
-
                 // Check if the bus exists for the given operator and date
                 $sql = "SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                 $stmt = $conn->prepare($sql);
@@ -509,10 +475,11 @@ try {
                         'bus-number' => $bus_number,
                         'search-date' => $search_date,
                         'cancelReason' => $cancel_reason,
-                        'otherReason' => $other_reason
+                        'otherReason' => $other_reason,
+
                     ];
                 } else {
-                    // update bookings first
+                    // update bookings first to avoid foreign key constraint
                     $sql = "UPDATE bookings SET status = 'Cancelled' WHERE bus_id IN 
                             (SELECT id FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?)";
                     $stmt = $conn->prepare($sql);
@@ -520,8 +487,8 @@ try {
                     $stmt->execute();
                     $stmt->close();
                     
-                    // Now update the bus status
-                    $sql = "UPDATE buses SET status = 'Cancelled' WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
+                    // Now delete the bus
+                    $sql = "DELETE FROM buses WHERE operator_name = ? AND bus_number = ? AND journey_date = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sss", $company_name, $bus_number, $search_date);
                     if ($stmt->execute()) {
@@ -529,9 +496,9 @@ try {
                         // Clear form data from session
                         $_SESSION['form_data']['cancel_trip'] = [];
                         // Refresh upcoming trips
-                        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
+                        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare 
                                 FROM buses 
-                                WHERE operator_name = ? AND journey_date >= CURDATE() AND status = 'Upcoming'
+                                WHERE operator_name = ? AND journey_date >= CURDATE() 
                                 ORDER BY journey_date ASC";
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param("s", $company_name);
@@ -541,21 +508,6 @@ try {
                         while ($row = $result->fetch_assoc()) {
                             $upcoming_trips[] = $row;
                         }
-                        $stmt->close();
-                        // Refresh all trips
-                        $sql = "SELECT id, bus_number, starting_point, destination, starting_time, arrival_time, journey_date, bus_type, seats_available, fare, status
-                                FROM buses 
-                                WHERE operator_name = ? AND journey_date >= CURDATE()
-                                ORDER BY journey_date ASC";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("s", $company_name);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $all_trips = [];
-                        while ($row = $result->fetch_assoc()) {
-                            $all_trips[] = $row;
-                        }
-                        $stmt->close();
                         // Set active tab
                         echo "<script>sessionStorage.setItem('activeTab', 'trips');</script>";
                     } else {
@@ -564,7 +516,9 @@ try {
                             'bus-number' => $bus_number,
                             'search-date' => $search_date,
                             'cancelReason' => $cancel_reason,
-                            'otherReason' => $other_reason
+                            'otherReason' => $other_reason,
+                            'emailNotif' => $email_notif,
+                            'smsNotif' => $sms_notif
                         ];
                     }
                 }
@@ -750,7 +704,6 @@ try {
                             <p><strong>Type:</strong> <?php echo htmlspecialchars($trip['bus_type']); ?></p>
                             <p><strong>Seats Available:</strong> <?php echo htmlspecialchars($trip['seats_available']); ?></p>
                             <p><strong>Fare:</strong> <?php echo htmlspecialchars($trip['fare']); ?> Tk</p>
-                            <p><strong>Status:</strong> <?php echo htmlspecialchars($trip['status']); ?></p>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -964,17 +917,17 @@ try {
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
-                        <label><span style="color: red; font-size: 20px;">*</span>Users will get an update from their Dashboard.</label>
+                        <label><span style="color: red; font-size: 20px;">*</span>Usesr will get update from thier Dashboard.</label>
                         
                     </div>
                     <button type="submit" class="cancel-btn">Cancel Trip</button>
                 </form>
                 <div class="trip-list" id="trip-list">
                     <h3 class="section-title">All Trips</h3>
-                    <?php if (empty($all_trips)): ?>
+                    <?php if (empty($upcoming_trips)): ?>
                         <p>No trips found.</p>
                     <?php else: ?>
-                        <?php foreach ($all_trips as $trip): ?>
+                        <?php foreach ($upcoming_trips as $trip): ?>
                             <div class="trip-item">
                                 <p><strong>Bus Number:</strong> <?php echo htmlspecialchars($trip['bus_number']); ?></p>
                                 <p><strong>Route:</strong> <?php echo htmlspecialchars($trip['starting_point'] . ' to ' . $trip['destination']); ?></p>
@@ -983,7 +936,6 @@ try {
                                 <p><strong>Type:</strong> <?php echo htmlspecialchars($trip['bus_type']); ?></p>
                                 <p><strong>Seats Available:</strong> <?php echo htmlspecialchars($trip['seats_available']); ?></p>
                                 <p><strong>Fare:</strong> <?php echo htmlspecialchars($trip['fare']); ?> Tk</p>
-                                <p><strong>Status:</strong> <?php echo htmlspecialchars($trip['status']); ?></p>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>

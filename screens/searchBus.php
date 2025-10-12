@@ -69,15 +69,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
 
     $bus_id = $conn->real_escape_string($_POST['bus_id']);
     $seat_number = $conn->real_escape_string($_POST['seat_number']);
-    $phone_number = $conn->real_escape_string($_POST['phone_number']);
+    $raw_phone = trim($_POST['phone_number']);
+    $phone_number = $conn->real_escape_string($raw_phone);
     $boarding_point = $conn->real_escape_string($_POST['boarding_point']);
     $dropping_point = $conn->real_escape_string($_POST['dropping_point']);
     $promo_code = isset($_POST['promo_code']) ? $conn->real_escape_string($_POST['promo_code']) : '';
     $route = "$from To $to";
 
-    if (!preg_match('/^\+?[0-9]{10,14}$/', $phone_number)) {
-        error_log("Invalid phone number format: $phone_number");
-        echo "<script>alert('Invalid phone number format.'); window.location.href='searchBus.php';</script>";
+    if (empty($raw_phone)) {
+        error_log("Phone number is empty");
+        echo "<script>alert('Phone number is required.'); window.location.href='searchBus.php';</script>";
+        exit;
+    }
+
+    if (!preg_match('/^(\+880)?01[3-9]\d{8}$/', $raw_phone)) {
+        error_log("Invalid phone number format: $raw_phone");
+        echo "<script>alert('Please enter a valid Bangladeshi mobile number (e.g., 01712345678 or +8801712345678).'); window.location.href='searchBus.php';</script>";
         exit;
     }
 
@@ -378,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
                             </div>
                             <div class="mobile-number">
                                 <label>PHONE NUMBER*</label>
-                                <input type="text" name="phone_number" placeholder="Enter phone number" pattern="\+?[0-9]{10,14}">
+                                <input type="text" name="phone_number" placeholder="Enter phone number">
                             </div>
                             <div class="promo-number">
                                 <label>Promo Code</label>
@@ -607,23 +614,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_booking'])) {
         </script>
     </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
