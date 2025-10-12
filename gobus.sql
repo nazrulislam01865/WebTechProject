@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 11, 2025 at 08:19 PM
+-- Generation Time: Oct 12, 2025 at 04:21 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -71,7 +71,8 @@ INSERT INTO `bookings` (`id`, `user_id`, `bus_id`, `seat_number`, `phone_number`
 (17, 3, 5, 'A1', '01956351202', 'Dhaka', 'Sylhet', 'BK71008', 'Dhaka To Sylhet', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1100.00, 'Ena Transport', NULL),
 (18, 2, 5, '', '01738251690', 'Dhaka', 'Sylhet', 'BK79620', 'Dhaka To Sylhet', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJDG', 'mobile_banking', 1090.00, 'Ena Transport', 'ss'),
 (19, 2, 6, 'A4', '01738251690', 'Dhaka', 'Khulna', 'BK27040', 'Dhaka To Khulna', '2025-09-30', 'Upcoming', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1000.00, 'Desh Travels', NULL),
-(20, 2, 6, 'B1', '01738251690', 'Dhaka', 'Khulna', 'BK51426', 'Dhaka To Khulna', '2025-09-30', 'Cancelled', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1000.00, 'Desh Travels', NULL);
+(20, 2, 6, 'B1', '01738251690', 'Dhaka', 'Khulna', 'BK51426', 'Dhaka To Khulna', '2025-09-30', 'Cancelled', NULL, 'XYZTKSYJFDS', 'mobile_banking', 1000.00, 'Desh Travels', NULL),
+(24, 2, 29, 'A3', '01738251690', 'Dhaka', 'Rajshahi', 'BK99429', 'Dhaka To Rajshahi', '2025-10-12', 'Cancelled', NULL, 'XYZTKSYJFDS', 'mobile_banking', 600.00, 'Desh Travels', NULL);
 
 -- --------------------------------------------------------
 
@@ -90,34 +91,41 @@ CREATE TABLE `buses` (
   `arrival_time` time NOT NULL,
   `fare` decimal(10,2) NOT NULL,
   `seats_available` int(11) NOT NULL,
-  `journey_date` date NOT NULL
+  `journey_date` date NOT NULL,
+  `status` enum('Upcoming','Completed','Cancelled') NOT NULL DEFAULT 'Upcoming'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `buses`
 --
 
-INSERT INTO `buses` (`id`, `operator_name`, `bus_number`, `bus_type`, `starting_point`, `destination`, `starting_time`, `arrival_time`, `fare`, `seats_available`, `journey_date`) VALUES
-(1, 'Sakura Paribahan', '102. SBD-BSL (PADMA)', 'Non AC', 'Saydabad Terminal -1', 'Barisal Terminal', '05:00:00', '07:30:00', 550.00, 28, '2025-08-29'),
-(2, 'Shyamoli NR Travels', '6301-Barisal', 'Non AC', 'Rainkhola Counter', 'Barisal Terminal', '06:00:00', '11:00:00', 450.00, 25, '2025-08-29'),
-(3, 'Green Line Paribahan', 'GL-201-DHK-RAJ', 'AC', 'Dhaka', 'Rajshahi', '08:00:00', '13:30:00', 1200.00, 36, '2025-09-30'),
-(4, 'Hanif Enterprise', 'HF-301-DHK-COX', 'Non AC', 'Dhaka', 'Cox\'s Bazar', '22:00:00', '07:00:00', 900.00, 34, '2025-09-30'),
-(5, 'Ena Transport', 'ENA-105-DHK-SYL', 'AC', 'Dhaka', 'Sylhet', '07:30:00', '14:00:00', 1100.00, 26, '2025-09-30'),
-(6, 'Desh Travels', 'DT-502-DHK-KHU', 'AC', 'Dhaka', 'Khulna', '06:30:00', '13:00:00', 1000.00, 16, '2025-09-30'),
-(7, 'National Travels', 'NT-601-DHK-MYM', 'Non AC', 'Dhaka', 'Mymensingh', '10:00:00', '12:30:00', 300.00, 40, '2025-09-30'),
-(8, 'Sakura Paribahan', '102-BSL-DHK', 'Non AC', 'Barisal', 'Dhaka', '08:00:00', '10:30:00', 550.00, 30, '2025-10-01'),
-(9, 'Shyamoli NR Travels', '6302-BAR-DHK', 'Non AC', 'Barisal', 'Dhaka', '09:00:00', '14:00:00', 450.00, 25, '2025-10-01'),
-(10, 'Green Line Paribahan', 'GL-202-RAJ-DHK', 'AC', 'Rajshahi', 'Dhaka', '07:00:00', '12:30:00', 1200.00, 18, '2025-10-01'),
-(11, 'Hanif Enterprise', 'HF-302-COX-DHK', 'Non AC', 'Cox\'s Bazar', 'Dhaka', '21:00:00', '06:00:00', 900.00, 32, '2025-10-01'),
-(12, 'Ena Transport', 'ENA-106-SYL-DHK', 'AC', 'Sylhet', 'Dhaka', '06:00:00', '12:30:00', 1100.00, 25, '2025-10-01'),
-(13, 'Saint Martin Paribahan', 'SM-401-CHT-BAN', 'Non AC', 'Chittagong', 'Bandarban', '09:00:00', '11:30:00', 400.00, 15, '2025-09-30'),
-(14, 'Desh Travels', 'DT-503-KHU-BAR', 'Non AC', 'Khulna', 'Barisal', '07:00:00', '11:00:00', 600.00, 28, '2025-09-30'),
-(15, 'National Travels', 'NT-602-MYM-SYL', 'Non AC', 'Mymensingh', 'Sylhet', '08:30:00', '13:30:00', 700.00, 30, '2025-09-30'),
-(17, 'Desh Travels', 'BUS-16960F', 'Non AC', 'Dhaka', 'Khulna', '05:00:00', '12:00:00', 1250.00, 38, '2025-09-26'),
-(19, 'Ena Transport', 'BUS-60C2B7', 'Non AC', 'Dhaka', 'Khulna', '22:00:00', '06:00:00', 1200.00, 40, '2025-09-26'),
-(21, 'Ena Transport', 'BUS-1A59B6', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29'),
-(23, 'Ena Transport', 'BUS-D1A02B', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29'),
-(24, 'Ena Transport', 'BUS-F860AE', 'Non AC', 'Dhaka', 'Sylhet', '10:00:00', '17:00:00', 1250.00, 40, '2025-10-03');
+INSERT INTO `buses` (`id`, `operator_name`, `bus_number`, `bus_type`, `starting_point`, `destination`, `starting_time`, `arrival_time`, `fare`, `seats_available`, `journey_date`, `status`) VALUES
+(1, 'Sakura Paribahan', '102. SBD-BSL (PADMA)', 'Non AC', 'Saydabad Terminal -1', 'Barisal Terminal', '05:00:00', '07:30:00', 550.00, 28, '2025-08-29', 'Upcoming'),
+(2, 'Shyamoli NR Travels', '6301-Barisal', 'Non AC', 'Rainkhola Counter', 'Barisal Terminal', '06:00:00', '11:00:00', 450.00, 25, '2025-08-29', 'Upcoming'),
+(3, 'Green Line Paribahan', 'GL-201-DHK-RAJ', 'AC', 'Dhaka', 'Rajshahi', '08:00:00', '13:30:00', 1200.00, 36, '2025-09-30', 'Upcoming'),
+(4, 'Hanif Enterprise', 'HF-301-DHK-COX', 'Non AC', 'Dhaka', 'Cox\'s Bazar', '22:00:00', '07:00:00', 900.00, 34, '2025-09-30', 'Upcoming'),
+(5, 'Ena Transport', 'ENA-105-DHK-SYL', 'AC', 'Dhaka', 'Sylhet', '07:30:00', '14:00:00', 1100.00, 26, '2025-09-30', 'Upcoming'),
+(6, 'Desh Travels', 'DT-502-DHK-KHU', 'AC', 'Dhaka', 'Khulna', '06:30:00', '13:00:00', 1000.00, 16, '2025-09-30', 'Upcoming'),
+(7, 'National Travels', 'NT-601-DHK-MYM', 'Non AC', 'Dhaka', 'Mymensingh', '10:00:00', '12:30:00', 300.00, 40, '2025-09-30', 'Upcoming'),
+(8, 'Sakura Paribahan', '102-BSL-DHK', 'Non AC', 'Barisal', 'Dhaka', '08:00:00', '10:30:00', 550.00, 30, '2025-10-01', 'Upcoming'),
+(9, 'Shyamoli NR Travels', '6302-BAR-DHK', 'Non AC', 'Barisal', 'Dhaka', '09:00:00', '14:00:00', 450.00, 25, '2025-10-01', 'Upcoming'),
+(10, 'Green Line Paribahan', 'GL-202-RAJ-DHK', 'AC', 'Rajshahi', 'Dhaka', '07:00:00', '12:30:00', 1200.00, 18, '2025-10-01', 'Upcoming'),
+(11, 'Hanif Enterprise', 'HF-302-COX-DHK', 'Non AC', 'Cox\'s Bazar', 'Dhaka', '21:00:00', '06:00:00', 900.00, 32, '2025-10-01', 'Upcoming'),
+(12, 'Ena Transport', 'ENA-106-SYL-DHK', 'AC', 'Sylhet', 'Dhaka', '06:00:00', '12:30:00', 1100.00, 25, '2025-10-01', 'Upcoming'),
+(13, 'Saint Martin Paribahan', 'SM-401-CHT-BAN', 'Non AC', 'Chittagong', 'Bandarban', '09:00:00', '11:30:00', 400.00, 15, '2025-09-30', 'Upcoming'),
+(14, 'Desh Travels', 'DT-503-KHU-BAR', 'Non AC', 'Khulna', 'Barisal', '07:00:00', '11:00:00', 600.00, 28, '2025-09-30', 'Upcoming'),
+(15, 'National Travels', 'NT-602-MYM-SYL', 'Non AC', 'Mymensingh', 'Sylhet', '08:30:00', '13:30:00', 700.00, 30, '2025-09-30', 'Upcoming'),
+(17, 'Desh Travels', 'BUS-16960F', 'Non AC', 'Dhaka', 'Khulna', '05:00:00', '12:00:00', 1250.00, 38, '2025-09-26', 'Upcoming'),
+(19, 'Ena Transport', 'BUS-60C2B7', 'Non AC', 'Dhaka', 'Khulna', '22:00:00', '06:00:00', 1200.00, 40, '2025-09-26', 'Upcoming'),
+(21, 'Ena Transport', 'BUS-1A59B6', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29', 'Upcoming'),
+(23, 'Ena Transport', 'BUS-D1A02B', 'Non AC', 'Dhaka', 'Sylhet', '22:00:00', '06:00:00', 1000.00, 40, '2025-09-29', 'Upcoming'),
+(24, 'Ena Transport', 'BUS-F860AE', 'Non AC', 'Dhaka', 'Sylhet', '10:00:00', '17:00:00', 1250.00, 40, '2025-10-03', 'Upcoming'),
+(29, 'Desh Travels', 'BUS-D9AEB1', 'Non AC', 'Dhaka', 'Rajshahi', '00:00:00', '06:00:00', 600.00, 39, '2025-10-12', 'Cancelled'),
+(30, 'Desh Travels', 'BUS-2FDAD4', 'Non AC', 'Dhaka', 'Rajshahi', '00:00:00', '08:00:00', 700.00, 40, '2025-10-12', 'Cancelled'),
+(31, 'Desh Travels', 'BUS-011165', 'Non AC', 'Dhaka', 'Rajshahi', '00:00:00', '02:00:00', 600.00, 40, '2025-10-12', 'Upcoming'),
+(32, 'Desh Travels', 'BUS-10C62D', 'Non AC', 'Dhaka', 'Rajshahi', '00:00:00', '02:00:00', 600.00, 40, '2025-10-12', 'Upcoming'),
+(33, 'Desh Travels', 'BUS-CC6954', 'Non AC', 'Dhaka', 'Rajshahi', '00:00:00', '02:00:00', 600.00, 40, '2025-10-12', 'Upcoming'),
+(34, 'Desh Travels', 'BUS-4FCBB8', 'Non AC', 'Dhaka', 'Rajshahi', '00:00:00', '02:00:00', 600.00, 40, '2025-10-12', 'Upcoming');
 
 -- --------------------------------------------------------
 
@@ -507,13 +515,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `buses`
 --
 ALTER TABLE `buses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `bus_companies`
